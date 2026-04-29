@@ -9,17 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20260429u" />
-  <!-- 提前计算缩放比例，避免页面加载时闪烁 -->
-  <script>
-    (function(){
-      var vw = window.innerWidth;
-      var s = Math.min(vw / 1920, 1);
-      var hs = vw / 1920;
-      document.documentElement.style.setProperty('--vw-scale', s);
-      document.documentElement.style.setProperty('--hero-scale', hs);
-    })();
-  </script>
+  <link rel="stylesheet" href="style.css?v=20260429t" />
 </head>
 <body>
 
@@ -416,29 +406,31 @@
       海外用户全域精准触达，助力业务拉新、召回、促活、增收
     </p>
 
-    <!-- 左侧 4 项特性列表 -->
-    <ul class="s4-features" style="left:360px; top:291px; width:380px;">
-      <li>
-        <div class="s4-feat-tag"><span class="s4-dot"></span>定时推送</div>
-        <div class="s4-feat-desc">支持全球多时区定时推送，精准覆盖目标用户活跃时段</div>
-      </li>
-      <li>
-        <div class="s4-feat-tag"><span class="s4-dot"></span>定向推送</div>
-        <div class="s4-feat-desc">支持指定号码包定向推送，精细化触达目标用户群体</div>
-      </li>
-      <li>
-        <div class="s4-feat-tag"><span class="s4-dot"></span>条件触发推送</div>
-        <div class="s4-feat-desc">实时监测玩家游戏状态，根据行为条件自动推送匹配内容</div>
-      </li>
-      <li>
-        <div class="s4-feat-tag"><span class="s4-dot"></span>保密测试协议推送</div>
-        <div class="s4-feat-desc">特别打通保密协议签署系统 &amp; CDK 系统，一体化管理测试资格发放</div>
-      </li>
-    </ul>
+    <!-- 左右容器：flex 水平布局，左文案+右图片垂直对齐 -->
+    <div class="s4-content" style="left:360px; top:262px; width:1200px;">
+      <!-- 左侧 4 项特性列表 -->
+      <ul class="s4-features">
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span>定时推送</div>
+          <div class="s4-feat-desc">支持全球多时区定时推送，精准覆盖目标用户活跃时段</div>
+        </li>
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span>定向推送</div>
+          <div class="s4-feat-desc">支持指定号码包定向推送，精细化触达目标用户群体</div>
+        </li>
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span>条件触发推送</div>
+          <div class="s4-feat-desc">实时监测玩家游戏状态，根据行为条件自动推送匹配内容</div>
+        </li>
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span>保密测试协议推送</div>
+          <div class="s4-feat-desc">特别打通保密协议签署系统 &amp; CDK 系统，一体化管理测试资格发放</div>
+        </li>
+      </ul>
 
-    <!-- 右侧切图 -->
-    <img class="s4-right-img" src="assets/私信营销部分右侧图.png" alt="私信营销平台展示"
-         style="position:absolute; left:800px; top:262px; width:788px; height:auto;" />
+      <!-- 右侧切图 -->
+      <img class="s4-right-img" src="assets/私信营销部分右侧图.png" alt="私信营销平台展示" />
+    </div>
   </div>
 </section>
 
@@ -447,69 +439,46 @@
      Scene 05 · 合作游戏（浅色） Figma y=4529~5882, h=1353
      ========================================================= -->
 <section id="scene5" class="scene scene--light" data-reveal>
-  <div class="scene-canvas" style="height:1640px;">
+  <div class="scene-canvas" style="height:1650px;">
 
     <h2 class="scene-title scene-title--dark" style="left:857px; top:186px;">合作游戏</h2>
     <p class="scene-subtitle scene-subtitle--dark" style="left:0; top:280px; width:1920px;">
       深度接入游戏生态，实现平台与游戏的无缝联动，持续扩展合作版图，更多游戏陆续接入中
     </p>
 
-    <!-- 游戏封面墙（3 列 × 3 行，中间 Delta Force 大卡占 2 行） -->
-    <div class="games-wall" style="left:360px; top:433px; width:1200px; height:1106px;">
-      <!-- 左列 -->
-      <div class="game-card" style="left:0; top:0; width:387px; height:462px;">
-        <img src="assets/games/dragonheir.png" alt="Dragonheir" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--purple"></div>
-        <div class="game-name">Dragonheir：<br/>Silent Gods</div>
+    <!-- 游戏封面墙（按设计稿 3列交错布局，素材 1-9 从左到右从上到下） -->
+    <div class="games-wall" style="left:360px; top:433px; width:1200px; height:1100px;">
+      <!-- Row 1 -->
+      <div class="game-card" style="left:0; top:0; width:390px; height:322px;">
+        <img src="assets/合作游戏卡片/1.png" alt="Game 1"/>
       </div>
-      <div class="game-card" style="left:0; top:482px; width:387px; height:302px;">
-        <img src="assets/games/age-of-empires.png" alt="Age of Empires" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--dark"></div>
-        <div class="game-name">AGE OF EMPIRES</div>
+      <div class="game-card" style="left:400px; top:0; width:390px; height:445px;">
+        <img src="assets/合作游戏卡片/2.png" alt="Game 2"/>
       </div>
-      <div class="game-card" style="left:0; top:804px; width:387px; height:302px;">
-        <img src="assets/games/honor-of-kings.png" alt="Honor of Kings" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--gold"></div>
-        <div class="game-name game-name--sm">HONOR OF KINGS</div>
+      <div class="game-card" style="left:800px; top:0; width:390px; height:322px;">
+        <img src="assets/合作游戏卡片/3.png" alt="Game 3"/>
       </div>
 
-      <!-- 中列 -->
-      <div class="game-card" style="left:407px; top:0; width:386px; height:462px;">
-        <img src="assets/games/arena-breakout.png" alt="Arena Breakout" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--orange"></div>
-        <div class="game-name game-name--lg">ARENA<br/>BREAKOUT</div>
+      <!-- Row 2 -->
+      <div class="game-card" style="left:0; top:332px; width:390px; height:445px;">
+        <img src="assets/合作游戏卡片/4.png" alt="Game 4"/>
       </div>
-      <!-- Delta Force 大卡 -->
-      <div class="game-card game-card--hero" style="left:407px; top:482px; width:386px; height:462px;">
-        <img src="assets/games/delta-force.png" alt="Delta Force" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--hero"></div>
-        <div class="game-hero-logo">
-          <div class="game-hero-badge">
-            <svg viewBox="0 0 40 40" width="44" height="44" fill="none">
-              <path d="M20 4 L36 34 L4 34 Z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
-              <circle cx="20" cy="24" r="3.2" fill="#fff"/>
-            </svg>
-          </div>
-          <div class="game-hero-title">DELTA FORCE</div>
-          <div class="game-hero-sub">— TOTAL WAR —</div>
-        </div>
+      <div class="game-card" style="left:400px; top:455px; width:390px; height:322px;">
+        <img src="assets/合作游戏卡片/5.png" alt="Game 5"/>
+      </div>
+      <div class="game-card" style="left:800px; top:332px; width:390px; height:322px;">
+        <img src="assets/合作游戏卡片/6.png" alt="Game 6"/>
       </div>
 
-      <!-- 右列 -->
-      <div class="game-card" style="left:813px; top:0; width:387px; height:302px;">
-        <img src="assets/games/pubg.png" alt="PUBG Mobile" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--blue"></div>
-        <div class="game-name">PUBG MOBILE</div>
+      <!-- Row 3 -->
+      <div class="game-card" style="left:0; top:787px; width:390px; height:322px;">
+        <img src="assets/合作游戏卡片/7.png" alt="Game 7"/>
       </div>
-      <div class="game-card" style="left:813px; top:322px; width:387px; height:462px;">
-        <img src="assets/games/fate-trigger.png" alt="Fate Trigger" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--cyan"></div>
-        <div class="game-name">FATE TRIGGER</div>
+      <div class="game-card" style="left:400px; top:787px; width:390px; height:445px;">
+        <img src="assets/合作游戏卡片/8.png" alt="Game 8"/>
       </div>
-      <div class="game-card" style="left:813px; top:804px; width:387px; height:302px;">
-        <img src="assets/games/goddess-nikke.png" alt="Goddess of Victory" onerror="this.style.display='none'"/>
-        <div class="game-tint game-tint--pink"></div>
-        <div class="game-name game-name--sm">GODDESS OF VICTORY</div>
+      <div class="game-card" style="left:800px; top:664px; width:390px; height:445px;">
+        <img src="assets/合作游戏卡片/9.png" alt="Game 9"/>
       </div>
     </div>
   </div>
@@ -555,6 +524,6 @@
 </footer>
 </div><!-- /.shared-bg-wrap -->
 
-<script src="app.js?v=20260429u"></script>
+<script src="app.js?v=20260429q"></script>
 </body>
 </html>
