@@ -2,43 +2,67 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
-// ========= 0. 动态计算全局缩放比例 --vw-scale =========
-// Scene5/Footer：Math.min(vw/1920, 1)，保持上一版效果（不超过设计稿尺寸）
-// Hero + Scene1~4：vw/1920（不设上限），实现自适应浏览器分辨率
+// ========= 0. 动态计算全局缩放比例 + 每一屏高度适配 =========
+// 所有屏幕统一采用 vw/1920 缩放，居中显示
+// 这样无论窗口多宽多窄，内容都按比例缩放且水平居中
 const updateVwScale = () => {
   const vw = window.innerWidth;
-  const scale = Math.min(vw / 1920, 1);       // scene5/footer 用（不超 1）
-  const heroScale = vw / 1920;                 // Hero + scene1~4 用（无上限）
-  document.documentElement.style.setProperty('--vw-scale', scale);
-  document.documentElement.style.setProperty('--hero-scale', heroScale);
+  const ratio = vw / 1920;                     // 统一缩放比
+  const clampedRatio = Math.min(ratio, 1);     // scene5/footer 用（不超 1）
+  document.documentElement.style.setProperty('--vw-scale', clampedRatio);
+  document.documentElement.style.setProperty('--hero-scale', ratio);
 
-  // Hero 首屏：高度 = max(1006 × heroScale, 视口高度)，确保填满浏览器窗口
+  // === Hero 首屏 ===
   const hero = document.querySelector('.hero');
   if (hero) {
-    const designH = 1006 * heroScale;
+    const designH = 1006 * ratio;
     const vh = window.innerHeight;
     hero.style.height = Math.max(designH, vh) + 'px';
   }
-
-  // Hero canvas 使用 heroScale 缩放
   const heroCanvas = document.querySelector('.hero-canvas');
   if (heroCanvas) {
-    heroCanvas.style.transform = 'translateX(-50%) scale(' + heroScale + ')';
+    heroCanvas.style.transform = 'translateX(-50%) scale(' + ratio + ')';
   }
 
-  // Scene1~4 也使用 heroScale 动态设置高度
-  var adaptiveSections = [
+  // === Scene1~4：使用 ratio（无上限），高度由 JS 动态设置 ===
+  var fullScaleSections = [
     { id: 'scene1', designH: 941 },
     { id: 'scene2', designH: 962 },
     { id: 'scene3', designH: 984 },
     { id: 'scene4', designH: 636 },
   ];
-  adaptiveSections.forEach(function(cfg) {
+  fullScaleSections.forEach(function(cfg) {
     var sec = document.getElementById(cfg.id);
     if (sec) {
-      sec.style.height = (cfg.designH * heroScale) + 'px';
+      sec.style.height = (cfg.designH * ratio) + 'px';
     }
   });
+
+  // === Scene5 + Footer：使用 clampedRatio（不超过 1），高度不超设计稿 ===
+  var clampedSections = [
+    { id: 'scene5', designH: 1785 },
+  ];
+  clampedSections.forEach(function(cfg) {
+    var sec = document.getElementById(cfg.id);
+    if (sec) {
+      sec.style.height = Math.min(cfg.designH * ratio, cfg.designH) + 'px';
+    }
+  });
+
+  // Footer 高度
+  var footer = document.querySelector('.site-footer');
+  if (footer) {
+    footer.style.height = Math.min(1408 * ratio, 1408) + 'px';
+  }
+
+  // === shared-bg-wrap 背景高度：Scene4 + Scene5 + Footer 总和 ===
+  var sharedWrap = document.querySelector('.shared-bg-wrap');
+  if (sharedWrap) {
+    var s4H = 636 * ratio;
+    var s5H = Math.min(1785 * ratio, 1785);
+    var ftH = Math.min(1408 * ratio, 1408);
+    sharedWrap.style.minHeight = (s4H + s5H + ftH) + 'px';
+  }
 };
 updateVwScale();
 window.addEventListener('resize', updateVwScale);

@@ -494,12 +494,17 @@ a { color: inherit; text-decoration: none; }
   transform: translateX(-50%) scale(var(--vw-scale, 1));
   transform-origin: top center;
 }
-/* Scene1~4 的 canvas 使用 --hero-scale（无上限缩放） */
+/* Scene1~4 的 canvas 使用 --hero-scale（无上限缩放），与首屏保持一致 */
 #scene1 .scene-canvas,
 #scene2 .scene-canvas,
 #scene3 .scene-canvas,
 #scene4 .scene-canvas {
   transform: translateX(-50%) scale(var(--hero-scale, 1));
+}
+/* Scene5 + Footer 的 canvas 使用 --vw-scale（不超过 1） */
+#scene5 .scene-canvas,
+.site-footer .scene-canvas {
+  transform: translateX(-50%) scale(var(--vw-scale, 1));
 }
 /* 深色 / 浅色主题 */
 .scene--dark {

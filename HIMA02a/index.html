@@ -9,7 +9,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20260429t" />
+  <link rel="stylesheet" href="style.css?v=20260429w" />
+  <!-- 提前计算缩放比例，避免页面加载时闪烁 -->
+  <script>
+    (function(){
+      var vw = window.innerWidth;
+      var s = Math.min(vw / 1920, 1);
+      var hs = vw / 1920;
+      document.documentElement.style.setProperty('--vw-scale', s);
+      document.documentElement.style.setProperty('--hero-scale', hs);
+    })();
+  </script>
 </head>
 <body>
 
@@ -524,6 +534,6 @@
 </footer>
 </div><!-- /.shared-bg-wrap -->
 
-<script src="app.js?v=20260429v"></script>
+<script src="app.js?v=20260429w"></script>
 </body>
 </html>
