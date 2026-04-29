@@ -3,19 +3,21 @@
    ========================================================= */
 
 // ========= 0. 动态计算全局缩放比例 --vw-scale =========
-// Scene4/5/Footer：Math.min(vw/1920, 1)，保持上一版效果（不超过设计稿尺寸）
-// Hero + Scene1~3：vw/1920（不设上限），实现自适应浏览器分辨率
+// Scene5/Footer：Math.min(vw/1920, 1)，保持上一版效果（不超过设计稿尺寸）
+// Hero + Scene1~4：vw/1920（不设上限），实现自适应浏览器分辨率
 const updateVwScale = () => {
   const vw = window.innerWidth;
-  const scale = Math.min(vw / 1920, 1);       // scene4/5/footer 用（不超 1）
-  const heroScale = vw / 1920;                 // Hero + scene1~3 用（无上限）
+  const scale = Math.min(vw / 1920, 1);       // scene5/footer 用（不超 1）
+  const heroScale = vw / 1920;                 // Hero + scene1~4 用（无上限）
   document.documentElement.style.setProperty('--vw-scale', scale);
   document.documentElement.style.setProperty('--hero-scale', heroScale);
 
-  // Hero 首屏：高度 = 1006 × heroScale
+  // Hero 首屏：高度 = max(1006 × heroScale, 视口高度)，确保填满浏览器窗口
   const hero = document.querySelector('.hero');
   if (hero) {
-    hero.style.height = (1006 * heroScale) + 'px';
+    const designH = 1006 * heroScale;
+    const vh = window.innerHeight;
+    hero.style.height = Math.max(designH, vh) + 'px';
   }
 
   // Hero canvas 使用 heroScale 缩放
@@ -24,11 +26,12 @@ const updateVwScale = () => {
     heroCanvas.style.transform = 'translateX(-50%) scale(' + heroScale + ')';
   }
 
-  // Scene1~3 也使用 heroScale 动态设置高度
+  // Scene1~4 也使用 heroScale 动态设置高度
   const adaptiveSections = [
     { id: 'scene1', designH: 941 },
     { id: 'scene2', designH: 962 },
     { id: 'scene3', designH: 984 },
+    { id: 'scene4', designH: 636 },
   ];
   adaptiveSections.forEach(function(cfg) {
     var sec = document.getElementById(cfg.id);
