@@ -118,14 +118,16 @@ a { color: inherit; text-decoration: none; }
   100% { opacity: .55; transform: scale(1)    rotate(360deg); }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 + 水平居中 */
+/* 1920×1006 固定画布 + 等比缩放 + 水平居中
+   注意：scale() 需要无量纲数，calc(100vw / 1920) 得到的是带单位的长度值，
+   在大多数浏览器中会被忽略！必须用 JS 设置 --vw-scale CSS 变量。 */
 .hero-canvas {
   position: absolute;
   top: 0;
   left: 50%;
   width: 1920px;
   height: 1006px;
-  transform: translateX(-50%) scale(calc(100vw / 1920));
+  transform: translateX(-50%) scale(var(--vw-scale, 1));
   transform-origin: top center;
   z-index: 2;
 }
@@ -491,9 +493,10 @@ a { color: inherit; text-decoration: none; }
   width: 1920px;
   /* 关键：先 translateX(-50%) 把 1920px 画布左移一半，再缩放；
      transform-origin: top center 保证缩放中心在画布顶部中点，
-     这样缩放后内容始终水平居中 */
+     这样缩放后内容始终水平居中。
+     --vw-scale 由 JS 动态计算（scale 需要无量纲数，纯 CSS calc 做不到） */
   left: 50%;
-  transform: translateX(-50%) scale(calc(100vw / 1920));
+  transform: translateX(-50%) scale(var(--vw-scale, 1));
   transform-origin: top center;
 }
 /* 深色 / 浅色主题 */

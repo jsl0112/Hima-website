@@ -2,6 +2,16 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
+// ========= 0. 动态计算全局缩放比例 --vw-scale =========
+// CSS 的 calc(100vw / 1920) 返回的是带单位的长度值（如 0.75px），
+// 而 transform: scale() 需要无量纲数字（如 0.75），因此必须用 JS 设置。
+const updateVwScale = () => {
+  const scale = Math.min(window.innerWidth / 1920, 1);
+  document.documentElement.style.setProperty('--vw-scale', scale);
+};
+updateVwScale();
+window.addEventListener('resize', updateVwScale);
+
 // ========= 1. Stats 数字计数动画（进入视口时触发） =========
 const countNums = document.querySelectorAll('.stat-num');
 const animateCount = (el) => {
