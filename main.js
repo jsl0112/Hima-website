@@ -5,11 +5,35 @@
   const stage = document.getElementById('stage');
 
   /* --------------------------------------------------------
-   * 1) 自适应缩放（居中）
+   * 0) 关键图片预加载：在 full-frame.png 解码完成前，
+   *    延迟启用滚动 reveal 观察，避免"图片还没到 → 已触发 in
+   *    → 滚动时出现空白/割裂"的问题
    * ------------------------------------------------------ */
+  const criticalImageReady = new Promise((resolve) => {
+    const img = new Image();
+    img.onload = img.onerror = () => {
+      // 再尝试 decode 一次，确保渲染前像素已就绪
+      if (img.decode) {
+        img.decode().then(resolve).catch(resolve);
+      } else {
+        resolve();
+      }
+    };
+    img.src = 'assets/full-frame.png';
+  });
+  // 标记 body，CSS 可用于控制整体过渡
+  criticalImageReady.then(() => {
+    document.body.classList.add('bg-ready');
+  });
+
+
+  /* --------------------------------------------------------
+   * 1) 自适应缩放（居中），大屏额外缩小 8% 避免过大
+   * ------------------------------------------------------ */
+  const SHRINK = 0.92;          /* 整体缩放因子，1 = 原尺寸 */
   function applyScale() {
     const vw = window.innerWidth;
-    const scale = vw / DESIGN_W;
+    const scale = (vw / DESIGN_W) * SHRINK;
     document.documentElement.style.setProperty('--scale', String(scale));
     viewport.style.height = (DESIGN_H * scale) + 'px';
   }
@@ -246,6 +270,8 @@
    * 4.1) 底图分段"从下而上"渐变浮现
    *      每个 .base-seg.scroll-reveal 进入视口时加 .in，
    *      底图对应 y 区间从下方上滑 + 淡入
+   *      ⚠️ 关键：必须等 full-frame.png 加载完毕再开启观察，
+   *      否则滚动到某段时图片尚未到位，会出现空白割裂。
    * ------------------------------------------------------ */
   const segIO = new IntersectionObserver(
     (entries) => {
@@ -264,5 +290,9 @@
     },
     { threshold: 0, rootMargin: '0px 0px -15% 0px' }
   );
-  document.querySelectorAll('.base-seg.scroll-reveal').forEach((el) => segIO.observe(el));
+  // 等底图大图加载完再开始观察分段 —— 此前分段保持 opacity:0，
+  // 避免图片未到位就开始动画，导致视觉上的"割裂/跳变"
+  criticalImageReady.then(() => {
+    document.querySelectorAll('.base-seg.scroll-reveal').forEach((el) => segIO.observe(el));
+  });
 })();

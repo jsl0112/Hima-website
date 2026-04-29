@@ -243,6 +243,58 @@ html, body {
 }
 
 /* 合作咨询按钮：纯色蓝，hover 提亮（不再渐变） */
+/* ============================================================
+   语言切换按钮（位于 cta-btn 左侧，图标 + EN 文本）
+   ============================================================ */
+.lang-switch {
+  position: absolute;
+  left: 1900px;        /* 2040 - 间距 - 宽度 ≈ 1900 */
+  top: 13px;
+  height: 44px;
+  padding: 0 14px 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: #ffffff;
+  font-family: "PingFang SC", "Noto Sans", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: .5px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity .25s ease,
+              transform .28s cubic-bezier(.2,.7,.2,1);
+}
+.lang-switch .lang-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: none;
+  transition: filter .25s ease;
+}
+.lang-switch .lang-text {
+  line-height: 1;
+  font-weight: 500;
+  transition: color .25s ease;
+}
+.lang-switch:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+}
+.lang-switch:hover .lang-icon {
+  filter: drop-shadow(0 0 6px rgba(31, 84, 255, .6)) brightness(1.15);
+}
+.lang-switch:hover .lang-text {
+  color: rgba(255, 255, 255, .85);
+}
+.lang-switch:active {
+  transform: translateY(0);
+  opacity: .75;
+}
+
 .cta-btn {
   position: absolute;
   left: 2040px;
@@ -368,24 +420,68 @@ html, body {
   100% { transform: translate(-3%, -4%)  scale(1);    }
 }
 
-/* 扫光：白色反射，保留用以增强"流动"的速度感 */
+/* 扫光改为随机流动光斑（非线性滑动），多个光斑以不同速度/方向漂浮 */
 .title-sweep {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    110deg,
-    transparent 0%,
-    transparent 42%,
-    rgba(255,255,255,.9) 50%,
-    transparent 58%,
-    transparent 100%
-  );
-  background-size: 220% 100%;
-  background-position: -60% 50%;
-  animation: titleSweep 4.8s linear infinite;
-  mix-blend-mode: screen;
+  overflow: hidden;
   -webkit-mask: url("assets/title-main.png") center / 100% 100% no-repeat;
           mask: url("assets/title-main.png") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+.title-sweep::before,
+.title-sweep::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+}
+.title-sweep::before {
+  background:
+    radial-gradient(40% 50% at 30% 50%, rgba(255,255,255,.7) 0%, transparent 70%),
+    radial-gradient(30% 40% at 75% 45%, rgba(255,255,255,.5) 0%, transparent 65%);
+  animation: sweepFloat1 7s ease-in-out infinite alternate;
+}
+.title-sweep::after {
+  background:
+    radial-gradient(35% 45% at 60% 55%, rgba(255,255,255,.6) 0%, transparent 68%),
+    radial-gradient(25% 35% at 20% 70%, rgba(255,255,255,.4) 0%, transparent 65%);
+  animation: sweepFloat2 9s ease-in-out infinite alternate;
+}
+
+/* 随机流动关键帧 —— 非线性漂浮轨迹 */
+@keyframes sweepFloat1 {
+  0%   { transform: translate(0%, 0%) scale(1); opacity: .6; }
+  25%  { transform: translate(12%, -8%) scale(1.1); opacity: .8; }
+  50%  { transform: translate(-5%, 6%) scale(.95); opacity: .5; }
+  75%  { transform: translate(8%, 4%) scale(1.05); opacity: .75; }
+  100% { transform: translate(-8%, -5%) scale(1); opacity: .65; }
+}
+@keyframes sweepFloat2 {
+  0%   { transform: translate(5%, 3%) scale(1.05); opacity: .5; }
+  30%  { transform: translate(-10%, -4%) scale(.92); opacity: .7; }
+  60%  { transform: translate(6%, 8%) scale(1.08); opacity: .55; }
+  100% { transform: translate(-6%, -6%) scale(1); opacity: .6; }
+}
+
+/* "一站式"蓝色高亮层 —— 用 clip-path 精确裁剪到对应字符区域
+   标题第一行"懂您的一站式海外游戏"共 10 个字，"一站式"为第 4-6 个字
+   水平：left = 3/10 = 30%，right = 4/10 = 40%
+   精确对齐字符边界，不留额外余量 */
+.title-blue {
+  position: absolute;
+  inset: 0;                  /* 与容器完全对齐，不外扩，避免 mask 错位 */
+  background: #045CFF;
+  -webkit-mask: url("assets/title-main.png") center / 100% 100% no-repeat;
+          mask: url("assets/title-main.png") center / 100% 100% no-repeat;
+  /* clip-path 精确裁剪"一站式"区域：
+     top:    0%   （从顶部开始）
+     right:  40%  （右侧裁掉"海外游戏"4字 = 4/10 = 40%）
+     bottom: 50%  （只保留第一行）
+     left:   30%  （左侧裁掉"懂您的"3字 = 3/10 = 30%）  */
+  clip-path: inset(0% 40% 50% 30%);
+  pointer-events: none;
 }
 .title-glow {
   position: absolute;
@@ -397,19 +493,31 @@ html, body {
   animation: titleGlow 6s ease-in-out infinite alternate;
   pointer-events: none;
 }
-@keyframes titleSweep {
-  0%   { background-position: -60% 50%; }
-  100% { background-position: 160% 50%; }
-}
+
 @keyframes titleGlow {
   0%   { opacity: .55; transform: translateX(-12px); }
   100% { opacity: .9;  transform: translateX(12px); }
 }
 
 /* ============================================================
-   社交图标
+   头部数字组（从底图中抠出的前景层，滚动整组渐变）
    ============================================================ */
-.social-hit { position: absolute; }
+.stats-group {
+  position: absolute;
+  pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+  z-index: 3;
+}
+
+/* ============================================================
+   社交图标组：整组前景，滚动整组渐变
+   ============================================================ */
+.social-group {
+  position: absolute;
+  image-rendering: -webkit-optimize-contrast;
+  z-index: 3;
+}
+.social-group .sp,
 .social-hit .sp {
   position: absolute;
   top: 0;
@@ -420,6 +528,7 @@ html, body {
   cursor: pointer;
   transition: transform .25s ease, filter .25s ease, box-shadow .25s ease;
 }
+.social-group .sp:hover,
 .social-hit .sp:hover {
   transform: translateY(-4px) scale(1.12);
   filter: drop-shadow(0 0 10px rgba(120,180,255,.7));
@@ -978,10 +1087,11 @@ html, body {
   justify-content: center;
   filter: drop-shadow(0 2px 6px rgba(20, 51, 255, .45));
 }
-.m1c-check svg {
+.m1c-check img {
   width: 100%;
   height: 100%;
   display: block;
+  object-fit: contain;
 }
 
 /* 右侧产品截图 */

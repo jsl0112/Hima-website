@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>黑马 CHIMA · 海外游戏运营平台</title>
+    <!-- 预加载关键大图，避免滚动时分段底图延迟出现造成割裂 -->
+    <link rel="preload" as="image" href="assets/full-frame.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/title-main.png" fetchpriority="high" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -47,7 +50,12 @@
           </a>
         </nav>
 
-        <!-- 右侧合作咨询按钮 -->
+        <!-- 右侧：语言切换 + 合作咨询按钮 -->
+        <button class="lang-switch" type="button" aria-label="切换语言">
+          <img class="lang-icon" src="assets/dq.svg" alt="" draggable="false" />
+          <span class="lang-text">EN</span>
+        </button>
+
         <a class="cta-btn" href="#contact">
           <svg class="cta-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
@@ -81,7 +89,7 @@
 
 
         <!-- 3. 大标题：文字 PNG 作 mask，多层蓝白随机流动渐变 -->
-        <div class="title-wrap reveal fx-up" style="left:814px;top:171px;width:933px;height:224px;">
+        <div class="title-wrap reveal" style="left:814px;top:171px;width:933px;height:224px;">
           <div class="title-cover"></div>
           <div class="title-glow"></div>
           <div class="title-gradient">
@@ -90,14 +98,31 @@
             <div class="tg-layer tg-l3"></div>
             <div class="tg-layer tg-l4"></div>
           </div>
+          <div class="title-blue"></div>
           <div class="title-sweep"></div>
         </div>
 
-        <!-- 4. 数字组 -->
-        <div class="reveal fx-up static-layer" style="left:746px;top:1130px;width:1069px;height:75px;"></div>
+        <!-- 4. 数字组：独立前景层，滚动到视口时整组渐变上浮 -->
+        <!-- 用黑色遮罩盖住底图原数字区域 -->
+        <div class="deco-mask" style="left:746px;top:1115px;width:1069px;height:110px;z-index:1;"></div>
+        <!-- 数字前景：从 full-frame 同坐标区域裁出 -->
+        <div class="stats-group reveal fx-up"
+             style="left:746px;top:1130px;width:1069px;height:75px;
+                    background-image:url('assets/full-frame.png');
+                    background-size:2560px 10007px;
+                    background-position:-746px -1130px;
+                    background-repeat:no-repeat;"></div>
 
-        <!-- 5. 社交图标组 -->
-        <div class="social-hit reveal fx-up" style="left:967px;top:2331px;width:623px;height:48px;">
+        <!-- 5. 社交图标组：独立前景层，整组渐变上浮 -->
+        <!-- 用黑色遮罩盖住底图原图标区域 -->
+        <div class="deco-mask" style="left:955px;top:2321px;width:647px;height:68px;z-index:1;"></div>
+        <!-- 社交图标前景：从 full-frame 同坐标区域裁出 + 点击热区 -->
+        <div class="social-group reveal fx-up"
+             style="left:967px;top:2331px;width:623px;height:48px;
+                    background-image:url('assets/full-frame.png');
+                    background-size:2560px 10007px;
+                    background-position:-967px -2331px;
+                    background-repeat:no-repeat;">
           <a class="sp" href="#" style="left:0"></a>
           <a class="sp" href="#" style="left:85px"></a>
           <a class="sp" href="#" style="left:170px"></a>
@@ -244,37 +269,25 @@
             <ul class="m1c-list">
               <li>
                 <span class="m1c-check" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
-                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                  <img src="assets/check-square.png" alt="" />
                 </span>
                 <span>支持图文、视频、Reel 多格式</span>
               </li>
               <li>
                 <span class="m1c-check" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
-                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                  <img src="assets/check-square.png" alt="" />
                 </span>
                 <span>AI 翻译 + 多语言一键适配</span>
               </li>
               <li>
                 <span class="m1c-check" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
-                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                  <img src="assets/check-square.png" alt="" />
                 </span>
                 <span>定时 / 定向发布，全球多时区精准覆盖</span>
               </li>
               <li>
                 <span class="m1c-check" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
-                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                  <img src="assets/check-square.png" alt="" />
                 </span>
                 <span>实时预览各平台展示效果</span>
               </li>

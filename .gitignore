@@ -2,6 +2,7 @@
 .DS_Store
 Thumbs.db
 *.log
+*.err
 node_modules/
 
 # Figma 设计稿数据（不需要上传到网站）
