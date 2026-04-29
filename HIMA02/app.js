@@ -3,29 +3,25 @@
    ========================================================= */
 
 // ========= 0. 动态计算全局缩放比例 --vw-scale =========
-// 以 1920px 设计稿为基准，按视口宽度等比缩放（不设上限，超宽屏也放大）
+// 其他 section：Math.min(vw/1920, 1)，保持上一版效果（不超过设计稿尺寸）
+// Hero 首屏：vw/1920（不设上限），实现自适应浏览器分辨率
 const updateVwScale = () => {
-  const scale = window.innerWidth / 1920;
+  const vw = window.innerWidth;
+  const scale = Math.min(vw / 1920, 1);       // 其他 section 用（不超 1）
+  const heroScale = vw / 1920;                 // Hero 首屏用（无上限）
   document.documentElement.style.setProperty('--vw-scale', scale);
+  document.documentElement.style.setProperty('--hero-scale', heroScale);
 
-  // 同时更新每个 section 的实际渲染高度 = 原始画布高度 × scale
-  document.querySelectorAll('.scene-canvas, .hero-canvas').forEach(canvas => {
-    const rawH = parseFloat(canvas.style.height);
-    if (!rawH) return;
-    const parent = canvas.closest('.scene, .hero, .site-footer');
-    if (parent) {
-      parent.style.height = (rawH * scale) + 'px';
-    }
-  });
+  // Hero 首屏：高度 = 原始画布高度 1006 × heroScale
+  const hero = document.querySelector('.hero');
+  if (hero) {
+    hero.style.height = (1006 * heroScale) + 'px';
+  }
 
-  // shared-bg-wrap 的总高度 = 内部所有 section 高度之和
-  const sharedWrap = document.querySelector('.shared-bg-wrap');
-  if (sharedWrap) {
-    let totalH = 0;
-    sharedWrap.querySelectorAll('.scene, .site-footer').forEach(sec => {
-      totalH += sec.getBoundingClientRect().height;
-    });
-    sharedWrap.style.height = totalH + 'px';
+  // Hero canvas 使用 heroScale 缩放
+  const heroCanvas = document.querySelector('.hero-canvas');
+  if (heroCanvas) {
+    heroCanvas.style.transform = 'translateX(-50%) scale(' + heroScale + ')';
   }
 };
 updateVwScale();

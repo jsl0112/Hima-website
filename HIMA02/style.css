@@ -59,8 +59,9 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   max-width: 100vw;
   overflow: hidden;
-  /* 高度由 JS 根据 --vw-scale 动态设置，下面是首次渲染前的 fallback */
+  /* Hero 首屏自适应：高度由 JS 动态设置，CSS fallback 兜底 */
   height: calc(100vw * 1006 / 1920);
+  min-height: 480px;
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
 }
@@ -126,7 +127,7 @@ a { color: inherit; text-decoration: none; }
   left: 50%;
   width: 1920px;
   height: 1006px;
-  transform: translateX(-50%) scale(var(--vw-scale, 1));
+  transform: translateX(-50%) scale(var(--hero-scale, 1));
   transform-origin: top center;
   z-index: 2;
 }
@@ -513,13 +514,13 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度（由 JS 根据 --vw-scale 精确设置，下面是 CSS fallback） */
-#scene1 { height: calc(100vw * 941 / 1920); }
-#scene2 { height: calc(100vw * 962 / 1920); }
-#scene3 { height: calc(100vw * 984 / 1920); }
-#scene4 { height: calc(100vw * 636 / 1920); }
-#scene5 { height: calc(100vw * 1640 / 1920); }
-.site-footer { height: calc(100vw * 1408 / 1920); }
+/* 动态计算 section 高度 — 其他 section 保持 max-height（不超过设计稿尺寸） */
+#scene1 { height: calc(100vw * 941 / 1920); max-height: 941px; }
+#scene2 { height: calc(100vw * 962 / 1920); max-height: 962px; }
+#scene3 { height: calc(100vw * 984 / 1920); max-height: 984px; }
+#scene4 { height: calc(100vw * 636 / 1920); max-height: 636px; }
+#scene5 { height: calc(100vw * 1640 / 1920); max-height: 1640px; }
+.site-footer { height: calc(100vw * 1408 / 1920); max-height: 1408px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
