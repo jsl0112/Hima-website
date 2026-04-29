@@ -499,10 +499,11 @@ a { color: inherit; text-decoration: none; }
   transform: translateX(-50%) scale(var(--vw-scale, 1));
   transform-origin: top center;
 }
-/* Scene1~3 的 canvas 使用 --hero-scale（无上限缩放），与首屏保持一致 */
+/* Scene1~4 的 canvas 使用 --hero-scale（无上限缩放），与首屏保持一致 */
 #scene1 .scene-canvas,
 #scene2 .scene-canvas,
-#scene3 .scene-canvas {
+#scene3 .scene-canvas,
+#scene4 .scene-canvas {
   transform: translateX(-50%) scale(var(--hero-scale, 1));
 }
 /* 深色 / 浅色主题 */
@@ -1376,7 +1377,7 @@ a { color: inherit; text-decoration: none; }
 /* 私信营销 + 合作游戏 + Footer 共用背景图 */
 .shared-bg-wrap {
   position: relative;
-  background: url('assets/第五屏背景.png') top center / 100% 100% no-repeat;
+  background: url('assets/第五屏背景.png') top center / cover no-repeat;
   overflow: hidden;           /* 防止水平溢出 */
   max-width: 100vw;
 }
