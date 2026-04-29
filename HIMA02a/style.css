@@ -117,14 +117,17 @@ a { color: inherit; text-decoration: none; }
   100% { opacity: .55; transform: scale(1)    rotate(360deg); }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 */
+/* 1920×1006 固定画布 + 等比缩放 + 水平居中
+   注意：scale() 需要无量纲数，calc(100vw / 1920) 得到的是带单位的长度值，
+   在大多数浏览器中会被忽略！必须用 JS 设置 --hero-scale CSS 变量。 */
 .hero-canvas {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 50%;
   width: 1920px;
   height: 1006px;
-  transform-origin: top left;
-  transform: scale(calc(100vw / 1920));
+  transform: translateX(-50%) scale(var(--hero-scale, 1));
+  transform-origin: top center;
   z-index: 2;
 }
 
@@ -482,12 +485,21 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   width: 100%;
   overflow: hidden;
+  max-width: 100vw;
 }
 .scene-canvas {
   position: relative;
   width: 1920px;
-  transform-origin: top left;
-  transform: scale(calc(100vw / 1920));
+  left: 50%;
+  transform: translateX(-50%) scale(var(--vw-scale, 1));
+  transform-origin: top center;
+}
+/* Scene1~4 的 canvas 使用 --hero-scale（无上限缩放） */
+#scene1 .scene-canvas,
+#scene2 .scene-canvas,
+#scene3 .scene-canvas,
+#scene4 .scene-canvas {
+  transform: translateX(-50%) scale(var(--hero-scale, 1));
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -504,13 +516,13 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度（canvas 高 × 100vw/1920） */
+/* 动态计算 section 高度 */
 #scene1 { height: calc(100vw * 941 / 1920); }
 #scene2 { height: calc(100vw * 962 / 1920); }
 #scene3 { height: calc(100vw * 984 / 1920); }
 #scene4 { height: calc(100vw * 636 / 1920); }
-#scene5 { height: calc(100vw * 1785 / 1920); }
-.site-footer { height: calc(100vw * 1408 / 1920); }
+#scene5 { height: calc(100vw * 1785 / 1920); max-height: 1785px; }
+.site-footer { height: calc(100vw * 1408 / 1920); max-height: 1408px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
@@ -1388,7 +1400,9 @@ a { color: inherit; text-decoration: none; }
 /* 私信营销 + 合作游戏 + Footer 共用背景图 */
 .shared-bg-wrap {
   position: relative;
-  background: url('assets/第五屏背景.png') top center / 100% 100% no-repeat;
+  background: url('assets/第五屏背景.png') top center / cover no-repeat;
+  overflow: hidden;
+  max-width: 100vw;
 }
 .shared-bg-wrap .scene--light {
   background: transparent;
@@ -1399,6 +1413,7 @@ a { color: inherit; text-decoration: none; }
 .site-footer {
   position: relative;
   width: 100%;
+  max-width: 100vw;
   overflow: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 50% 30%, #2752c2 0%, #0c2274 45%, #040b34 100%);
