@@ -494,14 +494,11 @@ a { color: inherit; text-decoration: none; }
   transform: translateX(-50%) scale(var(--vw-scale, 1));
   transform-origin: top center;
 }
-/* Scene1~4 的 canvas 使用 --hero-scale（无上限缩放），与首屏保持一致 */
+/* 所有屏幕的 scene-canvas 统一使用 --vw-scale 等比缩放（= vw/1920），居中显示 */
 #scene1 .scene-canvas,
 #scene2 .scene-canvas,
 #scene3 .scene-canvas,
-#scene4 .scene-canvas {
-  transform: translateX(-50%) scale(var(--hero-scale, 1));
-}
-/* Scene5 + Footer 的 canvas 使用 --vw-scale（不超过 1） */
+#scene4 .scene-canvas,
 #scene5 .scene-canvas,
 .site-footer .scene-canvas {
   transform: translateX(-50%) scale(var(--vw-scale, 1));
@@ -526,8 +523,8 @@ a { color: inherit; text-decoration: none; }
 #scene2 { height: calc(100vw * 962 / 1920); }
 #scene3 { height: calc(100vw * 984 / 1920); }
 #scene4 { height: calc(100vw * 636 / 1920); }
-#scene5 { height: calc(100vw * 1785 / 1920); max-height: 1785px; }
-.site-footer { height: calc(100vw * 1408 / 1920); max-height: 1408px; }
+#scene5 { height: calc(100vw * 1785 / 1920); }
+.site-footer { height: calc(100vw * 1408 / 1920); }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {

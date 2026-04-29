@@ -3,16 +3,16 @@
    ========================================================= */
 
 // ========= 0. 动态计算全局缩放比例 + 每一屏高度适配 =========
-// 所有屏幕统一采用 vw/1920 缩放，居中显示
-// 这样无论窗口多宽多窄，内容都按比例缩放且水平居中
+// 核心策略：所有屏幕统一采用 ratio = vw / 1920 等比缩放
+// 窄屏（<1920）缩小，宽屏（>1920）放大，所有内容水平居中
+// 这样在任何分辨率下，版面始终居中，内容大小也跟随适配
 const updateVwScale = () => {
   const vw = window.innerWidth;
-  const ratio = vw / 1920;                     // 统一缩放比
-  const clampedRatio = Math.min(ratio, 1);     // scene5/footer 用（不超 1）
-  document.documentElement.style.setProperty('--vw-scale', clampedRatio);
+  const ratio = vw / 1920;                     // 统一缩放比（所有屏幕共用）
+  document.documentElement.style.setProperty('--vw-scale', ratio);
   document.documentElement.style.setProperty('--hero-scale', ratio);
 
-  // === Hero 首屏 ===
+  // === Hero 首屏：高度 = max(设计稿高度 × ratio, 视口高度)，确保填满视口 ===
   const hero = document.querySelector('.hero');
   if (hero) {
     const designH = 1006 * ratio;
@@ -24,43 +24,33 @@ const updateVwScale = () => {
     heroCanvas.style.transform = 'translateX(-50%) scale(' + ratio + ')';
   }
 
-  // === Scene1~4：使用 ratio（无上限），高度由 JS 动态设置 ===
-  var fullScaleSections = [
+  // === Scene1~5 + Footer：统一使用 ratio，高度 = 设计稿高度 × ratio ===
+  var allSections = [
     { id: 'scene1', designH: 941 },
     { id: 'scene2', designH: 962 },
     { id: 'scene3', designH: 984 },
     { id: 'scene4', designH: 636 },
+    { id: 'scene5', designH: 1785 },
   ];
-  fullScaleSections.forEach(function(cfg) {
+  allSections.forEach(function(cfg) {
     var sec = document.getElementById(cfg.id);
     if (sec) {
       sec.style.height = (cfg.designH * ratio) + 'px';
     }
   });
 
-  // === Scene5 + Footer：使用 clampedRatio（不超过 1），高度不超设计稿 ===
-  var clampedSections = [
-    { id: 'scene5', designH: 1785 },
-  ];
-  clampedSections.forEach(function(cfg) {
-    var sec = document.getElementById(cfg.id);
-    if (sec) {
-      sec.style.height = Math.min(cfg.designH * ratio, cfg.designH) + 'px';
-    }
-  });
-
   // Footer 高度
   var footer = document.querySelector('.site-footer');
   if (footer) {
-    footer.style.height = Math.min(1408 * ratio, 1408) + 'px';
+    footer.style.height = (1408 * ratio) + 'px';
   }
 
   // === shared-bg-wrap 背景高度：Scene4 + Scene5 + Footer 总和 ===
   var sharedWrap = document.querySelector('.shared-bg-wrap');
   if (sharedWrap) {
     var s4H = 636 * ratio;
-    var s5H = Math.min(1785 * ratio, 1785);
-    var ftH = Math.min(1408 * ratio, 1408);
+    var s5H = 1785 * ratio;
+    var ftH = 1408 * ratio;
     sharedWrap.style.minHeight = (s4H + s5H + ftH) + 'px';
   }
 };
