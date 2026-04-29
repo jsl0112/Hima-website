@@ -1297,7 +1297,7 @@ a { color: inherit; text-decoration: none; }
 .games-wall { position: absolute; }
 .game-card {
   position: absolute;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
   box-shadow: none;
@@ -1349,18 +1349,18 @@ a { color: inherit; text-decoration: none; }
 }
 .game-name {
   position: absolute;
-  left: 22px; bottom: 18px; right: 22px;
+  left: 26px; bottom: 22px; right: 26px;
   color: #fff;
   font-family: 'MFHaoYing', 'PingFang SC', sans-serif;
-  font-size: 22px;
+  font-size: 26px;
   line-height: 1.15;
   letter-spacing: -0.02em;
   font-weight: 400;
   text-shadow: 0 4px 14px rgba(0,0,0,.6);
   z-index: 2;
 }
-.game-name--lg { font-size: 30px; font-weight: 600; letter-spacing: .06em; line-height: 1; }
-.game-name--sm { font-size: 16px; letter-spacing: .08em; bottom: 14px; font-weight: 500; }
+.game-name--lg { font-size: 34px; font-weight: 600; letter-spacing: .06em; line-height: 1; }
+.game-name--sm { font-size: 18px; letter-spacing: .08em; bottom: 16px; font-weight: 500; }
 
 .game-card--hero .game-hero-logo {
   position: absolute;
