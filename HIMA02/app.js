@@ -3,11 +3,30 @@
    ========================================================= */
 
 // ========= 0. 动态计算全局缩放比例 --vw-scale =========
-// CSS 的 calc(100vw / 1920) 返回的是带单位的长度值（如 0.75px），
-// 而 transform: scale() 需要无量纲数字（如 0.75），因此必须用 JS 设置。
+// 以 1920px 设计稿为基准，按视口宽度等比缩放（不设上限，超宽屏也放大）
 const updateVwScale = () => {
-  const scale = Math.min(window.innerWidth / 1920, 1);
+  const scale = window.innerWidth / 1920;
   document.documentElement.style.setProperty('--vw-scale', scale);
+
+  // 同时更新每个 section 的实际渲染高度 = 原始画布高度 × scale
+  document.querySelectorAll('.scene-canvas, .hero-canvas').forEach(canvas => {
+    const rawH = parseFloat(canvas.style.height);
+    if (!rawH) return;
+    const parent = canvas.closest('.scene, .hero, .site-footer');
+    if (parent) {
+      parent.style.height = (rawH * scale) + 'px';
+    }
+  });
+
+  // shared-bg-wrap 的总高度 = 内部所有 section 高度之和
+  const sharedWrap = document.querySelector('.shared-bg-wrap');
+  if (sharedWrap) {
+    let totalH = 0;
+    sharedWrap.querySelectorAll('.scene, .site-footer').forEach(sec => {
+      totalH += sec.getBoundingClientRect().height;
+    });
+    sharedWrap.style.height = totalH + 'px';
+  }
 };
 updateVwScale();
 window.addEventListener('resize', updateVwScale);
