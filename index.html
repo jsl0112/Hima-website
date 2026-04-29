@@ -1,18 +1,361 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hima Website</title>
-  <link rel="stylesheet" href="./css/style.css" />
-</head>
-<body>
-  <main class="hero">
-    <section class="card">
-      <h1>Hima Website</h1>
-      <p>这是我的官网页面，网站正在建设中。</p>
-    </section>
-  </main>
-  <script src="./js/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>黑马 CHIMA · 海外游戏运营平台</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- 顶栏（fixed，始终贴浏览器视口顶部） -->
+    <header class="topbar">
+      <!-- 深色底条覆盖 -->
+      <div class="topbar-bg"></div>
+
+      <!-- 内部按 2560 原始设计布局，整体用 scale 适配视口宽度 -->
+      <div class="topbar-inner">
+        <!-- 左侧 Logo -->
+        <a class="brand" href="#top" aria-label="HIMA">
+          <img class="brand-logo" src="assets/logo.png" alt="HIMA" draggable="false" />
+        </a>
+
+        <!-- 中部导航 tab -->
+        <nav class="nav">
+          <a class="nav-tab" data-target="sec-1" href="#sec-1">
+            <svg class="nav-star" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6.5 0L8.25559 4.74441L13 6.5L8.25559 8.25559L6.5 13L4.74441 8.25559L0 6.5L4.74441 4.74441L6.5 0Z" fill="#1F54FF"/>
+            </svg>
+            <span>社媒管理</span>
+          </a>
+          <a class="nav-tab" data-target="sec-2" href="#sec-2">
+            <svg class="nav-star" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6.5 0L8.25559 4.74441L13 6.5L8.25559 8.25559L6.5 13L4.74441 8.25559L0 6.5L4.74441 4.74441L6.5 0Z" fill="#1F54FF"/>
+            </svg>
+            <span>社区运营</span>
+          </a>
+          <a class="nav-tab" data-target="sec-3" href="#sec-3">
+            <svg class="nav-star" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6.5 0L8.25559 4.74441L13 6.5L8.25559 8.25559L6.5 13L4.74441 8.25559L0 6.5L4.74441 4.74441L6.5 0Z" fill="#1F54FF"/>
+            </svg>
+            <span>直播运营</span>
+          </a>
+          <a class="nav-tab" data-target="sec-4" href="#sec-4">
+            <svg class="nav-star" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6.5 0L8.25559 4.74441L13 6.5L8.25559 8.25559L6.5 13L4.74441 8.25559L0 6.5L4.74441 4.74441L6.5 0Z" fill="#1F54FF"/>
+            </svg>
+            <span>私信营销</span>
+          </a>
+        </nav>
+
+        <!-- 右侧合作咨询按钮 -->
+        <a class="cta-btn" href="#contact">
+          <svg class="cta-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
+                  stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>合作咨询</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="viewport">
+      <div class="stage" id="stage">
+        <!-- 1. 整帧设计底图（拆成若干段，每段独立"从下而上"渐变浮现） -->
+        <!-- 段1：顶部 0-1100（标题 + 数字组背景），首屏直接显示 -->
+        <div class="base-seg seg-fixed" style="--seg-top:0px;--seg-bot:1100px;"></div>
+        <!-- 段2：01 社媒管理 1100-2620 -->
+        <div class="base-seg scroll-reveal" style="--seg-top:1100px;--seg-bot:2620px;"></div>
+        <!-- 段3：02 社区运营（视频区，到 4007） 2620-4007 -->
+        <div class="base-seg scroll-reveal" style="--seg-top:2620px;--seg-bot:4007px;"></div>
+        <!-- 段4：02→03 过渡 + 03 直播运营完整背景 4007-5400 -->
+        <div class="base-seg scroll-reveal" style="--seg-top:4007px;--seg-bot:5400px;"></div>
+        <!-- 段5：04 私信营销 5400-6700 -->
+        <div class="base-seg scroll-reveal" style="--seg-top:5400px;--seg-bot:6700px;"></div>
+        <!-- 段6：05 合作游戏 6700-8500 -->
+        <div class="base-seg scroll-reveal" style="--seg-top:6700px;--seg-bot:8500px;"></div>
+        <!-- 段7：底部 CTA + footer 8500-10007 -->
+        <div class="base-seg scroll-reveal" style="--seg-top:8500px;--seg-bot:10007px;"></div>
+
+
+
+
+
+        <!-- 3. 大标题：文字 PNG 作 mask，多层蓝白随机流动渐变 -->
+        <div class="title-wrap reveal fx-up" style="left:814px;top:171px;width:933px;height:224px;">
+          <div class="title-cover"></div>
+          <div class="title-glow"></div>
+          <div class="title-gradient">
+            <div class="tg-layer tg-l1"></div>
+            <div class="tg-layer tg-l2"></div>
+            <div class="tg-layer tg-l3"></div>
+            <div class="tg-layer tg-l4"></div>
+          </div>
+          <div class="title-sweep"></div>
+        </div>
+
+        <!-- 4. 数字组 -->
+        <div class="reveal fx-up static-layer" style="left:746px;top:1130px;width:1069px;height:75px;"></div>
+
+        <!-- 5. 社交图标组 -->
+        <div class="social-hit reveal fx-up" style="left:967px;top:2331px;width:623px;height:48px;">
+          <a class="sp" href="#" style="left:0"></a>
+          <a class="sp" href="#" style="left:85px"></a>
+          <a class="sp" href="#" style="left:170px"></a>
+          <a class="sp" href="#" style="left:255px"></a>
+          <a class="sp" href="#" style="left:340px"></a>
+          <a class="sp" href="#" style="left:425px"></a>
+          <a class="sp" href="#" style="left:510px"></a>
+          <a class="sp" href="#" style="left:595px"></a>
+        </div>
+
+        <!-- 6. 四大模块标题锚点 -->
+        <div id="sec-1" class="section-anchor reveal fx-left static-layer" style="left:987px;top:1427px;width:586px;height:207px;"></div>
+        <div id="sec-2" class="section-anchor reveal fx-right static-layer" style="left:871px;top:2650px;width:793px;height:207px;"></div>
+        <div id="sec-3" class="section-anchor reveal fx-left static-layer" style="left:925px;top:4261px;width:709px;height:207px;"></div>
+        <div id="sec-4" class="section-anchor reveal fx-right static-layer" style="left:944px;top:5426px;width:781px;height:206px;"></div>
+
+        <!-- ============================================================
+             04 海外私信营销 - 严格按 Figma 设计稿还原
+             Figma frame (2566×1588) 对应页面 top=5342（sec-4 锚点 top=5426 对应 frame y=84）
+             ============================================================ -->
+        <!-- 底层遮罩：完全覆盖底图原 04 区域（5342 ~ 5342+1588=6930），用纯黑底色 -->
+        <div class="deco-mask dm-bg" style="left:0;top:5342px;width:2560px;height:1588px;z-index:1;background:#000;"></div>
+
+        <!-- 04 模块背景装饰图（bg3.png）- 右上角蓝色光环同心圆：Figma group 2119902951 at (1525, 471) 873×873 -->
+        <img class="dm-bg-deco reveal fx-zoom" src="assets/bg3.png" alt="" draggable="false"
+             style="left:1525px;top:5813px;width:873px;height:873px;z-index:2;" />
+
+        <!-- 04 标题切图（11-10497.png）: "04 核心场景 海外用户全域精准触达..."
+             高度与其他章节标题锚点一致 = 206px，宽度按原始切图比例 1570:206 保持，居中对齐 sec-4 -->
+        <img class="dm-title-img reveal fx-right" src="assets/11-10497.png" alt="04 海外私信营销 核心场景"
+             draggable="false"
+             style="left:944px;top:5426px;width:781px;height:206px;z-index:3;" />
+
+        <!-- 4 个功能卡片：Figma 坐标 + 5342；图标与标题同一行左侧
+             注：原 Figma 标题与卡片间距 25px，本稿加大三倍 → 75px（卡片整体下移 50px） -->
+        <!-- 定时推送 (496, 315) 682×175 → (496, 5707)  图标: h (3).png -->
+        <div class="dm-feat reveal fx-up" style="left:496px;top:5707px;width:682px;height:175px;z-index:3;">
+          <div class="dm-feat-head">
+            <img class="dm-feat-ic" src="assets/h (3).png" alt="" draggable="false"/>
+            <div class="dm-feat-title">定时推送</div>
+          </div>
+          <div class="dm-feat-desc">支持全球多时区定时推送，精准覆盖目标用户活跃时段</div>
+        </div>
+        <!-- 定向推送 (1205, 315) 639×175 → (1205, 5707)  图标: h (4).png -->
+        <div class="dm-feat reveal fx-up" style="left:1205px;top:5707px;width:639px;height:175px;z-index:3;">
+          <div class="dm-feat-head">
+            <img class="dm-feat-ic" src="assets/h (4).png" alt="" draggable="false"/>
+            <div class="dm-feat-title">定向推送</div>
+          </div>
+          <div class="dm-feat-desc">支持指定号码包定向推送，精细化触达目标用户群体</div>
+        </div>
+        <!-- 条件触发推送 (634, 519) 664×175 → (634, 5911)  图标: h (1).png -->
+        <div class="dm-feat reveal fx-up" style="left:634px;top:5911px;width:664px;height:175px;z-index:3;">
+          <div class="dm-feat-head">
+            <img class="dm-feat-ic" src="assets/h (1).png" alt="" draggable="false"/>
+            <div class="dm-feat-title">条件触发推送</div>
+          </div>
+          <div class="dm-feat-desc">实时监测玩家游戏状态，根据行为条件自动推送匹配内容</div>
+        </div>
+        <!-- 保密测试协议推送 (1326, 519) 742×175 → (1326, 5911)  图标: h (2).png -->
+        <div class="dm-feat reveal fx-up" style="left:1326px;top:5911px;width:742px;height:175px;z-index:3;">
+          <div class="dm-feat-head">
+            <img class="dm-feat-ic" src="assets/h (2).png" alt="" draggable="false"/>
+            <div class="dm-feat-title">保密测试协议推送</div>
+          </div>
+          <div class="dm-feat-desc">特别打通保密协议签署系统 &amp; CDK 系统，一体化管理测试资格发放</div>
+        </div>
+
+        <!-- "可支持渠道（持续接入中）" 标题行 —— 合并为同一行容器，baseline 对齐，水平居中 -->
+        <div class="dm-ch-heading reveal fx-up" style="left:0;top:6185px;width:2560px;z-index:3;">
+          <span class="dm-ch-label">可支持渠道</span>
+          <span class="dm-ch-sub">（持续接入中）</span>
+        </div>
+
+        <!-- 8 个渠道卡片（439×114, radius=20）- 每个卡片左侧圆形图标 + 右侧文字
+             整体随标题与卡片间距加大下移 50px -->
+        <!-- WhatsApp (867, 869)  → (867, 6261) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:867px;top:6261px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#25D366;"><img src="assets/dm/icon_whatsapp-298ae8.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">WhatsApp</span>
+          <span class="dm-ch-tag">即时通讯 · 全球</span>
+        </a>
+        <!-- Telegram (1340, 869) → (1340, 6261) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:1340px;top:6261px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#29A9EB;"><img src="assets/dm/icon_telegram-249831.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">Telegram</span>
+          <span class="dm-ch-tag">即时通讯 · 全球</span>
+        </a>
+        <!-- Discord (617, 1014) → (617, 6406) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:617px;top:6406px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#5865F2;"><img src="assets/dm/icon_discord-488882.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">Discord</span>
+          <span class="dm-ch-tag">游戏社区 · 全球</span>
+        </a>
+        <!-- Line (1090, 1014) → (1090, 6406) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:1090px;top:6406px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#06C755;"><img src="assets/dm/icon_line.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">Line</span>
+          <span class="dm-ch-tag">即时通讯 · 亚太</span>
+        </a>
+        <!-- KakaoTalk (1563, 1014) → (1563, 6406) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:1563px;top:6406px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#FAE100;"><img src="assets/dm/icon_kakao-39c420.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">KakaoTalk</span>
+          <span class="dm-ch-tag">即时通讯 · 韩国</span>
+        </a>
+        <!-- VK (867, 1159) → (867, 6551) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:867px;top:6551px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#0077FF;"><img src="assets/dm/icon_vk.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">VK</span>
+          <span class="dm-ch-tag">社交平台 · 俄语区</span>
+        </a>
+        <!-- Naver (1340, 1159) → (1340, 6551) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:1340px;top:6551px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#03C75A;"><img src="assets/dm/icon_naver-15dc02.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">Naver</span>
+          <span class="dm-ch-tag">社区平台 · 韩国</span>
+        </a>
+        <!-- E-mail (1090, 1305) → (1090, 6697) -->
+        <a class="dm-ch reveal fx-up" href="#" style="left:1090px;top:6697px;z-index:3;">
+          <span class="dm-ch-ic" style="background:#669C41;"><img src="assets/email.png" alt="" draggable="false"/></span>
+          <span class="dm-ch-name">E-mail</span>
+          <span class="dm-ch-tag">电子邮件 · 全球</span>
+        </a>
+
+        <!-- 6.1 【01 社媒管理】5 个 tab（HTML 还原，可点击切换，不用切图） -->
+        <div class="mod1-tabs reveal fx-up" style="left:788px;top:1658px;width:984px;height:67px;">
+          <span class="mod1-pill" aria-hidden="true"></span>
+          <button class="mod1-tab active" data-m1="1">发帖编辑</button>
+          <button class="mod1-tab"        data-m1="2">策略排期</button>
+          <button class="mod1-tab"        data-m1="3">审核工作流</button>
+          <button class="mod1-tab"        data-m1="4">数据看板</button>
+          <button class="mod1-tab"        data-m1="5">更多能力</button>
+        </div>
+
+        <!-- 6.2 【01 社媒管理 · 发帖编辑】卡片区：HTML 还原 Figma 70-1130
+             1499×528 深色卡片，左文右图，居中 left=(2560-1499)/2=530 -->
+        <div class="deco-mask" style="left:500px;top:1740px;width:1560px;height:560px;z-index:2;background:#000;"></div>
+        <div class="mod1-card reveal fx-up" style="left:530px;top:1757px;z-index:3;">
+          <!-- 左侧文字区 -->
+          <div class="mod1-card-text">
+            <h3 class="m1c-title">富文本编辑，一键多发</h3>
+            <p class="m1c-desc">支持富文本、多语言、多时区、帖子预览、首评设置，一次创作同步发布至全平台。</p>
+            <ul class="m1c-list">
+              <li>
+                <span class="m1c-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
+                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>支持图文、视频、Reel 多格式</span>
+              </li>
+              <li>
+                <span class="m1c-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
+                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>AI 翻译 + 多语言一键适配</span>
+              </li>
+              <li>
+                <span class="m1c-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
+                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>定时 / 定向发布，全球多时区精准覆盖</span>
+              </li>
+              <li>
+                <span class="m1c-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="2" width="20" height="20" rx="4" fill="#1433FF"/>
+                    <path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>实时预览各平台展示效果</span>
+              </li>
+            </ul>
+          </div>
+          <!-- 右侧产品截图 -->
+          <img class="mod1-card-img" src="assets/mod1-card-img.png" alt="发帖编辑界面" draggable="false" />
+        </div>
+
+        <!-- 7. 合作游戏标题组 -->
+        <div class="reveal fx-up static-layer" style="left:812px;top:7077px;width:936px;height:118px;"></div>
+
+        <!-- 8. Discord 4 个 Tab（4 个独立 386×176 卡片，精灵图背景，居中对齐） -->
+        <!-- 底色遮罩：覆盖底图原有 tab 区域 -->
+        <div class="deco-mask" style="left:450px;top:2860px;width:1660px;height:210px;z-index:2;"></div>
+        <!-- 4 个独立 tab 卡片 -->
+        <button class="discord-tab reveal fx-up active" data-tab="1" style="left:483px;top:2881px;z-index:3;">
+          <span class="dt-title">游戏账号绑定</span>
+          <span class="dt-desc">Discord 服务器内一键绑定游戏账号，绑定成功即触发权益发放，深度打通游戏与社区生态</span>
+        </button>
+        <button class="discord-tab reveal fx-up" data-tab="2" style="left:886px;top:2881px;z-index:3;">
+          <span class="dt-title">端内数据查询</span>
+          <span class="dt-desc">玩家在 Discord 内直接查询游戏数据，无需跳出游戏，降低流失风险</span>
+        </button>
+        <button class="discord-tab reveal fx-up" data-tab="3" style="left:1289px;top:2881px;z-index:3;">
+          <span class="dt-title">定制营销活动</span>
+          <span class="dt-desc">签到、抽奖、排行榜、CDK 兑换，低成本配置，支持快速复开</span>
+        </button>
+        <button class="discord-tab reveal fx-up" data-tab="4" style="left:1692px;top:2881px;z-index:3;">
+          <span class="dt-title">更多功能</span>
+          <span class="dt-desc">成员成长激励、AI 智能客服、开黑 Bot、添加游戏好友等全场景能力</span>
+        </button>
+
+        <!-- 9. Discord 媒体面板（视频居中：left = (2560 - 1595) / 2 = 482） -->
+        <div class="media-panel reveal fx-zoom" id="discord-media" style="left:482px;top:3100px;width:1595px;height:907px;">
+          <video class="m m-1 active" muted loop playsinline preload="auto"
+                 src="assets/video/discord_bind_compressed.mp4"></video>
+          <video class="m m-2" muted loop playsinline preload="auto"
+                 src="assets/video/discord_bind_compressed.mp4"></video>
+          <video class="m m-3" muted loop playsinline preload="auto"
+                 src="assets/video/discord_bind_compressed.mp4"></video>
+          <video class="m m-4" muted loop playsinline preload="auto"
+                 src="assets/video/discord_bind_compressed.mp4"></video>
+        </div>
+
+        <!-- 10. 直播大图 -->
+        <div class="hit hover-float reveal fx-zoom" style="left:933px;top:4629px;width:1145px;height:535px;border-radius:14px;"></div>
+
+        <!-- 10.1 【03 直播运营】4 个 tab（HTML 还原，可点击切换，不用切图）
+                 盖住底图原 tab 列标签（x=490, w=231），展开区保持底图原样 -->
+        <!-- 底色遮罩：盖 tab 1/2/3 三个紧邻 tab（y=4629 ~ 4822） -->
+        <div class="deco-mask" style="left:490px;top:4629px;width:231px;height:193px;z-index:4;"></div>
+        <!-- 底色遮罩：盖 tab 4（y=5067 ~ 5118） -->
+        <div class="deco-mask" style="left:490px;top:5067px;width:231px;height:51px;z-index:4;"></div>
+        <!-- HTML tab 组（4 个按钮 + 滑动胶囊） -->
+        <div class="mod3-tabs reveal fx-left" style="left:490px;top:4629px;width:231px;height:489px;">
+          <span class="mod3-pill" aria-hidden="true"></span>
+          <button class="mod3-tab" data-m3="1" style="top:0;">直播间掉宝</button>
+          <button class="mod3-tab" data-m3="2" style="top:72px;">互动挂件</button>
+          <button class="mod3-tab active" data-m3="3" style="top:142px;">主播挑战活动</button>
+          <button class="mod3-tab" data-m3="4" style="top:438px;">更多能力</button>
+        </div>
+
+        <!-- 11. 合作游戏 10 张卡片 -->
+        <!-- 第 1 行（5 张，y≈7271~7360，交错） -->
+        <div class="hit game-hit reveal fx-up" style="left:320px;top:7360px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:709px;top:7271px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:1097px;top:7360px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:1485px;top:7271px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:1874px;top:7360px;width:366px;height:477px;"></div>
+        <!-- 第 2 行（5 张，y≈7775~7864，交错） -->
+        <div class="hit game-hit reveal fx-up" style="left:319px;top:7864px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:708px;top:7775px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:1097px;top:7864px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:1485px;top:7775px;width:366px;height:477px;"></div>
+        <div class="hit game-hit reveal fx-up" style="left:1874px;top:7864px;width:366px;height:477px;"></div>
+
+        <!-- 12. 底部 CTA 按钮 -->
+        <button class="cta-hit reveal fx-zoom" style="left:482px;top:9450px;width:339px;height:91px;border-radius:45px;"></button>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
 </html>

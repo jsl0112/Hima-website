@@ -1,5 +1,14 @@
-# 忽略文件
+# 系统文件
 .DS_Store
 Thumbs.db
 *.log
 node_modules/
+
+# Figma 设计稿数据（不需要上传到网站）
+figma-file.json
+figma-node.json
+image-nodes.json
+layout-assets.json
+node-summary.json
+top-children.json
+assets-map.json
