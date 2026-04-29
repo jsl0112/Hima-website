@@ -69,8 +69,8 @@
     <div class="viewport">
       <div class="stage" id="stage">
         <!-- 1. 整帧设计底图（拆成若干段，每段滚动时 opacity 从无到有渐入） -->
-        <!-- 段1：首屏完整区域 0-2620（标题 + 数字 + 01 社媒管理），加载时整体渐入 -->
-        <div class="base-seg seg-fixed" style="--seg-top:0px;--seg-bot:2620px;"></div>
+        <!-- 段1：首屏 0-2620 —— 使用 bgg2.png 纯装饰背景（无文字/数字/图标，避免与 HTML 元素重复） -->
+        <div class="hero-bg seg-fixed"></div>
         <!-- 段2：02 社区运营（视频区） 2620-4007 -->
         <div class="base-seg scroll-reveal" style="--seg-top:2620px;--seg-bot:4007px;"></div>
         <!-- 段3：02→03 过渡 + 03 直播运营 4007-5400 -->
@@ -100,40 +100,71 @@
           <div class="title-sweep"></div>
         </div>
 
-        <!-- 4. 数字组：独立前景层，滚动到视口时整组渐变上浮 -->
-        <!-- 用黑色遮罩盖住底图原数字区域 -->
-        <div class="deco-mask" style="left:746px;top:1115px;width:1069px;height:110px;z-index:1;"></div>
-        <!-- 数字前景：从 full-frame 同坐标区域裁出 -->
-        <div class="stats-group reveal fx-up"
-             style="left:746px;top:1130px;width:1069px;height:75px;
-                    background-image:url('assets/full-frame.png');
-                    background-size:2560px 10007px;
-                    background-position:-746px -1130px;
-                    background-repeat:no-repeat;"></div>
+        <!-- 3.5 副标题（Figma id 14:13304, x=828,y=422,904×42）—— 之前靠底图显示，
+             现在首屏改用 21-107.png（无文字），需要独立 HTML 元素还原 -->
+        <p class="hero-subtitle reveal fx-up"
+           style="left:828px;top:422px;width:904px;">助力出海游戏精细化运营，提供全方位的技术支持与全球化的营销生态集成。</p>
 
-        <!-- 5. 社交图标组：独立前景层，整组渐变上浮 -->
-        <!-- 用黑色遮罩盖住底图原图标区域 -->
-        <div class="deco-mask" style="left:955px;top:2321px;width:647px;height:68px;z-index:1;"></div>
-        <!-- 社交图标前景：从 full-frame 同坐标区域裁出 + 点击热区 -->
-        <div class="social-group reveal fx-up"
-             style="left:967px;top:2331px;width:623px;height:48px;
-                    background-image:url('assets/full-frame.png');
-                    background-size:2560px 10007px;
-                    background-position:-967px -2331px;
-                    background-repeat:no-repeat;">
-          <a class="sp" href="#" style="left:0"></a>
-          <a class="sp" href="#" style="left:85px"></a>
-          <a class="sp" href="#" style="left:170px"></a>
-          <a class="sp" href="#" style="left:255px"></a>
-          <a class="sp" href="#" style="left:340px"></a>
-          <a class="sp" href="#" style="left:425px"></a>
-          <a class="sp" href="#" style="left:510px"></a>
-          <a class="sp" href="#" style="left:595px"></a>
+
+
+
+        <!-- 5. 数字组：HTML 还原，大数字滚动动画 -->
+        <!-- HTML 数字组精准对位 Figma 设计稿原数字位置（社交图标 y=1130 上方约 200px） -->
+        <div class="stats-group reveal fx-up" id="stats-group"
+             style="left:694px;top:930px;width:1172px;height:144px;">
+          <!-- 4+ 核心场景 -->
+          <div class="stat-item" style="left:0;">
+            <div class="stat-number">
+              <span class="stat-num" data-target="4">0</span><span class="stat-plus">+</span>
+            </div>
+            <div class="stat-label">核心场景</div>
+            <div class="stat-desc">社媒、社区、直播、私信</div>
+          </div>
+          <!-- 13+ 主流海外渠道 -->
+          <div class="stat-item" style="left:333px;">
+            <div class="stat-number">
+              <span class="stat-num" data-target="13">0</span><span class="stat-plus">+</span>
+            </div>
+            <div class="stat-label">主流海外渠道</div>
+            <div class="stat-desc">Discord、Twitch 等</div>
+          </div>
+          <!-- 20+ 游戏项目 -->
+          <div class="stat-item" style="left:666px;">
+            <div class="stat-number">
+              <span class="stat-num" data-target="20">0</span><span class="stat-plus">+</span>
+            </div>
+            <div class="stat-label">游戏项目</div>
+            <div class="stat-desc">PUBGM、三角洲等</div>
+          </div>
+          <!-- 16+ 语言 -->
+          <div class="stat-item" style="left:999px;">
+            <div class="stat-number">
+              <span class="stat-num" data-target="16">0</span><span class="stat-plus">+</span>
+            </div>
+            <div class="stat-label">语言</div>
+            <div class="stat-desc">中、英、日、韩、德等</div>
+          </div>
         </div>
 
+        <!-- 4.5 四组数字下方的社交图标横条：精准对位 Figma 原位 (x=746,y=1130,1069×75) -->
+        <div class="sj-bar reveal fx-up"
+             style="left:746px;top:1130px;width:1069px;height:75px;
+                    background-image:url('assets/sj.png');
+                    background-size:1069px 75px;
+                    background-repeat:no-repeat;"></div>
+
+
         <!-- 6. 四大模块标题锚点 -->
-        <div id="sec-1" class="section-anchor reveal fx-left static-layer" style="left:987px;top:1427px;width:586px;height:207px;"></div>
-        <div id="sec-2" class="section-anchor reveal fx-right static-layer" style="left:871px;top:2650px;width:793px;height:207px;"></div>
+        <!-- sec-1 标题：首屏区域不再用 full-frame.png，需要独立显示标题切图 -->
+        <img id="sec-1" class="section-title-img reveal fx-left"
+             src="assets/11-10487.png" alt="01 社媒管理" draggable="false"
+             style="left:987px;top:1427px;width:586px;height:207px;" />
+        <!-- 02 标题区域遮罩：盖住段2顶部 full-frame.png 与首屏 bgg2.png 底部蓝光交错的旧背景 -->
+        <div class="deco-mask" style="left:0;top:2620px;width:2560px;height:240px;z-index:1;"></div>
+        <!-- sec-2 标题：独立切图显示，不依赖 full-frame.png 底图 -->
+        <img id="sec-2" class="section-title-img reveal fx-right"
+             src="assets/11-10683.png" alt="02 Discord 社区运营" draggable="false"
+             style="left:871px;top:2650px;width:793px;height:207px;" />
         <div id="sec-3" class="section-anchor reveal fx-left static-layer" style="left:925px;top:4261px;width:709px;height:207px;"></div>
         <div id="sec-4" class="section-anchor reveal fx-right static-layer" style="left:944px;top:5426px;width:781px;height:206px;"></div>
 
@@ -247,6 +278,8 @@
         </a>
 
         <!-- 6.1 【01 社媒管理】5 个 tab（HTML 还原，可点击切换，不用切图） -->
+        <!-- 遮罩：盖住底图原 tab+卡片区域切图，避免滚动/刷新时重复出现 -->
+        <div class="deco-mask" style="left:500px;top:1640px;width:1560px;height:660px;z-index:2;background:#000;"></div>
         <div class="mod1-tabs reveal fx-up" style="left:788px;top:1658px;width:984px;height:67px;">
           <span class="mod1-pill" aria-hidden="true"></span>
           <button class="mod1-tab active" data-m1="1">发帖编辑</button>
@@ -258,7 +291,6 @@
 
         <!-- 6.2 【01 社媒管理 · 发帖编辑】卡片区：HTML 还原 Figma 70-1130
              1499×528 深色卡片，左文右图，居中 left=(2560-1499)/2=530 -->
-        <div class="deco-mask" style="left:500px;top:1740px;width:1560px;height:560px;z-index:2;background:#000;"></div>
         <div class="mod1-card reveal fx-up" style="left:530px;top:1757px;z-index:3;">
           <!-- 左侧文字区 -->
           <div class="mod1-card-text">

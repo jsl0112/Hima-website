@@ -1,3 +1,6 @@
+/* Radikal 字体（数字组大数字使用） */
+@import url('https://fonts.cdnfonts.com/css/radikal');
+
 :root {
   --dw: 2560;
   --dh: 10007;
@@ -67,10 +70,26 @@ html, body {
 }
 
 /* 首屏固定段：页面加载/刷新时从完全透明平滑渐入 */
-.base-seg.seg-fixed {
+.seg-fixed {
   opacity: 0;
   transform: translate3d(0, 0, 0);
   animation: segFadeIn 1.6s ease-out .1s forwards;
+}
+
+/* ========== 首屏专用背景：bgg2.png 纯装饰蓝光圆环（无文字/数字/图标）==========
+   bgg2.png 尺寸: 2566×2560px（≈1x），覆盖首屏 2560×2620 区域
+   纯装饰图，不会和 HTML 前景文字/数字产生重复 */
+.hero-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2560px;
+  height: 2620px;
+  background: #000 url("assets/bgg2.png") center 380px / 2560px auto no-repeat;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  overflow: hidden;
 }
 @keyframes segFadeIn {
   0%   { opacity: 0; }
@@ -92,6 +111,14 @@ html, body {
   position: absolute;
   pointer-events: none;
 }
+/* 首屏区域的模块标题切图（不再依赖 full-frame.png 底图） */
+.section-title-img {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;
+  z-index: 3;
+}
 
 /* ---- 装饰遮罩：精确盖住底图中不想要的装饰残余
         （如 02 视频下方延伸到 03 sec-3 标题之间的 Group 2119902950 下沿） ---- */
@@ -100,6 +127,23 @@ html, body {
   background: #000;        /* 纯黑，和底图底色完全一致 */
   pointer-events: none;
   z-index: 1;              /* 高于 base-seg(0)，低于内容层 */
+}
+/* 与首屏底图同步渐入的遮罩，避免底图淡入时遮罩先显示为黑块 */
+.seg-sync-mask {
+  opacity: 0;
+  animation: segFadeIn 1.6s ease-out .1s forwards;
+}
+/* 数字区域覆盖层：盖住底图上原有的两组数字切图。
+   使用黑底 + 多层蓝色径向光渐变，和底图视觉无缝衔接，不是纯黑色底色 */
+.num-cover {
+  position: absolute;
+  pointer-events: none;
+  background-color: #000;
+  background-image:
+    radial-gradient(60% 70% at 8% 50%,  rgba(47, 108, 255, 0.55) 0%, rgba(47, 108, 255, 0) 65%),
+    radial-gradient(60% 70% at 92% 50%, rgba(47, 108, 255, 0.55) 0%, rgba(47, 108, 255, 0) 65%),
+    radial-gradient(45% 60% at 50% 50%, rgba(30, 60, 160, 0.25) 0%, rgba(30, 60, 160, 0) 70%);
+  background-repeat: no-repeat;
 }
 
 /* ---- 通用按钮/卡片热区 ---- */
@@ -500,14 +544,83 @@ html, body {
   100% { opacity: .9;  transform: translateX(12px); }
 }
 
+/* 首屏副标题（Figma 14:13304）：浅蓝灰色，单行居中 */
+.hero-subtitle {
+  position: absolute;
+  margin: 0;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 42px;
+  letter-spacing: 1px;
+  color: #C2C6D7;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+}
+
 /* ============================================================
-   头部数字组（从底图中抠出的前景层，滚动整组渐变）
+   头部数字组（HTML 还原，数字滚动动画）
    ============================================================ */
 .stats-group {
   position: absolute;
   pointer-events: none;
-  image-rendering: -webkit-optimize-contrast;
   z-index: 3;
+}
+/* 四组数字下方的社交图标横条（使用 sj.png 原切图） */
+.sj-bar {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+.stat-item {
+  position: absolute;
+  top: 0;
+  width: 200px;
+  height: 144px;
+}
+/* 大数字行 */
+.stat-number {
+  font-family: 'Radikal', 'DIN Alternate', 'Bebas Neue', 'Helvetica Neue', 'Arial Black', sans-serif;
+  font-weight: 700;
+  font-size: 96px;
+  line-height: 72px;
+  color: #1F54FF;
+  letter-spacing: -1px;
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+}
+.stat-num {
+  display: inline-block;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+.stat-plus {
+  font-size: 96px;
+  line-height: 72px;
+}
+/* 中文标签 */
+.stat-label {
+  margin-top: 14px;
+  font-family: 'Noto Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 19.2px;
+  color: #E5E5E5;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* 描述文字 */
+.stat-desc {
+  margin-top: 14px;
+  font-family: 'Noto Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 24px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
 }
 
 /* ============================================================

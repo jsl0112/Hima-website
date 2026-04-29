@@ -267,6 +267,65 @@
   document.querySelectorAll('.reveal').forEach((el) => revealIO.observe(el));
 
   /* --------------------------------------------------------
+   * 4.05) 数字滚动动画
+   *       当 #stats-group 进入视口时，数字从 0 滚动到目标值
+   * ------------------------------------------------------ */
+  const statsGroup = document.getElementById('stats-group');
+  let statsAnimated = false;
+
+  function animateNumber(el, target, duration) {
+    const start = performance.now();
+    const end = start + duration;
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      // easeOutExpo 缓动：快速到达然后减速
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = String(current);
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function triggerStatsAnimation() {
+    if (statsAnimated) return;
+    statsAnimated = true;
+    const nums = statsGroup.querySelectorAll('.stat-num');
+    nums.forEach((num, i) => {
+      const target = parseInt(num.dataset.target, 10);
+      // 各数字依次延迟 150ms 开始滚动
+      setTimeout(() => {
+        animateNumber(num, target, 1200);
+      }, i * 150);
+    });
+  }
+
+  // 用 IntersectionObserver 监听数字组进入视口
+  if (statsGroup) {
+    const statsIO = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            triggerStatsAnimation();
+          } else {
+            // 离开较远时重置，允许再次触发
+            const rect = e.target.getBoundingClientRect();
+            if (rect.top > window.innerHeight + 200 || rect.bottom < -200) {
+              statsAnimated = false;
+              const nums = statsGroup.querySelectorAll('.stat-num');
+              nums.forEach((num) => { num.textContent = '0'; });
+            }
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    statsIO.observe(statsGroup);
+  }
+
+  /* --------------------------------------------------------
    * 4.1) 底图分段 opacity 渐入
    *      每个 .base-seg.scroll-reveal 进入视口时加 .in，
    *      底图对应 y 区间从透明到不透明自然渐入
