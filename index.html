@@ -68,20 +68,18 @@
 
     <div class="viewport">
       <div class="stage" id="stage">
-        <!-- 1. 整帧设计底图（拆成若干段，每段独立"从下而上"渐变浮现） -->
-        <!-- 段1：顶部 0-1100（标题 + 数字组背景），首屏直接显示 -->
-        <div class="base-seg seg-fixed" style="--seg-top:0px;--seg-bot:1100px;"></div>
-        <!-- 段2：01 社媒管理 1100-2620 -->
-        <div class="base-seg scroll-reveal" style="--seg-top:1100px;--seg-bot:2620px;"></div>
-        <!-- 段3：02 社区运营（视频区，到 4007） 2620-4007 -->
+        <!-- 1. 整帧设计底图（拆成若干段，每段滚动时 opacity 从无到有渐入） -->
+        <!-- 段1：首屏完整区域 0-2620（标题 + 数字 + 01 社媒管理），加载时整体渐入 -->
+        <div class="base-seg seg-fixed" style="--seg-top:0px;--seg-bot:2620px;"></div>
+        <!-- 段2：02 社区运营（视频区） 2620-4007 -->
         <div class="base-seg scroll-reveal" style="--seg-top:2620px;--seg-bot:4007px;"></div>
-        <!-- 段4：02→03 过渡 + 03 直播运营完整背景 4007-5400 -->
+        <!-- 段3：02→03 过渡 + 03 直播运营 4007-5400 -->
         <div class="base-seg scroll-reveal" style="--seg-top:4007px;--seg-bot:5400px;"></div>
-        <!-- 段5：04 私信营销 5400-6700 -->
+        <!-- 段4：04 私信营销 5400-6700 -->
         <div class="base-seg scroll-reveal" style="--seg-top:5400px;--seg-bot:6700px;"></div>
-        <!-- 段6：05 合作游戏 6700-8500 -->
+        <!-- 段5：05 合作游戏 6700-8500 -->
         <div class="base-seg scroll-reveal" style="--seg-top:6700px;--seg-bot:8500px;"></div>
-        <!-- 段7：底部 CTA + footer 8500-10007 -->
+        <!-- 段6：底部 CTA + footer 8500-10007 -->
         <div class="base-seg scroll-reveal" style="--seg-top:8500px;--seg-bot:10007px;"></div>
 
 
@@ -147,7 +145,7 @@
         <div class="deco-mask dm-bg" style="left:0;top:5342px;width:2560px;height:1588px;z-index:1;background:#000;"></div>
 
         <!-- 04 模块背景装饰图（bg3.png）- 右上角蓝色光环同心圆：Figma group 2119902951 at (1525, 471) 873×873 -->
-        <img class="dm-bg-deco reveal fx-zoom" src="assets/bg3.png" alt="" draggable="false"
+        <img class="dm-bg-deco reveal fx-fade" src="assets/bg3.png" alt="" draggable="false"
              style="left:1525px;top:5813px;width:873px;height:873px;z-index:2;" />
 
         <!-- 04 标题切图（11-10497.png）: "04 核心场景 海外用户全域精准触达..."

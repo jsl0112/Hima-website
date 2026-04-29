@@ -30,7 +30,7 @@
   /* --------------------------------------------------------
    * 1) 自适应缩放（居中），大屏额外缩小 8% 避免过大
    * ------------------------------------------------------ */
-  const SHRINK = 0.92;          /* 整体缩放因子，1 = 原尺寸 */
+  const SHRINK = 0.88;          /* 整体缩放因子，1 = 原尺寸 */
   function applyScale() {
     const vw = window.innerWidth;
     const scale = (vw / DESIGN_W) * SHRINK;
@@ -267,11 +267,11 @@
   document.querySelectorAll('.reveal').forEach((el) => revealIO.observe(el));
 
   /* --------------------------------------------------------
-   * 4.1) 底图分段"从下而上"渐变浮现
+   * 4.1) 底图分段 opacity 渐入
    *      每个 .base-seg.scroll-reveal 进入视口时加 .in，
-   *      底图对应 y 区间从下方上滑 + 淡入
+   *      底图对应 y 区间从透明到不透明自然渐入
    *      ⚠️ 关键：必须等 full-frame.png 加载完毕再开启观察，
-   *      否则滚动到某段时图片尚未到位，会出现空白割裂。
+   *      否则滚动到某段时图片尚未到位，会出现空白。
    * ------------------------------------------------------ */
   const segIO = new IntersectionObserver(
     (entries) => {
@@ -288,7 +288,7 @@
         }
       });
     },
-    { threshold: 0, rootMargin: '0px 0px -15% 0px' }
+    { threshold: 0, rootMargin: '200px 0px 0px 0px' }
   );
   // 等底图大图加载完再开始观察分段 —— 此前分段保持 opacity:0，
   // 避免图片未到位就开始动画，导致视觉上的"割裂/跳变"
