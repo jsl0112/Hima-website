@@ -2,17 +2,22 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
-// ========= 0. Viewport 宽度修正（解决 100vw 包含滚动条问题） =========
+// ========= 0. Viewport 宽度修正 + 全局缩放变量 =========
+// 精确设置 --scale-val = clientWidth / 1920，驱动所有模块自适应
 (function fixViewportWidth() {
-  const setVW = () => {
-    // 获取实际可视宽度（不含滚动条）
+  const DESIGN_WIDTH = 1920;
+  const setScale = () => {
     const vw = document.documentElement.clientWidth;
+    // 超宽屏限制最大 scale 为 1
+    const scale = Math.min(vw / DESIGN_WIDTH, 1);
     document.documentElement.style.setProperty('--vw', vw + 'px');
+    document.documentElement.style.setProperty('--scale-val', scale);
   };
-  setVW();
-  window.addEventListener('resize', setVW);
-  // 页面加载后再次确认
-  window.addEventListener('load', setVW);
+  setScale();
+  window.addEventListener('resize', setScale);
+  window.addEventListener('load', setScale);
+  // 确保首帧就生效（避免白屏闪烁）
+  requestAnimationFrame(setScale);
 })();
 
 // ========= 1. Stats 数字计数动画（进入视口时触发） =========
