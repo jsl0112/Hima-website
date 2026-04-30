@@ -1412,9 +1412,10 @@ a { color: inherit; text-decoration: none; }
   background: url('assets/第五屏背景.png') top center / 100% auto no-repeat;
   background-color: #1a1a1a;
 }
-.shared-bg-wrap .scene--light {
-  /* 保留背景图可见，用浅色半透明层让整体色调偏浅 */
-  background: rgba(240, 244, 252, 0.85);
+/* 合作游戏模块透明，让 shared-bg-wrap 的深色背景图穿透显示 */
+.scene--s5dark {
+  background: transparent;
+  color: rgba(255,255,255,.95);
 }
 .shared-bg-wrap .site-footer {
   background: transparent;
