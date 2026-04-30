@@ -503,7 +503,7 @@ a { color: inherit; text-decoration: none; }
 #scene2 { height: calc(100vw * 962 / 1920); }
 #scene3 { height: calc(100vw * 984 / 1920); }
 #scene4 { height: calc(100vw * 636 / 1920); }
-#scene5 { height: calc(100vw * 900 / 1920); }
+#scene5 { height: calc(100vw * 1850 / 1920); }
 .site-footer { height: calc(100vw * 900 / 1920); min-height: 500px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
@@ -1403,6 +1403,9 @@ a { color: inherit; text-decoration: none; }
   background: url('assets/第五屏背景.png') top center / 100% 100% no-repeat;
 }
 .shared-bg-wrap .scene--light {
+  background: transparent;
+}
+.shared-bg-wrap .site-footer {
   background: transparent;
 }
 .site-footer {
