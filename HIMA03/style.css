@@ -1422,7 +1422,7 @@ a { color: inherit; text-decoration: none; }
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('assets/第五屏背景_compressed.jpg');
+  background-image: url('assets/scene5-bg.jpg');
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
