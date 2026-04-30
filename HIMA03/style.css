@@ -512,8 +512,8 @@ a { color: inherit; text-decoration: none; }
 #scene2 { height: calc(962px * var(--scale)); }
 #scene3 { height: calc(984px * var(--scale)); }
 #scene4 { height: calc(636px * var(--scale)); }
-#scene5 { height: calc(1700px * var(--scale)); }
-.site-footer { height: calc(900px * var(--scale)); min-height: 500px; }
+#scene5 { height: calc(1300px * var(--scale)); }
+.site-footer { height: calc(750px * var(--scale)); min-height: 450px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
