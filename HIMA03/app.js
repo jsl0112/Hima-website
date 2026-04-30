@@ -2,6 +2,13 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
+// ========= 0. 设置 --vw 为真实视口宽度（不含滚动条） =========
+function setVW() {
+  document.documentElement.style.setProperty('--vw', document.documentElement.clientWidth + 'px');
+}
+setVW();
+window.addEventListener('resize', setVW);
+
 // ========= 1. Stats 数字计数动画（进入视口时触发） =========
 const countNums = document.querySelectorAll('.stat-num');
 const animateCount = (el) => {
