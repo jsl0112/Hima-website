@@ -512,7 +512,7 @@ a { color: inherit; text-decoration: none; }
 #scene2 { height: calc(962px * var(--scale)); }
 #scene3 { height: calc(984px * var(--scale)); }
 #scene4 { height: calc(636px * var(--scale)); }
-#scene5 { height: calc(2100px * var(--scale)); }
+#scene5 { height: calc(1500px * var(--scale)); }
 .site-footer { height: calc(900px * var(--scale)); min-height: 500px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
@@ -1413,7 +1413,10 @@ a { color: inherit; text-decoration: none; }
   background-color: #1a1a1a;
 }
 .shared-bg-wrap .scene--light {
-  background: transparent;
+  /* 合作游戏模块需要浅色背景，不使用 shared-bg-wrap 的深色背景 */
+  background: #f3f6fc;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, #ffffff 0%, #eef3fc 50%, #e4ecfa 100%);
 }
 .shared-bg-wrap .site-footer {
   background: transparent;
