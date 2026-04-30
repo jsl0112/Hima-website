@@ -15,6 +15,9 @@
       ? 1006
       : parseFloat(getComputedStyle(section).getPropertyValue('--design-h')) || 1006;
 
+    // scene5 用纯 CSS scale(100vw/1920)，跳过
+    if (section.id === 'scene5') return;
+
     const vw = section.clientWidth;
     const vh = section.clientHeight;
     if (!vw || !vh) return;
