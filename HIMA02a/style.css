@@ -46,19 +46,10 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;        /* 双重保险：防止水平滚动 */
   max-width: 100%;
-  width: 100%;
 }
 img { display: block; max-width: 100%; }
 button { border: none; background: none; font-family: inherit; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
-
-/* =========================================================
-   全局缩放变量 —— 解决 100vw 包含滚动条宽度的问题
-   用 100% 替代 100vw，当 html 和 body 都设为 overflow-x:hidden 时
-   100% 等于可视宽度（不含滚动条）。
-   对所有 scene 的 transform 保持 scale(calc(100vw / 1920))，
-   但让容器高度用更安全的 aspect-ratio fallback。
-   ========================================================= */
 
 /* =========================================================
    Hero · 严格 Figma 1920×1006 1:1 还原
@@ -68,8 +59,8 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   width: 100%;
   overflow: hidden;
-  height: calc(1006px * var(--scale-val));
-  min-height: 480px;
+  height: calc(100vw * 1006 / 1920);
+  min-height: 640px;
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
 }
@@ -120,15 +111,14 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(1);    opacity: .55; }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 + 居中 */
+/* 1920×1006 固定画布 + 等比缩放 */
 .hero-canvas {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0; left: 0;
   width: 1920px;
   height: 1006px;
-  transform-origin: center center;
-  transform: translate(-50%, -50%) scale(var(--scale-val));
+  transform-origin: top left;
+  transform: scale(calc(100vw / 1920));
   z-index: 2;
 }
 
@@ -489,12 +479,11 @@ a { color: inherit; text-decoration: none; }
 }
 .scene-canvas {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  left: 0;
   width: 1920px;
-  transform-origin: center center;
-  /* 居中 + 缩放：JS 动态设置 --section-scale */
-  transform: translate(-50%, -50%) scale(var(--scale-val));
+  transform-origin: top left;
+  transform: scale(calc(100vw / 1920));
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -511,19 +500,13 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 单屏铺满策略：每个 section 高度 = 100vh（一屏）
-   内容缩放由 JS 计算 min(vw/1920, vh/designH) 后写入各自 CSS 变量
-   全局 --scale-val 仅作 fallback（= vw/1920）
-   各 section 有独立的 --section-scale 由 JS 精确设置 */
-:root {
-  --scale-val: 1; /* JS 会设为真实数值 = min(vw/1920, 1) */
-}
-#scene1 { height: 100vh; min-height: 520px; }
-#scene2 { height: 100vh; min-height: 520px; }
-#scene3 { height: 100vh; min-height: 520px; }
-#scene4 { height: 100vh; min-height: 420px; }
-#scene5 { height: 100vh; min-height: 600px; }
-.site-footer { height: 100vh; min-height: 500px; }
+/* 动态计算 section 高度（canvas 高 × 100vw/1920） */
+#scene1 { height: calc(100vw * 941 / 1920); }
+#scene2 { height: calc(100vw * 962 / 1920); }
+#scene3 { height: calc(100vw * 984 / 1920); }
+#scene4 { height: calc(100vw * 636 / 1920); }
+#scene5 { height: calc(100vw * 1850 / 1920); }
+.site-footer { height: calc(100vw * 900 / 1920); }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
@@ -679,6 +662,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s1bg .scene-canvas {
+  position: relative;
   z-index: 2;
 }
 
@@ -911,6 +895,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s2bg .scene-canvas {
+  position: relative;
   z-index: 2;
 }
 /* 继承浅色主题文字配色 */
@@ -1016,6 +1001,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s3bg .scene-canvas {
+  position: relative;
   z-index: 2;
 }
 .scene--s3bg .scene-title--light { color: rgba(255,255,255,.95); }
@@ -1751,114 +1737,4 @@ html[lang="en"] .s3-feat-title {
 }
 html[lang="en"] .s3-feat-desc {
   margin-bottom: 20px;
-}
-
-/* =========================================================
-   响应式适配 · 确保各种浏览器分辨率正常展示
-   ========================================================= */
-
-/* --- 超宽屏（>1920px）：内容保持 1:1，居中显示 --- */
-@media (min-width: 1921px) {
-  .hero-canvas,
-  .scene-canvas {
-    /* 超过 1920px 时不再放大，CSS 变量由 JS 控制 */
-  }
-  .hero {
-    height: 100vh;
-  }
-  #scene1 { height: 100vh; }
-  #scene2 { height: 100vh; }
-  #scene3 { height: 100vh; }
-  #scene4 { height: 100vh; }
-  #scene5 { height: 100vh; }
-  .site-footer { height: 100vh; }
-}
-
-/* --- 笔记本 & 标准桌面（1024px ~ 1920px）：默认缩放机制完美适配 --- */
-/* 无需额外规则，scale(100vw/1920) 自动处理 */
-
-/* --- 小笔记本 / 平板横屏（768px ~ 1023px）--- */
-@media (max-width: 1023px) {
-  .side-dots {
-    left: 12px;
-    gap: 12px;
-  }
-  .side-dot {
-    width: 8px;
-    height: 8px;
-  }
-  .side-dot::after {
-    font-size: 10px;
-    left: 16px;
-  }
-}
-
-/* --- 平板竖屏 & 大手机（480px ~ 767px）--- */
-@media (max-width: 767px) {
-  .hero {
-    min-height: 420px;
-  }
-  .side-dots {
-    display: none;
-  }
-  /* 缩小 footer 文字，避免溢出 */
-  .footer-bigname {
-    font-size: 180px !important;
-  }
-  .footer-slogan {
-    font-size: 36px !important;
-  }
-  .footer-copy {
-    font-size: 10px !important;
-  }
-  .footer-links {
-    font-size: 10px !important;
-    gap: 6px !important;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-/* --- 手机竖屏（<480px）--- */
-@media (max-width: 479px) {
-  .hero {
-    min-height: 320px;
-  }
-  .footer-bigname {
-    font-size: 120px !important;
-  }
-  .footer-slogan {
-    font-size: 28px !important;
-  }
-  .footer-logo {
-    width: 80px !important;
-    height: 80px !important;
-  }
-}
-
-/* --- 高 DPI 屏幕优化 --- */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .hero-vortex {
-    image-rendering: -webkit-optimize-contrast;
-  }
-}
-
-/* --- 窗口非常矮的情况（如分屏模式） --- */
-@media (max-height: 600px) and (min-width: 1024px) {
-  .hero {
-    min-height: 480px;
-  }
-}
-
-/* --- 打印时隐藏动效元素 --- */
-@media print {
-  .hero-vortex-wrap,
-  .footer-glow-wrap,
-  .side-dots,
-  .logo-ticker {
-    display: none !important;
-  }
-  .scene-canvas {
-    transform: scale(0.5) !important;
-  }
 }
