@@ -15,8 +15,8 @@
       ? 1006
       : parseFloat(getComputedStyle(section).getPropertyValue('--design-h')) || 1006;
 
-    // scene4 / scene5 用纯 CSS scale(100vw/1920)，跳过
-    if (section.id === 'scene4' || section.id === 'scene5') return;
+    // scene4 / scene5 / footer 用纯 CSS scale(100vw/1920)，跳过
+    if (section.id === 'scene4' || section.id === 'scene5' || section.classList.contains('site-footer')) return;
 
     const vw = section.clientWidth;
     const vh = section.clientHeight;

@@ -520,22 +520,30 @@ a { color: inherit; text-decoration: none; }
   transform-origin: top left;
   transform: scale(calc(100vw / 1920));
 }
-/* scene5 合作游戏：纯按宽度缩放，不限制 max-height */
+/* scene5 合作游戏：按宽度缩放 + 垂直居中 */
 #scene5 {
-  --design-h: 1200;
-  height: calc(100vw * 1200 / 1920);
-  min-height: 480px;
+  --design-h: 1000;
+  height: calc(100vw * 1000 / 1920);
+  min-height: 520px;
+  max-height: 1000px;
 }
 #scene5 .scene-canvas {
   position: absolute;
-  top: 0; left: 50%;
+  top: 50%; left: 50%;
   width: 1920px;
-  transform-origin: top center;
-  transform: translateX(-50%) scale(calc(100vw / 1920));
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(calc(100vw / 1920));
 }
 /* footer：增加高度让版权区不贴底 */
 .site-footer {
   --design-h: 1000;
+}
+.site-footer .scene-canvas {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 1920px;
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(calc(100vw / 1920));
 }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
@@ -1440,10 +1448,10 @@ a { color: inherit; text-decoration: none; }
 .site-footer {
   position: relative;
   width: 100%;
-  /* 增加 footer 高度，给版权信息底部留出间距 */
-  height: calc(100vw * 1000 / 1920);
-  min-height: 620px;
-  max-height: 1000px;
+  /* footer 高度按宽度比例 + 底部留白 */
+  height: calc(100vw * 1100 / 1920);
+  min-height: 640px;
+  max-height: 1100px;
   overflow: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 50% 30%, #2752c2 0%, #0c2274 45%, #040b34 100%);
