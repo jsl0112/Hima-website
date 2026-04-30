@@ -2,6 +2,55 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
+// ========= 0. 每个模块独立自适应屏幕（contain 缩放 + 居中） =========
+// 策略：.hero / .scene 每个都是 100vh 一屏高；
+//       内部画布(1920 × designH) 按 min(vw/1920, vh/designH) 等比缩放，
+//       CSS 用 transform: translate(-50%,-50%) scale(var(--fit)) 实现居中。
+(function initResponsiveFit() {
+  const DESIGN_W = 1920;
+
+  function fitOne(section) {
+    // Hero 的 designH 固定 1006
+    const designH = section.classList.contains('hero')
+      ? 1006
+      : parseFloat(getComputedStyle(section).getPropertyValue('--design-h')) || 1006;
+
+    // scene5 按宽度缩放（跳过，不写 --fit）
+    if (section.id === 'scene5') return;
+
+    const vw = section.clientWidth;
+    const vh = section.clientHeight;
+    if (!vw || !vh) return;
+
+    // contain 缩放：同时不超出宽和高
+    const fit = Math.min(vw / DESIGN_W, vh / designH);
+    section.style.setProperty('--fit', fit.toFixed(4));
+  }
+
+  function fitAll() {
+    document.querySelectorAll('.hero, .scene, .site-footer').forEach(fitOne);
+  }
+
+  // 首次计算
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fitAll);
+  } else {
+    fitAll();
+  }
+
+  // 窗口缩放时重算（节流）
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    if (resizeTimer) cancelAnimationFrame(resizeTimer);
+    resizeTimer = requestAnimationFrame(fitAll);
+  });
+
+  // 字体加载完成后再算一次（避免字体导致的尺寸抖动）
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fitAll);
+  }
+})();
+
 // ========= 1. Stats 数字计数动画（进入视口时触发） =========
 const countNums = document.querySelectorAll('.stat-num');
 const animateCount = (el) => {

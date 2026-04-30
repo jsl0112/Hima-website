@@ -53,13 +53,15 @@ a { color: inherit; text-decoration: none; }
 
 /* =========================================================
    Hero · 严格 Figma 1920×1006 1:1 还原
-   策略：1920×1006 固定画布 + transform: scale(100vw/1920) 等比缩放
+   策略：100vh 一屏高 + 1920×1006 画布按 contain 居中缩放
+   - --fit: 由 JS 动态计算的缩放比例 (min(vw/1920, vh/designH))
+   - 画布水平 + 垂直居中，不会堆在左上角
    ========================================================= */
 .hero {
   position: relative;
   width: 100%;
   overflow: hidden;
-  height: calc(100vw * 1006 / 1920);
+  height: 100vh;
   min-height: 640px;
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
@@ -111,14 +113,14 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(1);    opacity: .55; }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 */
+/* 1920×1006 固定画布 + 居中缩放（contain 策略） */
 .hero-canvas {
   position: absolute;
-  top: 0; left: 0;
+  top: 50%; left: 50%;
   width: 1920px;
   height: 1006px;
-  transform-origin: top left;
-  transform: scale(calc(100vw / 1920));
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(var(--fit, 1));
   z-index: 2;
 }
 
@@ -468,20 +470,24 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =========================================================
-   Scene 通用画布（沿用 Hero 的 1920 scale 模式）
-   每个 section 给 .scene-canvas 一个固定 height（Figma 原稿高度），
-   外层 .scene 根据 height / 1920 计算响应式高度。
+   Scene 通用画布：每个模块独立 100vh 一屏高
+   - 每个 .scene 设置 --design-h 为 Figma 原稿高度
+   - .scene-canvas 按 min(vw/1920, vh/designH) 居中缩放（contain）
+   - 内容永远水平+垂直居中，不会堆到左上角
    ========================================================= */
 .scene {
   position: relative;
   width: 100%;
+  height: 100vh;
+  min-height: 560px;
   overflow: hidden;
 }
 .scene-canvas {
-  position: relative;
+  position: absolute;
+  top: 50%; left: 50%;
   width: 1920px;
-  transform-origin: top left;
-  transform: scale(calc(100vw / 1920));
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(var(--fit, 1));
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -498,13 +504,25 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度（canvas 高 × 100vw/1920） */
-#scene1 { height: calc(100vw * 941 / 1920); }
-#scene2 { height: calc(100vw * 962 / 1920); }
-#scene3 { height: calc(100vw * 984 / 1920); }
-#scene4 { height: calc(100vw * 636 / 1920); }
-#scene5 { height: calc(100vw * 1850 / 1920); }
-.site-footer { height: calc(100vw * 1000 / 1920); }
+/* scene5 特殊：按宽度缩放（因为它是长内容） */
+#scene5 .scene-canvas {
+  top: 0; left: 50%;
+  transform: translate(-50%, 0) scale(calc(100vw / 1920));
+  transform-origin: top center;
+}
+
+/* 每个 scene 的 Figma 原稿高度（供 JS 读取） */
+#scene1 { --design-h: 941; }
+#scene2 { --design-h: 962; }
+#scene3 { --design-h: 984; }
+#scene4 { --design-h: 636; }
+/* scene5 是超长内容模块，按宽度撑满（而非一屏高） */
+#scene5 {
+  --design-h: 1850;
+  height: calc(100vw * 1850 / 1920);
+  min-height: 1200px;
+}
+.site-footer { --design-h: 900; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
@@ -660,7 +678,6 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s1bg .scene-canvas {
-  position: relative;
   z-index: 2;
 }
 
@@ -893,7 +910,6 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s2bg .scene-canvas {
-  position: relative;
   z-index: 2;
 }
 /* 继承浅色主题文字配色 */
@@ -999,7 +1015,6 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s3bg .scene-canvas {
-  position: relative;
   z-index: 2;
 }
 .scene--s3bg .scene-title--light { color: rgba(255,255,255,.95); }
@@ -1411,6 +1426,8 @@ a { color: inherit; text-decoration: none; }
 .site-footer {
   position: relative;
   width: 100%;
+  height: 100vh;
+  min-height: 560px;
   overflow: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 50% 30%, #2752c2 0%, #0c2274 45%, #040b34 100%);
