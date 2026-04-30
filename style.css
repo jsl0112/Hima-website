@@ -518,14 +518,13 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度（canvas 高 × var(--scale-w)/1920）
-   内容充满 section，不留多余白边 */
-#scene1 { height: calc(var(--scale-w) * 941 / 1920); }
-#scene2 { height: calc(var(--scale-w) * 962 / 1920); }
-#scene3 { height: calc(var(--scale-w) * 984 / 1920); }
-#scene4 { height: calc(var(--scale-w) * 636 / 1920); }
+/* Section 高度：JS 会动态设置精确值；CSS 提供 100vh 回退确保每屏占满视口 */
+#scene1 { height: 100vh; }
+#scene2 { height: 100vh; }
+#scene3 { height: 100vh; }
+#scene4 { height: 100vh; }
 #scene5 { height: calc(var(--scale-w) * 1920 / 1920); }
-.site-footer { height: calc(var(--scale-w) * 1000 / 1920); }
+.site-footer { height: 100vh; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {

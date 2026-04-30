@@ -14,9 +14,10 @@ const setVW = () => {
 setVW();
 window.addEventListener('resize', setVW);
 
-// ========= 0.1 各模块自适应缩放：确保内容填满视口，不显得太小 =========
-// 策略：对每个 section，取 max(scaleByWidth, scaleByHeight) 并限制 ≤ 1
-//       当 scaleByHeight > scaleByWidth 时，画布视觉宽度 > 视口宽度 —— 通过水平居中 + overflow:hidden 裁切
+// ========= 0.1 各模块自适应缩放：确保内容尽量填满视口，不显得太小 =========
+// 策略：取 max(scaleByWidth, scaleByHeight) 让画布至少在高度维度贴合视口
+//       画布超出视口宽度时通过 overflow:hidden + 水平居中裁切两侧边缘
+//       每个 section 占满一屏高度（100vh），内容垂直居中
 const adaptCanvases = () => {
   const vw = document.documentElement.clientWidth;
   const vh = window.innerHeight;
@@ -29,6 +30,9 @@ const adaptCanvases = () => {
       c.style.transform = '';
       c.style.marginLeft = '';
       c.style.marginTop = '';
+    });
+    document.querySelectorAll('.scene, .hero, .site-footer').forEach(el => {
+      el.style.height = '';
     });
     const heroCanvas = document.querySelector('.hero-canvas');
     if (heroCanvas) {
@@ -59,18 +63,17 @@ const adaptCanvases = () => {
     const canvas = scene.querySelector('.scene-canvas');
     if (!canvas) return;
 
-    // 使用视口高度的 92%（留出呼吸空间）作为目标高度
-    const targetH = vh * 0.92;
+    // 目标：让画布视觉高度占满视口高度（留上下各 2% 呼吸空间）
+    const targetH = vh * 0.96;
     const scaleByHeight = targetH / rawH;
 
-    // 取较大值确保内容填满视口，但不超过 1
-    // 同时限制画布视觉宽度不超过视口宽度的 130%，避免两侧裁切过多
-    const maxScaleForWidth = (vw * 1.3) / 1920;
+    // 允许画布视觉宽度最多为视口宽度的 150%（每侧最多裁切 25%）
+    const maxScaleForWidth = (vw * 1.5) / 1920;
+
     let finalScale = Math.max(scaleByWidth, scaleByHeight);
     finalScale = Math.min(finalScale, 1, maxScaleForWidth);
 
-    // 对于特别高的画布（如 scene5: 1920px），按宽度缩放已经足够
-    // 不强制放大，避免内容被过度裁切
+    // 对于特别高的画布（如 scene5: 1920px），按宽度缩放不做额外放大
     if (rawH > vh) {
       finalScale = scaleByWidth;
     }
@@ -79,15 +82,15 @@ const adaptCanvases = () => {
     const visualW = 1920 * finalScale;
     const visualH = rawH * finalScale;
 
-    // 设置 section 高度为视觉高度（至少等于视口高度的 92%）
-    scene.style.height = Math.max(visualH, targetH) + 'px';
+    // section 高度：至少占满视口，同时要能容纳画布
+    const sectionHeight = Math.max(vh, visualH);
+    scene.style.height = sectionHeight + 'px';
 
-    // 水平居中偏移
+    // 水平居中偏移（负值时画布比视口宽，左右对称裁切）
     const offsetX = (vw - visualW) / 2;
 
     // 垂直居中偏移
-    const sectionH = scene.offsetHeight;
-    const offsetY = Math.max(0, (sectionH - visualH) / 2);
+    const offsetY = Math.max(0, (sectionHeight - visualH) / 2);
 
     canvas.style.transform = `scale(${finalScale})`;
     canvas.style.marginLeft = offsetX + 'px';
@@ -99,21 +102,21 @@ const adaptCanvases = () => {
   const heroCanvas = document.querySelector('.hero-canvas');
   if (hero && heroCanvas) {
     const rawH = 1006;
-    const targetH = vh * 0.92;
+    const targetH = vh * 0.96;
     const scaleByHeight = targetH / rawH;
-    const maxScaleForWidthHero = (vw * 1.3) / 1920;
+    const maxScaleForWidthHero = (vw * 1.5) / 1920;
     let finalScale = Math.max(scaleByWidth, scaleByHeight);
     finalScale = Math.min(finalScale, 1, maxScaleForWidthHero);
 
     const visualW = 1920 * finalScale;
     const visualH = rawH * finalScale;
 
-    // hero section 高度
-    hero.style.height = Math.max(visualH, targetH) + 'px';
+    // hero section 高度：至少占满视口
+    const sectionHeight = Math.max(vh, visualH);
+    hero.style.height = sectionHeight + 'px';
 
     const offsetX = (vw - visualW) / 2;
-    const sectionH = hero.offsetHeight;
-    const offsetY = Math.max(0, (sectionH - visualH) / 2);
+    const offsetY = Math.max(0, (sectionHeight - visualH) / 2);
 
     heroCanvas.style.transform = `scale(${finalScale})`;
     heroCanvas.style.left = offsetX + 'px';
@@ -127,20 +130,20 @@ const adaptCanvases = () => {
   const footerCanvas = footer ? footer.querySelector('.scene-canvas') : null;
   if (footer && footerCanvas) {
     const rawH = 1000;
-    const targetH = vh * 0.92;
+    const targetH = vh * 0.96;
     const scaleByHeight = targetH / rawH;
-    const maxScaleForWidthFooter = (vw * 1.3) / 1920;
+    const maxScaleForWidthFooter = (vw * 1.5) / 1920;
     let finalScale = Math.max(scaleByWidth, scaleByHeight);
     finalScale = Math.min(finalScale, 1, maxScaleForWidthFooter);
 
     const visualW = 1920 * finalScale;
     const visualH = rawH * finalScale;
 
-    footer.style.height = Math.max(visualH, targetH) + 'px';
+    const sectionHeight = Math.max(vh, visualH);
+    footer.style.height = sectionHeight + 'px';
 
     const offsetX = (vw - visualW) / 2;
-    const sectionH = footer.offsetHeight;
-    const offsetY = Math.max(0, (sectionH - visualH) / 2);
+    const offsetY = Math.max(0, (sectionHeight - visualH) / 2);
 
     footerCanvas.style.transform = `scale(${finalScale})`;
     footerCanvas.style.marginLeft = offsetX + 'px';
