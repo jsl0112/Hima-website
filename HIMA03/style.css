@@ -508,7 +508,18 @@ a { color: inherit; text-decoration: none; }
 #scene1 { --design-h: 941; }
 #scene2 { --design-h: 962; }
 #scene3 { --design-h: 984; }
-#scene4 { --design-h: 636; }
+#scene4 {
+  --design-h: 636;
+  height: calc(100vw * 636 / 1920);
+  min-height: 400px;
+}
+#scene4 .scene-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 1920px;
+  transform-origin: top left;
+  transform: scale(calc(100vw / 1920));
+}
 /* scene5 合作游戏：纯按宽度缩放，不限制 max-height */
 #scene5 {
   --design-h: 1200;
@@ -517,10 +528,10 @@ a { color: inherit; text-decoration: none; }
 }
 #scene5 .scene-canvas {
   position: absolute;
-  top: 0; left: 0;
+  top: 0; left: 50%;
   width: 1920px;
-  transform-origin: top left;
-  transform: scale(calc(100vw / 1920));
+  transform-origin: top center;
+  transform: translateX(-50%) scale(calc(100vw / 1920));
 }
 /* footer：增加高度让版权区不贴底 */
 .site-footer {
@@ -1424,9 +1435,6 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(180deg, #eef3fc 0%, #e4ecfa 30%, #dae4f6 60%, #040b34 100%);
 }
 .shared-bg-wrap .scene--light {
-  background: transparent;
-}
-.shared-bg-wrap .site-footer {
   background: transparent;
 }
 .site-footer {
