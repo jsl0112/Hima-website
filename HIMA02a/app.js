@@ -2,22 +2,54 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
-// ========= 0. Viewport 宽度修正 + 全局缩放变量 =========
-// 精确设置 --scale-val = clientWidth / 1920，驱动所有模块自适应
-(function fixViewportWidth() {
+// ========= 0. 全屏自适应 · 每个模块单屏铺满 =========
+// 策略：每个 section 高度 = 100vh
+// 每个 canvas 缩放 = min(vw/1920, vh/designH)，确保内容在视口内完整显示
+// 使用 transform: translate(-50%,-50%) scale(X) 居中
+(function initFullScreenFit() {
   const DESIGN_WIDTH = 1920;
-  const setScale = () => {
+  // 每个模块的设计稿原始高度
+  const sectionConfigs = [
+    { selector: '.hero-canvas', designH: 1006, parent: '.hero' },
+    { selector: '#scene1 .scene-canvas', designH: 941, parent: '#scene1' },
+    { selector: '#scene2 .scene-canvas', designH: 962, parent: '#scene2' },
+    { selector: '#scene3 .scene-canvas', designH: 984, parent: '#scene3' },
+    { selector: '#scene4 .scene-canvas', designH: 636, parent: '#scene4' },
+    { selector: '#scene5 .scene-canvas', designH: 1850, parent: '#scene5' },
+    { selector: '.site-footer .scene-canvas', designH: 900, parent: '.site-footer' },
+  ];
+
+  const updateAllScales = () => {
     const vw = document.documentElement.clientWidth;
-    // 超宽屏限制最大 scale 为 1
-    const scale = Math.min(vw / DESIGN_WIDTH, 1);
+    const vh = window.innerHeight;
+
+    sectionConfigs.forEach(({ selector, designH, parent }) => {
+      const canvas = document.querySelector(selector);
+      if (!canvas) return;
+
+      // 获取父 section 的实际高度（可能受 min-height 影响）
+      const parentEl = document.querySelector(parent);
+      const sectionH = parentEl ? parentEl.clientHeight : vh;
+
+      // 核心：取宽度缩放和高度缩放的较小值，保证内容不超出视口
+      // 加 0.92 留一点边距，避免贴边
+      const scaleW = vw / DESIGN_WIDTH;
+      const scaleH = sectionH / designH * 0.92;
+      const scale = Math.min(scaleW, scaleH, 1); // 不超过 1:1
+
+      canvas.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    });
+
+    // 同时设置全局 CSS 变量（给其他依赖的元素用）
+    const globalScale = Math.min(vw / DESIGN_WIDTH, 1);
+    document.documentElement.style.setProperty('--scale-val', globalScale);
     document.documentElement.style.setProperty('--vw', vw + 'px');
-    document.documentElement.style.setProperty('--scale-val', scale);
   };
-  setScale();
-  window.addEventListener('resize', setScale);
-  window.addEventListener('load', setScale);
-  // 确保首帧就生效（避免白屏闪烁）
-  requestAnimationFrame(setScale);
+
+  updateAllScales();
+  window.addEventListener('resize', updateAllScales);
+  window.addEventListener('load', updateAllScales);
+  requestAnimationFrame(updateAllScales);
 })();
 
 // ========= 1. Stats 数字计数动画（进入视口时触发） =========

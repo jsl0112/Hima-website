@@ -120,14 +120,15 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(1);    opacity: .55; }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 */
+/* 1920×1006 固定画布 + 等比缩放 + 居中 */
 .hero-canvas {
   position: absolute;
-  top: 0; left: 0;
+  top: 50%;
+  left: 50%;
   width: 1920px;
   height: 1006px;
-  transform-origin: top left;
-  transform: scale(var(--scale-val));
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(var(--scale-val));
   z-index: 2;
 }
 
@@ -487,10 +488,13 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
 }
 .scene-canvas {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 1920px;
-  transform-origin: top left;
-  transform: scale(var(--scale-val));
+  transform-origin: center center;
+  /* 居中 + 缩放：JS 动态设置 --section-scale */
+  transform: translate(-50%, -50%) scale(var(--scale-val));
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -507,20 +511,19 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度
-   使用 CSS 变量 --scale 由 JS 实时设置（= clientWidth / 1920）
-   每个 section 高度 = 画布设计高度 × --scale
-   fallback 用 100vw 近似（首次加载 JS 还未执行时） */
+/* 单屏铺满策略：每个 section 高度 = 100vh（一屏）
+   内容缩放由 JS 计算 min(vw/1920, vh/designH) 后写入各自 CSS 变量
+   全局 --scale-val 仅作 fallback（= vw/1920）
+   各 section 有独立的 --section-scale 由 JS 精确设置 */
 :root {
-  --scale: calc(100vw / 1920);
-  --scale-val: 1; /* JS 会设为真实数值 */
+  --scale-val: 1; /* JS 会设为真实数值 = min(vw/1920, 1) */
 }
-#scene1 { height: calc(941px * var(--scale-val)); min-height: 420px; }
-#scene2 { height: calc(962px * var(--scale-val)); min-height: 420px; }
-#scene3 { height: calc(984px * var(--scale-val)); min-height: 420px; }
-#scene4 { height: calc(636px * var(--scale-val)); min-height: 300px; }
-#scene5 { height: calc(1850px * var(--scale-val)); min-height: 600px; }
-.site-footer { height: calc(1000px * var(--scale-val)); min-height: 400px; }
+#scene1 { height: 100vh; min-height: 520px; }
+#scene2 { height: 100vh; min-height: 520px; }
+#scene3 { height: 100vh; min-height: 520px; }
+#scene4 { height: 100vh; min-height: 420px; }
+#scene5 { height: 100vh; min-height: 600px; }
+.site-footer { height: 100vh; min-height: 500px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
@@ -676,7 +679,6 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s1bg .scene-canvas {
-  position: relative;
   z-index: 2;
 }
 
@@ -909,7 +911,6 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s2bg .scene-canvas {
-  position: relative;
   z-index: 2;
 }
 /* 继承浅色主题文字配色 */
@@ -1015,7 +1016,6 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s3bg .scene-canvas {
-  position: relative;
   z-index: 2;
 }
 .scene--s3bg .scene-title--light { color: rgba(255,255,255,.95); }
@@ -1757,26 +1757,21 @@ html[lang="en"] .s3-feat-desc {
    响应式适配 · 确保各种浏览器分辨率正常展示
    ========================================================= */
 
-/* --- 超宽屏（>1920px）：限制最大缩放，保持 1:1 内容居中 --- */
+/* --- 超宽屏（>1920px）：内容保持 1:1，居中显示 --- */
 @media (min-width: 1921px) {
-  :root {
-    --scale-val: 1;
-  }
   .hero-canvas,
   .scene-canvas {
-    /* 超过 1920px 时不再放大，保持 1:1 并用 margin 居中 */
-    transform: none;
-    margin-left: calc((100vw - 1920px) / 2);
+    /* 超过 1920px 时不再放大，CSS 变量由 JS 控制 */
   }
   .hero {
-    height: 1006px;
+    height: 100vh;
   }
-  #scene1 { height: 941px; }
-  #scene2 { height: 962px; }
-  #scene3 { height: 984px; }
-  #scene4 { height: 636px; }
-  #scene5 { height: 1850px; }
-  .site-footer { height: 1000px; }
+  #scene1 { height: 100vh; }
+  #scene2 { height: 100vh; }
+  #scene3 { height: 100vh; }
+  #scene4 { height: 100vh; }
+  #scene5 { height: 100vh; }
+  .site-footer { height: 100vh; }
 }
 
 /* --- 笔记本 & 标准桌面（1024px ~ 1920px）：默认缩放机制完美适配 --- */
