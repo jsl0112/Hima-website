@@ -46,10 +46,19 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;        /* 双重保险：防止水平滚动 */
   max-width: 100%;
+  width: 100%;
 }
 img { display: block; max-width: 100%; }
 button { border: none; background: none; font-family: inherit; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
+
+/* =========================================================
+   全局缩放变量 —— 解决 100vw 包含滚动条宽度的问题
+   用 100% 替代 100vw，当 html 和 body 都设为 overflow-x:hidden 时
+   100% 等于可视宽度（不含滚动条）。
+   对所有 scene 的 transform 保持 scale(calc(100vw / 1920))，
+   但让容器高度用更安全的 aspect-ratio fallback。
+   ========================================================= */
 
 /* =========================================================
    Hero · 严格 Figma 1920×1006 1:1 还原
@@ -60,7 +69,7 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   overflow: hidden;
   height: calc(100vw * 1006 / 1920);
-  min-height: 640px;
+  min-height: 540px;
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
 }
@@ -78,13 +87,13 @@ a { color: inherit; text-decoration: none; }
    内层 img 只做"缩放 + 旋转"（动画只在这一层跑）
    这样 translate 不跟 rotate/scale 在同一个 transform 里抢执行顺序，
    漩涡中心永远钉死在画布 (960, 503)，绝对不会漂。
-   原图 2502×1888 ≈ 4:3，保持比例别压扁。 ===== */
+   新图 1854×1854 正方形。 ===== */
 .hero-vortex-wrap {
   position: absolute;
   left: 960px;                          /* 画布水平中心 */
   top: 503px;                           /* 画布垂直中心 */
-  width: 1600px;                        /* 原图比例 4:3 */
-  height: 1200px;
+  width: 1400px;                        /* 正方形，略小于画布以免溢出 */
+  height: 1400px;
   transform: translate(-50%, -50%);     /* 把中心对齐到 (960,503) */
   transform-origin: center center;
   z-index: 1;
@@ -97,37 +106,28 @@ a { color: inherit; text-decoration: none; }
   height: 100%;
   max-width: none;
   object-fit: contain;                  /* 保持原比例，不压扁 */
-  opacity: 0;
+  opacity: .55;
   mix-blend-mode: multiply;
   transform-origin: center center;
-  animation:
-    vortexIn 1.6s cubic-bezier(.22,.61,.36,1) .15s forwards,
-    vortexLoop 22s linear 1.8s infinite;
+  transform: scale(1);
+  animation: vortexBreath 4s ease-in-out infinite;
   will-change: transform, opacity;
 }
-/* 入场：从小放大到 1，不加 translate，让 wrapper 负责定位 */
-@keyframes vortexIn {
-  0%   { opacity: 0;   transform: scale(.7) rotate(-30deg); }
-  100% { opacity: .55; transform: scale(1)  rotate(0deg); }
-}
-/* 循环：只做呼吸缩放 + 匀速自转，绝对不 translate */
-@keyframes vortexLoop {
-  0%   { opacity: .55; transform: scale(1)    rotate(0deg); }
-  50%  { opacity: .65; transform: scale(1.06) rotate(180deg); }
-  100% { opacity: .55; transform: scale(1)    rotate(360deg); }
+/* 呼吸缩放：持续循环，不停歇 */
+@keyframes vortexBreath {
+  0%   { transform: scale(1);    opacity: .55; }
+  50%  { transform: scale(1.08); opacity: .65; }
+  100% { transform: scale(1);    opacity: .55; }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 + 水平居中
-   注意：scale() 需要无量纲数，calc(100vw / 1920) 得到的是带单位的长度值，
-   在大多数浏览器中会被忽略！必须用 JS 设置 --hero-scale CSS 变量。 */
+/* 1920×1006 固定画布 + 等比缩放 */
 .hero-canvas {
   position: absolute;
-  top: 0;
-  left: 50%;
+  top: 0; left: 0;
   width: 1920px;
   height: 1006px;
-  transform: translateX(-50%) scale(var(--hero-scale, 1));
-  transform-origin: top center;
+  transform-origin: top left;
+  transform: scale(calc(100vw / 1920));
   z-index: 2;
 }
 
@@ -485,23 +485,12 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   width: 100%;
   overflow: hidden;
-  max-width: 100vw;
 }
 .scene-canvas {
   position: relative;
   width: 1920px;
-  left: 50%;
-  transform: translateX(-50%) scale(var(--vw-scale, 1));
-  transform-origin: top center;
-}
-/* 所有屏幕的 scene-canvas 统一使用 --vw-scale 等比缩放（= vw/1920），居中显示 */
-#scene1 .scene-canvas,
-#scene2 .scene-canvas,
-#scene3 .scene-canvas,
-#scene4 .scene-canvas,
-#scene5 .scene-canvas,
-.site-footer .scene-canvas {
-  transform: translateX(-50%) scale(var(--vw-scale, 1));
+  transform-origin: top left;
+  transform: scale(calc(100vw / 1920));
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -518,13 +507,14 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度 */
-#scene1 { height: calc(100vw * 941 / 1920); }
-#scene2 { height: calc(100vw * 962 / 1920); }
-#scene3 { height: calc(100vw * 984 / 1920); }
-#scene4 { height: calc(100vw * 636 / 1920); }
-#scene5 { height: calc(100vw * 1785 / 1920); }
-.site-footer { height: calc(100vw * 1408 / 1920); }
+/* 动态计算 section 高度（canvas 高 × 100vw/1920）
+   使用 min() 限制最大高度，防止超宽屏幕下过高 */
+#scene1 { height: calc(100vw * 941 / 1920); min-height: calc(941px * 0.5); }
+#scene2 { height: calc(100vw * 962 / 1920); min-height: calc(962px * 0.5); }
+#scene3 { height: calc(100vw * 984 / 1920); min-height: calc(984px * 0.5); }
+#scene4 { height: calc(100vw * 636 / 1920); min-height: calc(636px * 0.5); }
+#scene5 { height: calc(100vw * 1850 / 1920); min-height: calc(1850px * 0.5); }
+.site-footer { height: calc(100vw * 1000 / 1920); min-height: calc(1000px * 0.5); }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
@@ -1295,9 +1285,27 @@ a { color: inherit; text-decoration: none; }
    Scene 05 · 合作游戏（浅色）· 3×3 封面墙
    ========================================================= */
 .games-wall { position: absolute; }
-.game-card {
+.games-wall-img {
+  display: block;
+  border-radius: 18px;
+  cursor: pointer;
+  /* 入场前 */
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity .8s cubic-bezier(.22,.61,.36,1),
+    transform .8s cubic-bezier(.22,.61,.36,1);
+}
+#scene5.is-in .games-wall-img {
+  opacity: 1;
+  transform: translateY(0);
+}
+#scene5.is-in .games-wall-img:hover {
+  transform: translateY(-6px) scale(1.008);
+}
+.game-card:not(.games-grid .game-card) {
   position: absolute;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
   box-shadow: none;
@@ -1310,11 +1318,11 @@ a { color: inherit; text-decoration: none; }
     transform .8s cubic-bezier(.22,.61,.36,1),
     box-shadow .4s;
 }
-#scene5.is-in .game-card {
+#scene5.is-in .game-card:not(.games-grid .game-card) {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
-#scene5.is-in .game-card:hover {
+#scene5.is-in .game-card:not(.games-grid .game-card):hover {
   transform: translateY(-8px) scale(1.015);
   box-shadow: none;
   z-index: 3;
@@ -1349,18 +1357,18 @@ a { color: inherit; text-decoration: none; }
 }
 .game-name {
   position: absolute;
-  left: 26px; bottom: 22px; right: 26px;
+  left: 22px; bottom: 18px; right: 22px;
   color: #fff;
   font-family: 'MFHaoYing', 'PingFang SC', sans-serif;
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1.15;
   letter-spacing: -0.02em;
   font-weight: 400;
   text-shadow: 0 4px 14px rgba(0,0,0,.6);
   z-index: 2;
 }
-.game-name--lg { font-size: 34px; font-weight: 600; letter-spacing: .06em; line-height: 1; }
-.game-name--sm { font-size: 18px; letter-spacing: .08em; bottom: 16px; font-weight: 500; }
+.game-name--lg { font-size: 30px; font-weight: 600; letter-spacing: .06em; line-height: 1; }
+.game-name--sm { font-size: 16px; letter-spacing: .08em; bottom: 14px; font-weight: 500; }
 
 .game-card--hero .game-hero-logo {
   position: absolute;
@@ -1402,9 +1410,7 @@ a { color: inherit; text-decoration: none; }
 /* 私信营销 + 合作游戏 + Footer 共用背景图 */
 .shared-bg-wrap {
   position: relative;
-  background: url('assets/第五屏背景.png') top center / cover no-repeat;
-  overflow: hidden;
-  max-width: 100vw;
+  background: url('assets/第五屏背景.png') top center / 100% 100% no-repeat;
 }
 .shared-bg-wrap .scene--light {
   background: transparent;
@@ -1415,7 +1421,6 @@ a { color: inherit; text-decoration: none; }
 .site-footer {
   position: relative;
   width: 100%;
-  max-width: 100vw;
   overflow: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 50% 30%, #2752c2 0%, #0c2274 45%, #040b34 100%);
@@ -1483,7 +1488,87 @@ a { color: inherit; text-decoration: none; }
 .footer-links a { cursor: pointer; transition: color .2s; }
 .footer-links a:hover { color: #fff; }
 .footer-links .sep { color: rgba(255,255,255,.2); }
-.footer-company { line-height: 1.9; }
+.footer-company { line-height: 1.9; margin-bottom: 32px; }
+.footer-copyright {
+  font-size: 14px;
+  color: rgba(255,255,255,.75);
+  margin-top: 24px;
+}
+
+/* ===== Footer 底部流光动效 ===== */
+.footer-glow-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.footer-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.3;
+  will-change: transform;
+}
+.footer-glow--1 {
+  top: 55%;
+  left: -5%;
+  width: 300px;
+  height: 120px;
+  background: linear-gradient(90deg, #0165F2, #6366f1);
+  animation: glowFlow1 6s ease-in-out infinite;
+}
+.footer-glow--2 {
+  top: 45%;
+  left: 35%;
+  width: 360px;
+  height: 110px;
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  animation: glowFlow2 8s ease-in-out infinite;
+}
+.footer-glow--3 {
+  top: 60%;
+  left: 65%;
+  width: 280px;
+  height: 120px;
+  background: linear-gradient(90deg, #a855f7, #0165F2);
+  animation: glowFlow3 7s ease-in-out infinite;
+}
+@keyframes glowFlow1 {
+  0%   { transform: translateX(0) translateY(0); }
+  33%  { transform: translateX(220px) translateY(-25px); }
+  66%  { transform: translateX(110px) translateY(15px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+@keyframes glowFlow2 {
+  0%   { transform: translateX(0) translateY(0); }
+  33%  { transform: translateX(-160px) translateY(20px); }
+  66%  { transform: translateX(80px) translateY(-10px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+@keyframes glowFlow3 {
+  0%   { transform: translateX(0) translateY(0); }
+  33%  { transform: translateX(-200px) translateY(-15px); }
+  66%  { transform: translateX(130px) translateY(25px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+/* 鼠标追光 */
+.footer-glow-cursor {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(1,101,242,0.25) 0%, rgba(99,102,241,0.1) 40%, transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  transform: translate(-50%, -50%);
+  will-change: left, top;
+}
 
 /* =========================================================
    左侧导航小圆点
@@ -1554,3 +1639,227 @@ a { color: inherit; text-decoration: none; }
 /* =========================================================
    游戏卡片滚动渐入动画（已合并至 .game-card 主定义中）
    ========================================================= */
+
+/* =========================================================
+   英文模式字体覆盖 — 切换为 Radikal 全家族
+   ========================================================= */
+html[lang="en"],
+html[lang="en"] body,
+html[lang="en"] h1,
+html[lang="en"] h2,
+html[lang="en"] h3,
+html[lang="en"] p,
+html[lang="en"] span,
+html[lang="en"] a,
+html[lang="en"] button,
+html[lang="en"] li,
+html[lang="en"] div {
+  font-family: 'Radikal', 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* --- 英文：首屏大标题加粗 + 统一85px + 居中 --- */
+html[lang="en"] .hero-title {
+  font-weight: 700;
+  font-size: 85px;
+  white-space: normal;
+  text-align: center;
+  left: 0 !important;
+  right: 0 !important;
+  width: 1920px !important;
+  margin: 0 auto;
+}
+/* 英文三行间距与中文两行一致（~95px） */
+html[lang="en"] .hero-title-1 {
+  top: 226px !important;
+}
+html[lang="en"] .hero-title-2 {
+  top: 321px !important;
+}
+html[lang="en"] .hero-title-3 {
+  top: 416px !important;
+}
+/* 英文副标题下移，与大标题拉开间距 */
+html[lang="en"] .hero-subtitle {
+  top: 545px !important;
+}
+
+/* --- 英文：首屏左侧图标左移、右侧图标右移，减少遮挡 --- */
+html[lang="en"] .hero-icon[data-id="facebook"],
+html[lang="en"] .hero-icon[data-id="telegram"],
+html[lang="en"] .hero-icon[data-id="slack"],
+html[lang="en"] .hero-icon[data-id="instagram"],
+html[lang="en"] .hero-icon[data-id="youtube"] {
+  margin-left: -80px !important;
+}
+html[lang="en"] .hero-icon[data-id="discord"],
+html[lang="en"] .hero-icon[data-id="messenger"],
+html[lang="en"] .hero-icon[data-id="snapchat"],
+html[lang="en"] .hero-icon[data-id="tiktok"],
+html[lang="en"] .hero-icon[data-id="whatsapp"],
+html[lang="en"] .hero-icon[data-id="spotify"],
+html[lang="en"] .hero-icon[data-id="dribbble"],
+html[lang="en"] .hero-icon[data-id="linkedin"],
+html[lang="en"] .hero-icon[data-id="skype"] {
+  margin-left: 80px !important;
+}
+
+/* --- 英文：首屏 Stats 小标题字体 --- */
+html[lang="en"] .hero-stats .stat-title {
+  font-family: 'Radikal', 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+/* --- 英文：Scene1 左侧蓝色小标题加粗 --- */
+html[lang="en"] .s1-bluet {
+  font-weight: 700;
+}
+
+/* --- 英文：Scene2 Discord icon 左移避免遮挡标题 --- */
+html[lang="en"] .s2-3dicon {
+  left: 420px !important;
+}
+
+/* --- 英文：所有 scene-title 加粗 --- */
+html[lang="en"] .scene-title {
+  font-weight: 700;
+}
+
+/* --- 英文：Scene2 Tab 居中 --- */
+html[lang="en"] #scene2 .scene-tabs {
+  left: 0 !important;
+  width: 1920px !important;
+  justify-content: center;
+}
+
+/* --- 英文：Scene4 / Scene5 标题居中 --- */
+html[lang="en"] #scene4 .scene-title,
+html[lang="en"] #scene5 .scene-title {
+  left: 0 !important;
+  width: 1920px;
+  text-align: center;
+}
+
+/* --- 英文：Scene3 蓝色标题加粗 + 列表上移 --- */
+html[lang="en"] .s3-feat-title {
+  font-weight: 700;
+}
+html[lang="en"] .s3-feat-desc {
+  margin-bottom: 20px;
+}
+
+/* =========================================================
+   响应式适配 · 确保各种浏览器分辨率正常展示
+   ========================================================= */
+
+/* --- 超宽屏（>1920px）：限制最大缩放，保持 1:1 内容居中 --- */
+@media (min-width: 1921px) {
+  .hero-canvas,
+  .scene-canvas {
+    /* 超过 1920px 时不再放大，保持 1:1 并用 margin 居中 */
+    transform: none;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    position: relative;
+    margin-left: calc((100vw - 1920px) / 2);
+  }
+  .hero {
+    height: 1006px;
+  }
+  #scene1 { height: 941px; }
+  #scene2 { height: 962px; }
+  #scene3 { height: 984px; }
+  #scene4 { height: 636px; }
+  #scene5 { height: 1850px; }
+  .site-footer { height: 1000px; }
+}
+
+/* --- 笔记本 & 标准桌面（1024px ~ 1920px）：默认缩放机制完美适配 --- */
+/* 无需额外规则，scale(100vw/1920) 自动处理 */
+
+/* --- 小笔记本 / 平板横屏（768px ~ 1023px）--- */
+@media (max-width: 1023px) {
+  .side-dots {
+    left: 12px;
+    gap: 12px;
+  }
+  .side-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .side-dot::after {
+    font-size: 10px;
+    left: 16px;
+  }
+}
+
+/* --- 平板竖屏 & 大手机（480px ~ 767px）--- */
+@media (max-width: 767px) {
+  .hero {
+    min-height: 420px;
+  }
+  .side-dots {
+    display: none;
+  }
+  /* 缩小 footer 文字，避免溢出 */
+  .footer-bigname {
+    font-size: 180px !important;
+  }
+  .footer-slogan {
+    font-size: 36px !important;
+  }
+  .footer-copy {
+    font-size: 10px !important;
+  }
+  .footer-links {
+    font-size: 10px !important;
+    gap: 6px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* --- 手机竖屏（<480px）--- */
+@media (max-width: 479px) {
+  .hero {
+    min-height: 320px;
+  }
+  .footer-bigname {
+    font-size: 120px !important;
+  }
+  .footer-slogan {
+    font-size: 28px !important;
+  }
+  .footer-logo {
+    width: 80px !important;
+    height: 80px !important;
+  }
+}
+
+/* --- 高 DPI 屏幕优化 --- */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .hero-vortex {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* --- 窗口非常矮的情况（如分屏模式） --- */
+@media (max-height: 600px) and (min-width: 1024px) {
+  .hero {
+    min-height: 480px;
+  }
+}
+
+/* --- 打印时隐藏动效元素 --- */
+@media print {
+  .hero-vortex-wrap,
+  .footer-glow-wrap,
+  .side-dots,
+  .logo-ticker {
+    display: none !important;
+  }
+  .scene-canvas {
+    transform: scale(0.5) !important;
+  }
+}

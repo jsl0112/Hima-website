@@ -3,22 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HIMA · 懂您的一站式海外游戏运营平台</title>
+  <title data-i18n="page-title">HIMA · 懂您的一站式海外游戏运营平台</title>
   <meta name="description" content="黑马海外游戏运营平台 HIMA，助力出海游戏精细化运营，提供全方位的技术支持与全球化的营销生态集成。" />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20260429y" />
-  <!-- 提前计算缩放比例，避免页面加载时闪烁 -->
-  <script>
-    (function(){
-      var vw = window.innerWidth;
-      var r = vw / 1920;
-      document.documentElement.style.setProperty('--vw-scale', r);
-      document.documentElement.style.setProperty('--hero-scale', r);
-    })();
-  </script>
+  <link rel="stylesheet" href="style.css?v=20260430p" />
 </head>
 <body>
 
@@ -49,7 +40,7 @@
 
     <!-- 背景漩涡：外层 wrapper 负责"锁死中心"，内层 img 只负责"转+缩"，彻底不漂 -->
     <div class="hero-vortex-wrap" aria-hidden="true">
-      <img class="hero-vortex" src="assets/背景漩涡.png" alt="" />
+      <img class="hero-vortex" src="assets/新的背景漩涡.png" alt="" />
     </div>
 
     <!-- ===== 顶部导航（Figma 节点 0:1958，H=80） ===== -->
@@ -62,23 +53,23 @@
 
       <!-- 菜单（Figma x=682, y=28, w=496, h=24） -->
       <nav class="nav-menu" style="left:682px; top:28px; width:496px;">
-        <a href="#scene1" class="nav-link">社媒管理</a>
-        <a href="#scene2" class="nav-link">社区运营</a>
-        <a href="#scene3" class="nav-link">直播运营</a>
-        <a href="#scene4" class="nav-link">私信营销</a>
+        <a href="#scene1" class="nav-link" data-i18n="nav-sm">社媒管理</a>
+        <a href="#scene2" class="nav-link" data-i18n="nav-sq">社区运营</a>
+        <a href="#scene3" class="nav-link" data-i18n="nav-zb">直播运营</a>
+        <a href="#scene4" class="nav-link" data-i18n="nav-sx">私信营销</a>
       </nav>
 
       <!-- Language（Figma x=1669, y=28） -->
-      <div class="nav-lang" style="left:1669px; top:28px;">
+      <div class="nav-lang" id="langToggle" style="left:1669px; top:28px; cursor:pointer;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
         </svg>
-        <span>EN</span>
+        <span id="langLabel">EN</span>
       </div>
 
       <!-- 合作咨询按钮（Figma 0:1976: x=1749, w=111, h=44） -->
-      <button class="nav-cta" style="left:1749px; top:18px; width:111px; height:44px;">合作咨询</button>
+      <button class="nav-cta" data-i18n="nav-cta" style="left:1749px; top:18px; width:111px; height:44px;">合作咨询</button>
     </header>
 
     <!-- ===== 中心人物 KV（Figma 0:2420: x=377.09, y=58, 314×453） ===== -->
@@ -104,14 +95,17 @@
     <!-- ===== 主标题（Figma 0:2422: x=560,y=226, w=772,h=258）=====
          Figma fills="mixed"：「一站式」单独 #0165F2，其他深色 -->
     <h1 class="hero-title hero-title-1" style="left:660px; top:226px;">
-      <span>懂您的</span><span class="accent">一站式</span>
+      <span data-i18n="hero-t1a">懂您的</span><span class="accent" data-i18n="hero-t1b">一站式</span>
     </h1>
     <h1 class="hero-title hero-title-2" style="left:560px; top:336px;">
-      <span>海外游戏运营平台</span>
+      <span data-i18n="hero-t2">海外游戏运营平台</span>
+    </h1>
+    <h1 class="hero-title hero-title-3" style="left:560px; top:336px; display:none;">
+      <span data-i18n="hero-t3"></span>
     </h1>
 
     <!-- 副标题（单行，1920 画布内整体居中） -->
-    <div class="hero-subtitle" style="left:0; top:470px; width:1920px; text-align:center;">
+    <div class="hero-subtitle" data-i18n="hero-sub" style="left:0; top:470px; width:1920px; text-align:center;">
       助力出海游戏精细化运营，提供全方位的技术支持与全球化的营销生态集成
     </div>
 
@@ -120,23 +114,23 @@
       <div class="hero-stats-inner">
         <div class="stat-item">
           <div class="stat-num">4<span class="plus">+</span></div>
-          <div class="stat-title">核心场景</div>
-          <div class="stat-desc">社媒、社区、直播、私信<br/>覆盖全生命周期核心运营场景</div>
+          <div class="stat-title" data-i18n="stat-t1">核心场景</div>
+          <div class="stat-desc" data-i18n="stat-d1" data-i18n-html>社媒、社区、直播、私信<br/>覆盖全生命周期核心运营场景</div>
         </div>
         <div class="stat-item">
           <div class="stat-num">13<span class="plus">+</span></div>
-          <div class="stat-title">主流海外渠道</div>
-          <div class="stat-desc">一站式触达 Discord、Twitch 等<br/>全球主流社媒平台</div>
+          <div class="stat-title" data-i18n="stat-t2">主流海外渠道</div>
+          <div class="stat-desc" data-i18n="stat-d2" data-i18n-html>一站式触达 Discord、Twitch 等<br/>全球主流社媒平台</div>
         </div>
         <div class="stat-item">
           <div class="stat-num">20<span class="plus">+</span></div>
-          <div class="stat-title">游戏项目</div>
-          <div class="stat-desc">拥有PUBGM、三角洲等<br/>出海大作稳定运营经验</div>
+          <div class="stat-title" data-i18n="stat-t3">游戏项目</div>
+          <div class="stat-desc" data-i18n="stat-d3" data-i18n-html>拥有PUBGM、三角洲等<br/>出海大作稳定运营经验</div>
         </div>
         <div class="stat-item">
           <div class="stat-num">16<span class="plus">+</span></div>
-          <div class="stat-title">语言支持</div>
-          <div class="stat-desc">中、英、日、韩、德等<br/>多语言本地化运营支持与交付</div>
+          <div class="stat-title" data-i18n="stat-t4">语言支持</div>
+          <div class="stat-desc" data-i18n="stat-d4" data-i18n-html>中、英、日、韩、德等<br/>多语言本地化运营支持与交付</div>
         </div>
       </div>
     </div>
@@ -217,10 +211,10 @@
     <div class="scene-eyebrow" style="left:0; top:99px; width:1920px; text-align:center;">/      Core Scene 01      /</div>
 
     <!-- 大标题 — 水平居中 -->
-    <h2 class="scene-title scene-title--light" style="left:0; top:120px; width:1920px; text-align:center;">社媒管理</h2>
+    <h2 class="scene-title scene-title--light" data-i18n="s1-title" style="left:0; top:120px; width:1920px; text-align:center;">社媒管理</h2>
 
     <!-- 副标题 — Figma: Frame18.y(1105) + Body.y(90) - 1006 = 189 -->
-    <p class="scene-subtitle scene-subtitle--light" style="left:0; top:189px; width:1920px;">
+    <p class="scene-subtitle scene-subtitle--light" data-i18n="s1-sub" style="left:0; top:189px; width:1920px;">
       覆盖全球主流社交媒体平台，提供发帖、互动、数据分析一体化解决方案
     </p>
 
@@ -232,30 +226,30 @@
       <img src="assets/icons/plat-04-x.svg" alt="X / Twitter" />
       <img src="assets/icons/plat-05.svg" alt="" />
       <img src="assets/icons/plat-06.svg" alt="" />
-      <span class="s1-plat-more">更多平台接入中</span>
+      <span class="s1-plat-more" data-i18n="s1-more">更多平台接入中</span>
     </div>
 
     <!-- Tab 导航（5 个）— Figma: x=630, y=296, w=660 -->
     <div class="scene-tabs scene-tabs--dark" style="left:630px; top:296px; width:660px;">
-      <button class="tab active"><span>发帖编辑</span></button>
-      <button class="tab"><span>策略排期</span></button>
-      <button class="tab"><span>数据看板</span></button>
-      <button class="tab"><span>更多能力</span></button>
-      <button class="tab"><span>审核工作流</span></button>
+      <button class="tab active"><span data-i18n="s1-tab1">发帖编辑</span></button>
+      <button class="tab"><span data-i18n="s1-tab2">策略排期</span></button>
+      <button class="tab"><span data-i18n="s1-tab3">数据看板</span></button>
+      <button class="tab"><span data-i18n="s1-tab4">更多能力</span></button>
+      <button class="tab"><span data-i18n="s1-tab5">审核工作流</span></button>
       <span class="tab-indicator"></span>
     </div>
     <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:326px; width:1200px;"></div>
 
     <!-- ======= 下半部分：左蓝色标题 + 4 条 bullet ======= -->
     <div class="s1-left" style="left:360px; top:400px; width:260px;">
-      <h3 class="s1-bluet">
+      <h3 class="s1-bluet" data-i18n="s1-bluet" data-i18n-html>
         富文本编辑<br/>一键多发
       </h3>
       <ul class="s1-bullets">
-        <li><span class="s1-dot-blue"></span>支持图文、视频、Reel 多格式</li>
-        <li><span class="s1-dot-blue"></span>AI 翻译 + 多语言一键适配</li>
-        <li><span class="s1-dot-blue"></span>定时 / 定向发布，全球多时区精准覆盖</li>
-        <li><span class="s1-dot-blue"></span>实时预览各平台展示效果</li>
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b1">支持图文、视频、Reel 多格式</span></li>
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b2">AI 翻译 + 多语言一键适配</span></li>
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b3">定时 / 定向发布，全球多时区精准覆盖</span></li>
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b4">实时预览各平台展示效果</span></li>
       </ul>
     </div>
 
@@ -267,10 +261,10 @@
       <img class="s1-shot-card" src="assets/scenes/scene2-sub1.png" alt="富文本编辑卡" />
       <!-- 底部按钮条 (334 × 40) -->
       <div class="s1-shot-btnbar">
-        <span class="s1-btn s1-btn--ghost">🏷 标签</span>
-        <span class="s1-btn s1-btn--ghost">📅 选取时间</span>
-        <span class="s1-btn s1-btn--primary">⚠ 立即发布</span>
-        <span class="s1-btn s1-btn--amber">⏩ 添加至队列</span>
+        <span class="s1-btn s1-btn--ghost" data-i18n="s1-btn1">🏷 标签</span>
+        <span class="s1-btn s1-btn--ghost" data-i18n="s1-btn2">📅 选取时间</span>
+        <span class="s1-btn s1-btn--primary" data-i18n="s1-btn3">⚠ 立即发布</span>
+        <span class="s1-btn s1-btn--amber" data-i18n="s1-btn4">⏩ 添加至队列</span>
       </div>
     </div>
 
@@ -298,18 +292,18 @@
     </div>
 
     <div class="scene-eyebrow" style="left:0; top:164px; width:1920px; text-align:center;">/      Core Scene 02     /</div>
-    <h2 class="scene-title scene-title--dark" style="left:0; top:188px; width:1920px; text-align:center;">社区运营</h2>
-    <p class="scene-subtitle scene-subtitle--dark" style="left:0; top:278px; width:1920px;">
+    <h2 class="scene-title scene-title--dark" data-i18n="s2-title" style="left:0; top:188px; width:1920px; text-align:center;">社区运营</h2>
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s2-sub" style="left:0; top:278px; width:1920px;">
       司内最强的 Discord 官方私域全场景运营解决方案，助力业务打造全能可控的官方私域社区
     </p>
 
     <!-- Tab 导航（5 个） -->
     <div class="scene-tabs scene-tabs--light" style="left:667px; top:337px; width:586px;">
-      <button class="tab active"><span>游戏账号绑定</span></button>
-      <button class="tab"><span>内容管理</span></button>
-      <button class="tab"><span>端内数据查询</span></button>
-      <button class="tab"><span>定制营销活动</span></button>
-      <button class="tab"><span>更多能力</span></button>
+      <button class="tab active"><span data-i18n="s2-tab1">游戏账号绑定</span></button>
+      <button class="tab"><span data-i18n="s2-tab2">内容管理</span></button>
+      <button class="tab"><span data-i18n="s2-tab3">端内数据查询</span></button>
+      <button class="tab"><span data-i18n="s2-tab4">定制营销活动</span></button>
+      <button class="tab"><span data-i18n="s2-tab5">更多能力</span></button>
       <span class="tab-indicator"></span>
     </div>
     <div class="scene-tabs-line scene-tabs-line--light" style="left:360px; top:367px; width:1200px;"></div>
@@ -344,8 +338,8 @@
   <div class="scene-canvas" style="height:984px;">
 
     <div class="scene-eyebrow" style="left:0; top:113px; width:1920px; text-align:center;">/      Core Scene 03      /</div>
-    <h2 class="scene-title scene-title--light" style="left:0; top:137px; width:1920px; text-align:center;">直播运营</h2>
-    <p class="scene-subtitle scene-subtitle--light" style="left:0; top:203px; width:1920px;">
+    <h2 class="scene-title scene-title--light" data-i18n="s3-title" style="left:0; top:137px; width:1920px; text-align:center;">直播运营</h2>
+    <p class="scene-subtitle scene-subtitle--light" data-i18n="s3-sub" style="left:0; top:203px; width:1920px;">
       支持主流海外直播平台的丰富营销能力，覆盖掉宝、互动挂件、主播挑战、AI 高光识别
     </p>
 
@@ -356,22 +350,22 @@
 
     <!-- Tab 导航（4 个） -->
     <div class="scene-tabs scene-tabs--dark" style="left:689px; top:320px; width:542px;">
-      <button class="tab active"><span>直播间掉宝</span></button>
-      <button class="tab"><span>互动挂件</span></button>
-      <button class="tab"><span>主播挑战活动</span></button>
-      <button class="tab"><span>更多能力</span></button>
+      <button class="tab active"><span data-i18n="s3-tab1">直播间掉宝</span></button>
+      <button class="tab"><span data-i18n="s3-tab2">互动挂件</span></button>
+      <button class="tab"><span data-i18n="s3-tab3">主播挑战活动</span></button>
+      <button class="tab"><span data-i18n="s3-tab4">更多能力</span></button>
       <span class="tab-indicator"></span>
     </div>
     <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:350px; width:1200px;"></div>
 
     <!-- 左侧「互动挑战」特性点 -->
     <div class="s3-features" style="left:360px; top:408px; width:285px;">
-      <div class="s3-feat-title">玩家与主播<br/>互动挑战</div>
-      <div class="s3-feat-desc">基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。</div>
+      <div class="s3-feat-title" data-i18n="s3-ft" data-i18n-html>玩家与主播<br/>互动挑战</div>
+      <div class="s3-feat-desc" data-i18n="s3-fd">基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。</div>
       <ul class="s3-feat-list">
-        <li>主播与玩家联动，提升直播互动深度</li>
-        <li>Player / Streamer Challenge 双轨并行</li>
-        <li>任务奖励机制驱动持续参与</li>
+        <li data-i18n="s3-f1">主播与玩家联动，提升直播互动深度</li>
+        <li data-i18n="s3-f2">Player / Streamer Challenge 双轨并行</li>
+        <li data-i18n="s3-f3">任务奖励机制驱动持续参与</li>
       </ul>
     </div>
 
@@ -410,8 +404,8 @@
 
     <div class="scene-eyebrow" style="left:0; top:99px; width:1920px; text-align:center;">/      Core Scene 04      /</div>
 
-    <h2 class="scene-title scene-title--dark" style="left:857px; top:123px;">私信营销</h2>
-    <p class="scene-subtitle scene-subtitle--dark" style="left:0; top:213px; width:1920px;">
+    <h2 class="scene-title scene-title--dark" data-i18n="s4-title" style="left:857px; top:123px;">私信营销</h2>
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s4-sub" style="left:0; top:213px; width:1920px;">
       海外用户全域精准触达，助力业务拉新、召回、促活、增收
     </p>
 
@@ -420,20 +414,20 @@
       <!-- 左侧 4 项特性列表 -->
       <ul class="s4-features">
         <li>
-          <div class="s4-feat-tag"><span class="s4-dot"></span>定时推送</div>
-          <div class="s4-feat-desc">支持全球多时区定时推送，精准覆盖目标用户活跃时段</div>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag1">定时推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd1">支持全球多时区定时推送，精准覆盖目标用户活跃时段</div>
         </li>
         <li>
-          <div class="s4-feat-tag"><span class="s4-dot"></span>定向推送</div>
-          <div class="s4-feat-desc">支持指定号码包定向推送，精细化触达目标用户群体</div>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag2">定向推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd2">支持指定号码包定向推送，精细化触达目标用户群体</div>
         </li>
         <li>
-          <div class="s4-feat-tag"><span class="s4-dot"></span>条件触发推送</div>
-          <div class="s4-feat-desc">实时监测玩家游戏状态，根据行为条件自动推送匹配内容</div>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag3">条件触发推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd3">实时监测玩家游戏状态，根据行为条件自动推送匹配内容</div>
         </li>
         <li>
-          <div class="s4-feat-tag"><span class="s4-dot"></span>保密测试协议推送</div>
-          <div class="s4-feat-desc">特别打通保密协议签署系统 &amp; CDK 系统，一体化管理测试资格发放</div>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag4">保密测试协议推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd4">特别打通保密协议签署系统 &amp; CDK 系统，一体化管理测试资格发放</div>
         </li>
       </ul>
 
@@ -448,48 +442,15 @@
      Scene 05 · 合作游戏（浅色） Figma y=4529~5882, h=1353
      ========================================================= -->
 <section id="scene5" class="scene scene--light" data-reveal>
-  <div class="scene-canvas" style="height:1785px;">
+  <div class="scene-canvas" style="height:1850px;">
 
-    <h2 class="scene-title scene-title--dark" style="left:810px; top:120px;">合作游戏</h2>
-    <p class="scene-subtitle scene-subtitle--dark" style="left:0; top:210px; width:1920px;">
+    <h2 class="scene-title scene-title--dark" data-i18n="s5-title" style="left:857px; top:186px;">合作游戏</h2>
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s5-sub" style="left:0; top:280px; width:1920px;">
       深度接入游戏生态，实现平台与游戏的无缝联动，持续扩展合作版图，更多游戏陆续接入中
     </p>
 
-    <!-- 游戏封面墙（3列交错布局，整体放大至 1400px 宽度，卡片尺寸提升约 17%） -->
-    <div class="games-wall" style="left:260px; top:340px; width:1400px; height:1444px;">
-      <!-- Row 1 -->
-      <div class="game-card" style="left:0; top:0; width:456px; height:376px;">
-        <img src="assets/合作游戏卡片/1.png" alt="Game 1"/>
-      </div>
-      <div class="game-card" style="left:470px; top:0; width:456px; height:520px;">
-        <img src="assets/合作游戏卡片/2.png" alt="Game 2"/>
-      </div>
-      <div class="game-card" style="left:940px; top:0; width:456px; height:376px;">
-        <img src="assets/合作游戏卡片/3.png" alt="Game 3"/>
-      </div>
-
-      <!-- Row 2 -->
-      <div class="game-card" style="left:0; top:390px; width:456px; height:520px;">
-        <img src="assets/合作游戏卡片/4.png" alt="Game 4"/>
-      </div>
-      <div class="game-card" style="left:470px; top:534px; width:456px; height:376px;">
-        <img src="assets/合作游戏卡片/5.png" alt="Game 5"/>
-      </div>
-      <div class="game-card" style="left:940px; top:390px; width:456px; height:376px;">
-        <img src="assets/合作游戏卡片/6.png" alt="Game 6"/>
-      </div>
-
-      <!-- Row 3 -->
-      <div class="game-card" style="left:0; top:924px; width:456px; height:376px;">
-        <img src="assets/合作游戏卡片/7.png" alt="Game 7"/>
-      </div>
-      <div class="game-card" style="left:470px; top:924px; width:456px; height:520px;">
-        <img src="assets/合作游戏卡片/8.png" alt="Game 8"/>
-      </div>
-      <div class="game-card" style="left:940px; top:780px; width:456px; height:520px;">
-        <img src="assets/合作游戏卡片/9.png" alt="Game 9"/>
-      </div>
-    </div>
+    <!-- 合作游戏卡片：整张设计稿切图 -->
+    <img class="games-wall-img" src="assets/合作游戏卡片.png" alt="合作游戏" style="position:absolute; left:288px; top:360px; width:1344px; height:auto;" />
   </div>
 </section>
 
@@ -498,41 +459,63 @@
      Footer · 深蓝区（Figma y=5882~7290, h=1408）
      ========================================================= -->
 <footer class="site-footer" data-reveal>
-  <div class="scene-canvas" style="height:1408px;">
+  <div class="footer-glow-wrap">
+    <div class="footer-glow footer-glow--1"></div>
+    <div class="footer-glow footer-glow--2"></div>
+    <div class="footer-glow footer-glow--3"></div>
+    <div class="footer-glow-cursor"></div>
+  </div>
+  <div class="scene-canvas" style="height:900px;">
 
     <!-- 背景大字 HIMA -->
-    <div class="footer-bigname" style="left:0; top:519px; width:1920px;">HIMA</div>
+    <div class="footer-bigname" style="left:0; top:200px; width:1920px;">HIMA</div>
 
     <!-- Logo 圆球徽章（渐变主色） -->
-    <div class="footer-logo" style="left:885px; top:493px; width:150px; height:150px;">
+    <div class="footer-logo" style="left:885px; top:174px; width:150px; height:150px;">
       <div class="footer-logo-badge">
         <img src="assets/icons/hima-logo.png" alt="HIMA" onerror="this.style.display='none'"/>
       </div>
     </div>
 
     <!-- Slogan -->
-    <div class="footer-slogan" style="left:0; top:693px; width:1920px;">一站式海外游戏运营平台</div>
+    <div class="footer-slogan" data-i18n="footer-slogan" style="left:0; top:374px; width:1920px;">一站式海外游戏运营平台</div>
 
     <!-- 底部版权信息 -->
-    <div class="footer-copy" style="left:0; top:1061px; width:1920px;">
-      <div class="footer-links">
-        <a>关于我们</a><span class="sep">|</span>
-        <a>核心能力</a><span class="sep">|</span>
-        <a>合作游戏</a><span class="sep">|</span>
-        <a>商务合作</a><span class="sep">|</span>
-        <a>加入我们</a><span class="sep">|</span>
+    <div class="footer-copy" style="left:0; top:742px; width:1920px;">
+      <div class="footer-links" data-i18n="footer-links1" data-i18n-html>
+        <a>关于腾讯</a><span class="sep">|</span>
+        <a>About Tencent</a><span class="sep">|</span>
+        <a>服务协议</a><span class="sep">|</span>
         <a>隐私政策</a><span class="sep">|</span>
-        <a>服务条款</a>
+        <a>开放平台</a><span class="sep">|</span>
+        <a>广告服务</a><span class="sep">|</span>
+        <a>腾讯招聘</a><span class="sep">|</span>
+        <a>腾讯公益</a><span class="sep">|</span>
+        <a>腾讯云</a><span class="sep">|</span>
+        <a>客服中心</a><span class="sep">|</span>
+        <a>举报中心</a><span class="sep">|</span>
+        <a>网址导航</a>
       </div>
-      <div class="footer-company">
-        深圳市黑马科技有限公司 · Tencent · HIMA — Overseas Gaming Operation Platform<br/>
-        Copyright © 2026 Tencent · All Rights Reserved
+      <div class="footer-links" data-i18n="footer-links2" data-i18n-html style="margin-top:4px;">
+        <a>深圳举报中心</a><span class="sep">|</span>
+        <a>深圳公安局</a><span class="sep">|</span>
+        <a>抵制违法广告承诺书</a><span class="sep">|</span>
+        <a>版权保护投诉指引</a><span class="sep">|</span>
+        <a>广东省通管局</a>
+      </div>
+      <div class="footer-company" data-i18n="footer-company" data-i18n-html>
+        粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>
+        新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>
+        互联网药品信息服务资格证书 （粤）一非营业性一2017-0153
+      </div>
+      <div class="footer-copyright">
+        Copyright © 2026 Tencent . All Rights Reserved.
       </div>
     </div>
   </div>
 </footer>
 </div><!-- /.shared-bg-wrap -->
 
-<script src="app.js?v=20260429x"></script>
+<script src="app.js?v=20260430p"></script>
 </body>
 </html>

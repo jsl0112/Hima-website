@@ -2,60 +2,18 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
-// ========= 0. 动态计算全局缩放比例 + 每一屏高度适配 =========
-// 核心策略：所有屏幕统一采用 ratio = vw / 1920 等比缩放
-// 窄屏（<1920）缩小，宽屏（>1920）放大，所有内容水平居中
-// 这样在任何分辨率下，版面始终居中，内容大小也跟随适配
-const updateVwScale = () => {
-  const vw = window.innerWidth;
-  const ratio = vw / 1920;                     // 统一缩放比（所有屏幕共用）
-  document.documentElement.style.setProperty('--vw-scale', ratio);
-  document.documentElement.style.setProperty('--hero-scale', ratio);
-
-  // === Hero 首屏：高度 = max(设计稿高度 × ratio, 视口高度)，确保填满视口 ===
-  const hero = document.querySelector('.hero');
-  if (hero) {
-    const designH = 1006 * ratio;
-    const vh = window.innerHeight;
-    hero.style.height = Math.max(designH, vh) + 'px';
-  }
-  const heroCanvas = document.querySelector('.hero-canvas');
-  if (heroCanvas) {
-    heroCanvas.style.transform = 'translateX(-50%) scale(' + ratio + ')';
-  }
-
-  // === Scene1~5 + Footer：统一使用 ratio，高度 = 设计稿高度 × ratio ===
-  var allSections = [
-    { id: 'scene1', designH: 941 },
-    { id: 'scene2', designH: 962 },
-    { id: 'scene3', designH: 984 },
-    { id: 'scene4', designH: 636 },
-    { id: 'scene5', designH: 1785 },
-  ];
-  allSections.forEach(function(cfg) {
-    var sec = document.getElementById(cfg.id);
-    if (sec) {
-      sec.style.height = (cfg.designH * ratio) + 'px';
-    }
-  });
-
-  // Footer 高度
-  var footer = document.querySelector('.site-footer');
-  if (footer) {
-    footer.style.height = (1408 * ratio) + 'px';
-  }
-
-  // === shared-bg-wrap 背景高度：Scene4 + Scene5 + Footer 总和 ===
-  var sharedWrap = document.querySelector('.shared-bg-wrap');
-  if (sharedWrap) {
-    var s4H = 636 * ratio;
-    var s5H = 1785 * ratio;
-    var ftH = 1408 * ratio;
-    sharedWrap.style.minHeight = (s4H + s5H + ftH) + 'px';
-  }
-};
-updateVwScale();
-window.addEventListener('resize', updateVwScale);
+// ========= 0. Viewport 宽度修正（解决 100vw 包含滚动条问题） =========
+(function fixViewportWidth() {
+  const setVW = () => {
+    // 获取实际可视宽度（不含滚动条）
+    const vw = document.documentElement.clientWidth;
+    document.documentElement.style.setProperty('--vw', vw + 'px');
+  };
+  setVW();
+  window.addEventListener('resize', setVW);
+  // 页面加载后再次确认
+  window.addEventListener('load', setVW);
+})();
 
 // ========= 1. Stats 数字计数动画（进入视口时触发） =========
 const countNums = document.querySelectorAll('.stat-num');
@@ -121,8 +79,8 @@ const attachStagger = () => {
     { selector: '#scene2 .s2-card', step: 120 },
     // Scene4 私信营销 9 平台卡片
     { selector: '#scene4 .s4-plat', step: 70 },
-    // Scene5 合作游戏 9 张封面
-    { selector: '#scene5 .game-card', step: 90 },
+    // Scene5 合作游戏 整图渐入
+    { selector: '#scene5 .games-wall-img', step: 0 },
     // Scene1 左侧 bullet 列表
     { selector: '#scene1 .s1-bullets li', step: 90 },
     // Scene1 标题下平台 logo 条
@@ -337,7 +295,166 @@ const initSideDots = () => {
 };
 initSideDots();
 
-// ========= 7. 游戏卡片交错入场延迟 =========
-document.querySelectorAll('#scene5 .game-card').forEach((card, idx) => {
-  card.style.transitionDelay = `${idx * 100}ms`;
-});
+// ========= 7. 合作游戏整图渐入（无需交错） =========
+
+// ========= 8. 中英文切换（i18n） =========
+const i18n = {
+  zh: {
+    'page-title': 'HIMA · 懂您的一站式海外游戏运营平台',
+    'nav-sm': '社媒管理', 'nav-sq': '社区运营', 'nav-zb': '直播运营', 'nav-sx': '私信营销',
+    'nav-cta': '合作咨询',
+    'hero-t1a': '懂您的', 'hero-t1b': '一站式', 'hero-t2': '海外游戏运营平台', 'hero-t3': '',
+    'hero-sub': '助力出海游戏精细化运营，提供全方位的技术支持与全球化的营销生态集成',
+    'stat-t1': '核心场景', 'stat-d1': '社媒、社区、直播、私信<br/>覆盖全生命周期核心运营场景',
+    'stat-t2': '主流海外渠道', 'stat-d2': '一站式触达 Discord、Twitch 等<br/>全球主流社媒平台',
+    'stat-t3': '游戏项目', 'stat-d3': '拥有PUBGM、三角洲等<br/>出海大作稳定运营经验',
+    'stat-t4': '语言支持', 'stat-d4': '中、英、日、韩、德等<br/>多语言本地化运营支持与交付',
+    's1-title': '社媒管理', 's1-sub': '覆盖全球主流社交媒体平台，提供发帖、互动、数据分析一体化解决方案',
+    's1-more': '更多平台接入中',
+    's1-tab1': '发帖编辑', 's1-tab2': '策略排期', 's1-tab3': '数据看板', 's1-tab4': '更多能力', 's1-tab5': '审核工作流',
+    's1-bluet': '富文本编辑<br/>一键多发',
+    's1-b1': '支持图文、视频、Reel 多格式', 's1-b2': 'AI 翻译 + 多语言一键适配',
+    's1-b3': '定时 / 定向发布，全球多时区精准覆盖', 's1-b4': '实时预览各平台展示效果',
+    's1-btn1': '🏷 标签', 's1-btn2': '📅 选取时间', 's1-btn3': '⚠ 立即发布', 's1-btn4': '⏩ 添加至队列',
+    's2-title': '社区运营', 's2-sub': '司内最强的 Discord 官方私域全场景运营解决方案，助力业务打造全能可控的官方私域社区',
+    's2-tab1': '游戏账号绑定', 's2-tab2': '内容管理', 's2-tab3': '端内数据查询', 's2-tab4': '定制营销活动', 's2-tab5': '更多能力',
+    's3-title': '直播运营', 's3-sub': '支持主流海外直播平台的丰富营销能力，覆盖掉宝、互动挂件、主播挑战、AI 高光识别',
+    's3-tab1': '直播间掉宝', 's3-tab2': '互动挂件', 's3-tab3': '主播挑战活动', 's3-tab4': '更多能力',
+    's3-ft': '玩家与主播<br/>互动挑战',
+    's3-fd': '基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。',
+    's3-f1': '主播与玩家联动，提升直播互动深度',
+    's3-f2': 'Player / Streamer Challenge 双轨并行',
+    's3-f3': '任务奖励机制驱动持续参与',
+    's4-title': '私信营销', 's4-sub': '海外用户全域精准触达，助力业务拉新、召回、促活、增收',
+    's4-tag1': '定时推送', 's4-fd1': '支持全球多时区定时推送，精准覆盖目标用户活跃时段',
+    's4-tag2': '定向推送', 's4-fd2': '支持指定号码包定向推送，精细化触达目标用户群体',
+    's4-tag3': '条件触发推送', 's4-fd3': '实时监测玩家游戏状态，根据行为条件自动推送匹配内容',
+    's4-tag4': '保密测试协议推送', 's4-fd4': '特别打通保密协议签署系统 & CDK 系统，一体化管理测试资格发放',
+    's5-title': '合作游戏', 's5-sub': '深度接入游戏生态，实现平台与游戏的无缝联动，持续扩展合作版图，更多游戏陆续接入中',
+    'footer-slogan': '一站式海外游戏运营平台',
+    'footer-links1': '<a>关于腾讯</a><span class="sep">|</span><a>About Tencent</a><span class="sep">|</span><a>服务协议</a><span class="sep">|</span><a>隐私政策</a><span class="sep">|</span><a>开放平台</a><span class="sep">|</span><a>广告服务</a><span class="sep">|</span><a>腾讯招聘</a><span class="sep">|</span><a>腾讯公益</a><span class="sep">|</span><a>腾讯云</a><span class="sep">|</span><a>客服中心</a><span class="sep">|</span><a>举报中心</a><span class="sep">|</span><a>网址导航</a>',
+    'footer-links2': '<a>深圳举报中心</a><span class="sep">|</span><a>深圳公安局</a><span class="sep">|</span><a>抵制违法广告承诺书</a><span class="sep">|</span><a>版权保护投诉指引</a><span class="sep">|</span><a>广东省通管局</a>',
+    'footer-company': '粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>互联网药品信息服务资格证书 （粤）一非营业性一2017-0153',
+  },
+  en: {
+    'page-title': 'HIMA · Your All-in-One Overseas Game Operations Platform',
+    'nav-sm': 'Social Media', 'nav-sq': 'Community', 'nav-zb': 'Live Streaming', 'nav-sx': 'Direct Messaging',
+    'nav-cta': 'Contact Us',
+    'hero-t1a': 'Your ', 'hero-t1b': 'All-in-One', 'hero-t2': 'Overseas Game', 'hero-t3': 'Operations Platform',
+    'hero-sub': 'Empowering overseas game operations with comprehensive tech support and global marketing ecosystem integration',
+    'stat-t1': 'Core Scenarios', 'stat-d1': 'Social Media, Community, Live Streaming, DM<br/>Covering full-lifecycle core operation scenarios',
+    'stat-t2': 'Overseas Channels', 'stat-d2': 'One-stop access to Discord, Twitch and<br/>other major global social platforms',
+    'stat-t3': 'Game Projects', 'stat-d3': 'Proven track record with PUBG Mobile,<br/>Delta Force and other hit titles',
+    'stat-t4': 'Languages', 'stat-d4': 'CN, EN, JP, KR, DE and more<br/>Multi-language localized operations & delivery',
+    's1-title': 'Social Media Management', 's1-sub': 'Covering all major global social media platforms with integrated posting, engagement and analytics solutions',
+    's1-more': 'More platforms coming',
+    's1-tab1': 'Post Editor', 's1-tab2': 'Scheduling', 's1-tab3': 'Dashboard', 's1-tab4': 'More Features', 's1-tab5': 'Review Workflow',
+    's1-bluet': 'Rich Text Editor<br/>One-Click Multi-Post',
+    's1-b1': 'Supports image, video, Reel and more formats', 's1-b2': 'AI translation + one-click multi-language adaptation',
+    's1-b3': 'Scheduled / targeted posting across global time zones', 's1-b4': 'Real-time preview across all platforms',
+    's1-btn1': '🏷 Tags', 's1-btn2': '📅 Schedule', 's1-btn3': '⚠ Publish Now', 's1-btn4': '⏩ Add to Queue',
+    's2-title': 'Community Operations', 's2-sub': 'The most powerful Discord community operations solution, empowering fully-controlled official community management',
+    's2-tab1': 'Account Binding', 's2-tab2': 'Content Mgmt', 's2-tab3': 'In-Game Data', 's2-tab4': 'Custom Campaigns', 's2-tab5': 'More Features',
+    's3-title': 'Live Streaming', 's3-sub': 'Rich marketing capabilities across major overseas streaming platforms — drops, widgets, streamer challenges, AI highlights',
+    's3-tab1': 'Live Drops', 's3-tab2': 'Widgets', 's3-tab3': 'Streamer Challenge', 's3-tab4': 'More Features',
+    's3-ft': 'Player & Streamer<br/>Interactive Challenge',
+    's3-fd': 'Built on Twitch Extension and more, enabling Streamer Challenge and interactive quests between players and streamers.',
+    's3-f1': 'Streamer-player synergy for deeper live engagement',
+    's3-f2': 'Dual-track Player / Streamer Challenge system',
+    's3-f3': 'Quest reward mechanism driving sustained participation',
+    's4-title': 'Direct Messaging', 's4-sub': 'Precision reach across all overseas user touchpoints — acquisition, re-engagement, activation and revenue growth',
+    's4-tag1': 'Scheduled Push', 's4-fd1': 'Multi-timezone scheduled push for precise coverage of peak user activity',
+    's4-tag2': 'Targeted Push', 's4-fd2': 'Audience-specific targeted push for refined user segment reach',
+    's4-tag3': 'Event-Triggered Push', 's4-fd3': 'Real-time player status monitoring with automatic content push based on behavior triggers',
+    's4-tag4': 'NDA Test Push', 's4-fd4': 'Seamlessly integrated with NDA signing & CDK systems for unified test qualification management',
+    's5-title': 'Partner Games', 's5-sub': 'Deep integration with the gaming ecosystem — seamless platform-game connectivity with an ever-expanding partnership portfolio',
+    'footer-slogan': 'All-in-One Overseas Game Operations Platform',
+    'footer-links1': '<a>About Tencent</a><span class="sep">|</span><a>About Tencent</a><span class="sep">|</span><a>Terms of Service</a><span class="sep">|</span><a>Privacy Policy</a><span class="sep">|</span><a>Open Platform</a><span class="sep">|</span><a>Advertising</a><span class="sep">|</span><a>Tencent Careers</a><span class="sep">|</span><a>Tencent Charity</a><span class="sep">|</span><a>Tencent Cloud</a><span class="sep">|</span><a>Support Center</a><span class="sep">|</span><a>Report Center</a><span class="sep">|</span><a>Site Map</a>',
+    'footer-links2': '<a>Shenzhen Report Center</a><span class="sep">|</span><a>Shenzhen Public Security</a><span class="sep">|</span><a>Ad Compliance Commitment</a><span class="sep">|</span><a>Copyright Protection Guide</a><span class="sep">|</span><a>Guangdong Communications Admin</a>',
+    'footer-company': 'Yue Wang Wen [2017] 6138-1456 / New Net Certificate (Yue) Zi 010 / Network AV License 1904073 / Telecom Business License: Yue B2-20090059 B2-20090028<br/>News Information Service License Yue Fu Xin Han [2001] 87 / Illegal Info Hotline: 0755-83765566-9 / Yue Gong Wang An Bei 44030002000001<br/>Internet Pharmaceutical Info Service Certificate (Yue) Non-commercial 2017-0153',
+  }
+};
+
+let currentLang = 'zh';
+
+function switchLang(lang) {
+  currentLang = lang;
+  const dict = i18n[lang];
+  if (!dict) return;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (!dict[key]) return;
+    if (el.hasAttribute('data-i18n-html')) {
+      el.innerHTML = dict[key];
+    } else if (el.tagName === 'TITLE') {
+      document.title = dict[key];
+    } else {
+      el.textContent = dict[key];
+    }
+  });
+
+  // 英文模式显示第三行标题，中文隐藏
+  const heroT3 = document.querySelector('.hero-title-3');
+  if (heroT3) heroT3.style.display = lang === 'en' ? '' : 'none';
+
+  // 更新语言按钮标签
+  const label = document.getElementById('langLabel');
+  if (label) label.textContent = lang === 'zh' ? 'EN' : '中';
+
+  // 更新 html lang 属性
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+
+  // 重新初始化 Tab 指示条位置
+  if (typeof initTabSwitcher === 'function') initTabSwitcher();
+}
+
+// 语言切换按钮事件
+const langToggle = document.getElementById('langToggle');
+if (langToggle) {
+  langToggle.addEventListener('click', () => {
+    switchLang(currentLang === 'zh' ? 'en' : 'zh');
+  });
+}
+
+/* ===== Footer 鼠标追光 ===== */
+(function() {
+  const footer = document.querySelector('.site-footer');
+  const cursor = document.querySelector('.footer-glow-cursor');
+  if (!footer || !cursor) return;
+
+  let rafId = null;
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+
+  footer.addEventListener('mouseenter', () => {
+    cursor.style.opacity = '1';
+  });
+
+  footer.addEventListener('mouseleave', () => {
+    cursor.style.opacity = '0';
+  });
+
+  footer.addEventListener('mousemove', (e) => {
+    const rect = footer.getBoundingClientRect();
+    targetX = e.clientX - rect.left;
+    targetY = e.clientY - rect.top;
+
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateCursor);
+    }
+  });
+
+  function updateCursor() {
+    currentX += (targetX - currentX) * 0.12;
+    currentY += (targetY - currentY) * 0.12;
+    cursor.style.left = currentX + 'px';
+    cursor.style.top = currentY + 'px';
+
+    if (Math.abs(targetX - currentX) > 0.5 || Math.abs(targetY - currentY) > 0.5) {
+      rafId = requestAnimationFrame(updateCursor);
+    } else {
+      rafId = null;
+    }
+  }
+})();
