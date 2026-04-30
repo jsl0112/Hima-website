@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page-title">HIMA · 懂您的一站式海外游戏运营平台</title>
+  <meta name="description" content="黑马海外游戏运营平台 HIMA，助力出海游戏精细化运营，提供全方位的技术支持与全球化的营销生态集成。" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <link rel="stylesheet" href="style.css?v=20260430v" />
+</head>
+<body>
+
+<!-- 左侧导航小圆点 -->
+<nav class="side-dots" id="sideDots">
+  <a href="#hero" class="side-dot active" data-section="hero" title="首屏"></a>
+  <a href="#scene1" class="side-dot" data-section="scene1" title="社媒管理"></a>
+  <a href="#scene2" class="side-dot" data-section="scene2" title="社区运营"></a>
+  <a href="#scene3" class="side-dot" data-section="scene3" title="直播运营"></a>
+  <a href="#scene4" class="side-dot" data-section="scene4" title="私信营销"></a>
+</nav>
+
+<!-- =========================================================
+     Hero 首屏 · 严格按 Figma 1920×1006 1:1 还原
+     - 整体浅色背景（白→淡蓝渐变）
+     - LOGO / 导航 / 标题：黑色
+     - 仅「一站式」#0165F2 蓝色
+     - 背景漩涡：入场旋转 + 收缩动效
+     - 底部 Logo Ticker（浅色 + 深色图标）
+========================================================= */ -->
+<section id="hero" class="hero">
+
+  <!-- 底层背景图（浅色） -->
+  <div class="hero-bg"></div>
+
+  <!-- 1920×1006 精确画布 -->
+  <div class="hero-canvas">
+
+    <!-- 背景漩涡：外层 wrapper 负责"锁死中心"，内层 img 只负责"转+缩"，彻底不漂 -->
+    <div class="hero-vortex-wrap" aria-hidden="true">
+      <img class="hero-vortex" src="assets/新的背景漩涡.png" alt="" />
+    </div>
+
+    <!-- ===== 顶部导航（Figma 节点 0:1958，H=80） ===== -->
+    <header class="hero-nav">
+      <!-- LOGO（黑色） -->
+      <a href="#hero" class="nav-brand" style="left:60px; top:21px;">
+        <img class="nav-brand-mark" src="assets/icons/hima-logo.png" alt="HIMA" />
+        <span class="nav-brand-name">HIMA</span>
+      </a>
+
+      <!-- 菜单（Figma x=682, y=28, w=496, h=24） -->
+      <nav class="nav-menu" style="left:682px; top:28px; width:496px;">
+        <a href="#scene1" class="nav-link" data-i18n="nav-sm">社媒管理</a>
+        <a href="#scene2" class="nav-link" data-i18n="nav-sq">社区运营</a>
+        <a href="#scene3" class="nav-link" data-i18n="nav-zb">直播运营</a>
+        <a href="#scene4" class="nav-link" data-i18n="nav-sx">私信营销</a>
+      </nav>
+
+      <!-- Language（Figma x=1669, y=28） -->
+      <div class="nav-lang" id="langToggle" style="left:1669px; top:28px; cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
+        </svg>
+        <span id="langLabel">英文</span>
+      </div>
+
+      <!-- 合作咨询按钮（Figma 0:1976: x=1749, w=111, h=44） -->
+      <button class="nav-cta" data-i18n="nav-cta" style="left:1749px; top:18px; width:111px; height:44px;">合作咨询</button>
+    </header>
+
+    <!-- ===== 中心人物 KV（Figma 0:2420: x=377.09, y=58, 314×453） ===== -->
+    <img class="hero-kv" src="assets/icons/机器人.png" alt="HIMA 3D Mascot" />
+
+    <!-- ===== 14 个 3D 社交图标 ===== -->
+    <img class="hero-icon" data-id="facebook"  style="left:243.99px; top:298.08px; width:105.94px; height:104.52px;"  src="assets/icons/facebook.png"  alt="Facebook"/>
+    <img class="hero-icon" data-id="telegram"  style="left:263.00px; top:282.80px; width:89.60px;  height:91.24px;"   src="assets/icons/Telegram.png"  alt="Telegram"/>
+    <img class="hero-icon" data-id="discord"   style="left:1311.17px;top:135.00px; width:175.50px; height:173.14px;"  src="assets/icons/Discord.png"   alt="Discord"/>
+    <img class="hero-icon" data-id="slack"     style="left:247.43px; top:519.00px; width:81.47px;  height:80.38px;"   src="assets/icons/Slack.png"     alt="Slack"/>
+    <img class="hero-icon" data-id="skype"     style="left:1108.36px;top:782.64px; width:213.75px; height:217.35px;"  src="assets/icons/skype.png"     alt="Skype"/>
+    <img class="hero-icon" data-id="messenger" style="left:1552.61px;top:149.00px; width:100.62px; height:99.27px;"   src="assets/icons/Messenger.png" alt="Messenger"/>
+    <img class="hero-icon" data-id="snapchat"  style="left:1363.72px;top:710.02px; width:213.75px; height:217.35px;"  src="assets/icons/snapchat.png"  alt="Snapchat"/>
+    <img class="hero-icon" data-id="tiktok"    style="left:1377.55px;top:424.00px; width:106.68px; height:104.89px;"  src="assets/icons/Tikto.png"     alt="TikTok"/>
+    <img class="hero-icon" data-id="whatsapp"  style="left:1441.21px;top:347.82px; width:153.26px; height:155.31px;"  src="assets/icons/Whatsapp.png"  alt="Whatsapp"/>
+    <img class="hero-icon" data-id="spotify"   style="left:1133.29px;top:-16.67px; width:213.75px; height:217.35px;"  src="assets/icons/spotify.png"   alt="Spotify"/>
+    <img class="hero-icon" data-id="dribbble"  style="left:1236.28px;top:366.35px; width:214.47px; height:210.87px;"  src="assets/icons/dribbble.png"  alt="Dribbble"/>
+    <img class="hero-icon" data-id="linkedin"  style="left:1477.70px;top:297.99px; width:213.75px; height:217.35px;"  src="assets/icons/linkedin.png"  alt="LinkedIn"/>
+    <img class="hero-icon" data-id="youtube"   style="left:486.00px; top:464.41px; width:132.93px; height:134.71px;"  src="assets/icons/Youtube.png"   alt="Youtube"/>
+    <img class="hero-icon" data-id="twitter"   style="left:891.13px; top:812.24px; width:213.75px; height:210.16px;"  src="assets/icons/twitter.png"   alt="Twitter"/>
+    <img class="hero-icon" data-id="instagram" style="left:297.47px; top:427.00px; width:102.91px; height:101.18px;"  src="assets/icons/Instagram.png" alt="Instagram"/>
+
+    <!-- ===== 主标题（Figma 0:2422: x=560,y=226, w=772,h=258）=====
+         Figma fills="mixed"：「一站式」单独 #0165F2，其他深色 -->
+    <h1 class="hero-title hero-title-1" style="left:660px; top:226px;">
+      <span data-i18n="hero-t1a">懂您的</span><span class="accent" data-i18n="hero-t1b">一站式</span>
+    </h1>
+    <h1 class="hero-title hero-title-2" style="left:560px; top:336px;">
+      <span data-i18n="hero-t2">海外游戏运营平台</span>
+    </h1>
+    <h1 class="hero-title hero-title-3" style="left:560px; top:336px; display:none;">
+      <span data-i18n="hero-t3"></span>
+    </h1>
+
+    <!-- 副标题（单行，1920 画布内整体居中） -->
+    <div class="hero-subtitle" data-i18n="hero-sub" style="left:0; top:470px; width:1920px; text-align:center;">
+      助力出海游戏精细化运营，提供全方位的技术支持与全球化的营销生态集成
+    </div>
+
+    <!-- ===== Stats（嵌入 Hero，在 Logo Ticker 上方） ===== -->
+    <div class="hero-stats" style="left:0px; top:620px; width:1920px;">
+      <div class="hero-stats-inner">
+        <div class="stat-item">
+          <div class="stat-num">4<span class="plus">+</span></div>
+          <div class="stat-title" data-i18n="stat-t1">核心场景</div>
+          <div class="stat-desc" data-i18n="stat-d1" data-i18n-html>社媒、社区、直播、私信<br/>覆盖全生命周期核心运营场景</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">13<span class="plus">+</span></div>
+          <div class="stat-title" data-i18n="stat-t2">主流海外渠道</div>
+          <div class="stat-desc" data-i18n="stat-d2" data-i18n-html>一站式触达 Discord、Twitch 等<br/>全球主流社媒平台</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">20<span class="plus">+</span></div>
+          <div class="stat-title" data-i18n="stat-t3">游戏项目</div>
+          <div class="stat-desc" data-i18n="stat-d3" data-i18n-html>拥有PUBGM、三角洲等<br/>出海大作稳定运营经验</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">16<span class="plus">+</span></div>
+          <div class="stat-title" data-i18n="stat-t4">语言支持</div>
+          <div class="stat-desc" data-i18n="stat-d4" data-i18n-html>中、英、日、韩、德等<br/>多语言本地化运营支持与交付</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 底部 Logo Ticker（透明背景，无白底） ===== -->
+    <div class="logo-ticker" style="left:0px; top:906px; width:1920px; height:100px;">
+      <div class="logo-ticker-track">
+        <div class="logo-ticker-group">
+          <span class="ticker-logo" data-id="facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0 0 14.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.361H7.332v3.209h2.753v8.196h3.312z"/></svg>
+            <span class="ticker-label">Facebook</span>
+          </span>
+          <span class="ticker-logo" data-id="instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            <span class="ticker-label">Instagram</span>
+          </span>
+          <span class="ticker-logo" data-id="tiktok">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            <span class="ticker-label">TikTok</span>
+          </span>
+          <span class="ticker-logo" data-id="youtube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <span class="ticker-label">YouTube</span>
+          </span>
+          <span class="ticker-logo" data-id="discord">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          </span>
+          <span class="ticker-logo" data-id="twitch">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+          </span>
+          <span class="ticker-logo" data-id="x">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </span>
+          <span class="ticker-logo" data-id="threads">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.651Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg>
+          </span>
+          <span class="ticker-logo" data-id="whatsapp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+          </span>
+          <span class="ticker-logo" data-id="vk">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.15 14.27h-1.46c-.55 0-.72-.44-1.71-1.43-.86-.83-1.23-.94-1.44-.94-.3 0-.38.08-.38.49v1.31c0 .35-.11.56-1.03.56-1.52 0-3.21-.92-4.39-2.63-1.78-2.5-2.27-4.38-2.27-4.77 0-.21.08-.4.49-.4h1.46c.37 0 .51.17.65.57.72 2.08 1.93 3.9 2.43 3.9.19 0 .27-.09.27-.56V9.95c-.06-1.01-.59-1.1-.59-1.46 0-.17.14-.34.37-.34h2.3c.31 0 .42.17.42.54v2.9c0 .31.14.42.23.42.19 0 .34-.11.69-.46 1.07-1.2 1.83-3.04 1.83-3.04.1-.22.27-.42.64-.42h1.46c.44 0 .54.22.44.54-.19.85-1.97 3.36-1.97 3.36-.15.24-.21.36 0 .64.15.2.65.64 1 1.03.63.73 1.11 1.34 1.25 1.77.11.42-.11.64-.54.64z"/></svg>
+          </span>
+          <span class="ticker-logo ticker-logo--text" data-id="chzzk">
+            <span class="ticker-text">chzzk</span>
+          </span>
+          <span class="ticker-logo ticker-logo--text" data-id="mirrativ">
+            <span class="ticker-text ticker-text--italic">Mirrativ</span>
+          </span>
+        </div>
+        <!-- 复制一遍实现无缝无限滚动 -->
+        <div class="logo-ticker-group" aria-hidden="true">
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0 0 14.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.361H7.332v3.209h2.753v8.196h3.312z"/></svg><span class="ticker-label">Facebook</span></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span class="ticker-label">Instagram</span></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg><span class="ticker-label">TikTok</span></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span class="ticker-label">YouTube</span></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.651Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg></span>
+          <span class="ticker-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.15 14.27h-1.46c-.55 0-.72-.44-1.71-1.43-.86-.83-1.23-.94-1.44-.94-.3 0-.38.08-.38.49v1.31c0 .35-.11.56-1.03.56-1.52 0-3.21-.92-4.39-2.63-1.78-2.5-2.27-4.38-2.27-4.77 0-.21.08-.4.49-.4h1.46c.37 0 .51.17.65.57.72 2.08 1.93 3.9 2.43 3.9.19 0 .27-.09.27-.56V9.95c-.06-1.01-.59-1.1-.59-1.46 0-.17.14-.34.37-.34h2.3c.31 0 .42.17.42.54v2.9c0 .31.14.42.23.42.19 0 .34-.11.69-.46 1.07-1.2 1.83-3.04 1.83-3.04.1-.22.27-.42.64-.42h1.46c.44 0 .54.22.44.54-.19.85-1.97 3.36-1.97 3.36-.15.24-.21.36 0 .64.15.2.65.64 1 1.03.63.73 1.11 1.34 1.25 1.77.11.42-.11.64-.54.64z"/></svg></span>
+          <span class="ticker-logo ticker-logo--text"><span class="ticker-text">chzzk</span></span>
+          <span class="ticker-logo ticker-logo--text"><span class="ticker-text ticker-text--italic">Mirrativ</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =========================================================
+     Scene 01 · 社媒管理（深色） Figma y=1006~1947, h=941
+     ========================================================= -->
+<section id="scene1" class="scene scene--s1bg" data-reveal>
+  <div class="scene-canvas" style="height:941px;">
+
+    <!-- 英文分隔符 — 水平居中 (1920宽 text-align:center) -->
+    <div class="scene-eyebrow" style="left:0; top:99px; width:1920px; text-align:center;">/      Core Scene 01      /</div>
+
+    <!-- 大标题 — 水平居中 -->
+    <h2 class="scene-title scene-title--light" data-i18n="s1-title" style="left:0; top:120px; width:1920px; text-align:center;">社媒管理</h2>
+
+    <!-- 副标题 — Figma: Frame18.y(1105) + Body.y(90) - 1006 = 189 -->
+    <p class="scene-subtitle scene-subtitle--light" data-i18n="s1-sub" style="left:0; top:189px; width:1920px;">
+      覆盖全球主流社交媒体平台，提供发帖、互动、数据分析一体化解决方案
+    </p>
+
+    <!-- 标题下的平台 Logo 条 — 居中对齐 (Figma: x=795, w=330 → center=960) -->
+    <div class="s1-plat-bar" style="left:50%; top:224px; transform:translateX(-50%);">
+      <img src="assets/icons/plat-01.svg" alt="" />
+      <img src="assets/icons/plat-02-youtube.svg" alt="YouTube" />
+      <img src="assets/icons/plat-03-instagram.svg" alt="Instagram" />
+      <img src="assets/icons/plat-04-x.svg" alt="X / Twitter" />
+      <img src="assets/icons/plat-05.svg" alt="" />
+      <img src="assets/icons/plat-06.svg" alt="" />
+      <span class="s1-plat-more" data-i18n="s1-more">更多平台接入中</span>
+    </div>
+
+    <!-- Tab 导航（5 个）— Figma: x=630, y=296, w=660 -->
+    <div class="scene-tabs scene-tabs--dark" style="left:630px; top:296px; width:660px;">
+      <button class="tab active"><span data-i18n="s1-tab1">发帖编辑</span></button>
+      <button class="tab"><span data-i18n="s1-tab2">策略排期</span></button>
+      <button class="tab"><span data-i18n="s1-tab3">数据看板</span></button>
+      <button class="tab"><span data-i18n="s1-tab4">更多能力</span></button>
+      <button class="tab"><span data-i18n="s1-tab5">审核工作流</span></button>
+      <span class="tab-indicator"></span>
+    </div>
+    <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:326px; width:1200px;"></div>
+
+    <!-- ======= 下半部分：左蓝色标题 + 4 条 bullet ======= -->
+    <div class="s1-left" style="left:360px; top:400px; width:260px;">
+      <h3 class="s1-bluet" data-i18n="s1-bluet" data-i18n-html>
+        富文本编辑<br/>一键多发
+      </h3>
+      <ul class="s1-bullets">
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b1">支持图文、视频、Reel 多格式</span></li>
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b2">AI 翻译 + 多语言一键适配</span></li>
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b3">定时 / 定向发布，全球多时区精准覆盖</span></li>
+        <li><span class="s1-dot-blue"></span><span data-i18n="s1-b4">实时预览各平台展示效果</span></li>
+      </ul>
+    </div>
+
+    <!-- ======= 右侧三张配图（主图 + 富文本卡 + 按钮条） ======= -->
+    <div class="s1-shots" style="left:654px; top:400px; width:881px; height:409px;">
+      <!-- 主图：CrossPost 编辑界面 (793 × 399)，偏右上 -->
+      <img class="s1-shot-main" src="assets/scenes/scene2-main.png" alt="CrossPost 编辑器" />
+      <!-- 富文本编辑卡浮在左下 (547 × 172) -->
+      <img class="s1-shot-card" src="assets/scenes/scene2-sub1.png" alt="富文本编辑卡" />
+      <!-- 底部按钮条 (334 × 40) -->
+      <div class="s1-shot-btnbar">
+        <span class="s1-btn s1-btn--ghost" data-i18n="s1-btn1">🏷 标签</span>
+        <span class="s1-btn s1-btn--ghost" data-i18n="s1-btn2">📅 选取时间</span>
+        <span class="s1-btn s1-btn--primary" data-i18n="s1-btn3">⚠ 立即发布</span>
+        <span class="s1-btn s1-btn--amber" data-i18n="s1-btn4">⏩ 添加至队列</span>
+      </div>
+    </div>
+
+    <!-- 右上角 2 个 3D Icons：Thread / Facebook（叠放，从上方掉落） -->
+    <div class="s1-icons-row">
+      <img class="s1-3dicon" data-drop="0" src="assets/icons/3d-thread.png"
+           style="left:1454px; top:247px; width:131px; height:131px;" alt="Thread" />
+      <img class="s1-3dicon" data-drop="1" src="assets/icons/3d-facebook.png"
+           style="left:1548px; top:238px; width:130px; height:130px;" alt="Facebook" />
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     Scene 02 · 社区运营（浅色） Figma y=1947~2909, h=962
+     ========================================================= -->
+<section id="scene2" class="scene scene--s2bg" data-reveal>
+  <div class="scene-canvas" style="height:962px;">
+
+    <!-- Discord 大 icon，左上角（掉落 + 漂浮动画） -->
+    <div class="s2-icons-row">
+      <img class="s2-3dicon" data-drop="0" src="assets/icons/Discord.png" alt="" aria-hidden="true"
+           style="left:580px; top:74px; width:209px; height:206px;" />
+    </div>
+
+    <div class="scene-eyebrow" style="left:0; top:164px; width:1920px; text-align:center;">/      Core Scene 02     /</div>
+    <h2 class="scene-title scene-title--dark" data-i18n="s2-title" style="left:0; top:188px; width:1920px; text-align:center;">社区运营</h2>
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s2-sub" style="left:0; top:278px; width:1920px;">
+      司内最强的 Discord 官方私域全场景运营解决方案，助力业务打造全能可控的官方私域社区
+    </p>
+
+    <!-- Tab 导航（5 个） -->
+    <div class="scene-tabs scene-tabs--light" style="left:667px; top:337px; width:586px;">
+      <button class="tab active"><span data-i18n="s2-tab1">游戏账号绑定</span></button>
+      <button class="tab"><span data-i18n="s2-tab2">内容管理</span></button>
+      <button class="tab"><span data-i18n="s2-tab3">端内数据查询</span></button>
+      <button class="tab"><span data-i18n="s2-tab4">定制营销活动</span></button>
+      <button class="tab"><span data-i18n="s2-tab5">更多能力</span></button>
+      <span class="tab-indicator"></span>
+    </div>
+    <div class="scene-tabs-line scene-tabs-line--light" style="left:360px; top:367px; width:1200px;"></div>
+
+    <!-- 4 张深色功能卡（真实设计截图） -->
+    <div class="s2-cards" style="left:360px; top:466px; width:1200px; height:370px;">
+      <!-- 卡 1：成员成长激励 -->
+      <div class="s2-card stagger-item">
+        <img class="s2-card-img" src="assets/第三屏内容图/成员成长激励.png" alt="成员成长激励" />
+      </div>
+      <!-- 卡 2：AI 智能客服 -->
+      <div class="s2-card stagger-item">
+        <img class="s2-card-img" src="assets/第三屏内容图/AI智能客服.png" alt="AI 智能客服" />
+      </div>
+      <!-- 卡 3：开黑 Bot -->
+      <div class="s2-card stagger-item">
+        <img class="s2-card-img" src="assets/第三屏内容图/开黑Bot.png" alt="开黑 Bot" />
+      </div>
+      <!-- 卡 4：添加游戏好友 -->
+      <div class="s2-card stagger-item">
+        <img class="s2-card-img" src="assets/第三屏内容图/添加游戏好友.png" alt="添加游戏好友" />
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     Scene 03 · 直播运营（深色） Figma y=2909~3893, h=984
+     ========================================================= -->
+<section id="scene3" class="scene scene--s3bg" data-reveal>
+  <div class="scene-canvas" style="height:984px;">
+
+    <div class="scene-eyebrow" style="left:0; top:113px; width:1920px; text-align:center;">/      Core Scene 03      /</div>
+    <h2 class="scene-title scene-title--light" data-i18n="s3-title" style="left:0; top:137px; width:1920px; text-align:center;">直播运营</h2>
+    <p class="scene-subtitle scene-subtitle--light" data-i18n="s3-sub" style="left:0; top:203px; width:1920px;">
+      支持主流海外直播平台的丰富营销能力，覆盖掉宝、互动挂件、主播挑战、AI 高光识别
+    </p>
+
+    <!-- 平台 icon 条 -->
+    <div class="s3-icon-bar" style="left:0; top:240px; width:1920px;">
+      <img src="assets/第四屏icon条.png" alt="平台icons" class="s3-icon-bar-img" />
+    </div>
+
+    <!-- Tab 导航（4 个） -->
+    <div class="scene-tabs scene-tabs--dark" style="left:689px; top:320px; width:542px;">
+      <button class="tab active"><span data-i18n="s3-tab1">直播间掉宝</span></button>
+      <button class="tab"><span data-i18n="s3-tab2">互动挂件</span></button>
+      <button class="tab"><span data-i18n="s3-tab3">主播挑战活动</span></button>
+      <button class="tab"><span data-i18n="s3-tab4">更多能力</span></button>
+      <span class="tab-indicator"></span>
+    </div>
+    <div class="scene-tabs-line scene-tabs-line--dark" style="left:360px; top:350px; width:1200px;"></div>
+
+    <!-- 左侧「互动挑战」特性点 -->
+    <div class="s3-features" style="left:360px; top:408px; width:285px;">
+      <div class="s3-feat-title" data-i18n="s3-ft" data-i18n-html>玩家与主播<br/>互动挑战</div>
+      <div class="s3-feat-desc" data-i18n="s3-fd">基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。</div>
+      <ul class="s3-feat-list">
+        <li data-i18n="s3-f1">主播与玩家联动，提升直播互动深度</li>
+        <li data-i18n="s3-f2">Player / Streamer Challenge 双轨并行</li>
+        <li data-i18n="s3-f3">任务奖励机制驱动持续参与</li>
+      </ul>
+    </div>
+
+    <!-- 右侧大图卡片（设计截图） -->
+    <div class="s3-showcase" style="left:672px; top:408px; width:800px; height:415px;">
+      <img class="s3-main-img" src="assets/第四屏内容图.png" alt="直播运营" />
+
+    </div>
+
+    <!-- 左下角 3D icons（X Twitter + Twitch）掉落 + 漂浮动画 -->
+    <div class="s3-icons-row">
+      <img class="s3-3dicon" data-drop="0" src="assets/icons/x-twitter.png" alt="" aria-hidden="true"
+           style="left:370px; top:780px; width:160px; height:160px;"
+           onerror="this.style.display='none'" />
+      <img class="s3-3dicon" data-drop="1" src="assets/icons/twitch.png" alt="" aria-hidden="true"
+           style="left:450px; top:800px; width:162px; height:162px;"
+           onerror="this.style.display='none'" />
+    </div>
+  </div>
+</section>
+
+
+<!-- 私信营销 + 合作游戏 + Footer 共用背景 -->
+<div class="shared-bg-wrap">
+
+<!-- Line 3D icon 跨 Scene03/04 边界 -->
+<img class="s4-3dicon" src="assets/icons/line.png" alt="" aria-hidden="true"
+     data-drop="0"
+     style="position:absolute; left:calc(1430 / 1920 * 100%); top:-80px; width:calc(196 / 1920 * 100%); z-index:10;" />
+
+<!-- =========================================================
+     Scene 04 · 私信营销（浅色） Figma y=3893~4529, h=636
+     ========================================================= -->
+<section id="scene4" class="scene scene--light" data-reveal>
+  <div class="scene-canvas" style="height:636px;">
+
+    <div class="scene-eyebrow" style="left:0; top:99px; width:1920px; text-align:center;">/      Core Scene 04      /</div>
+
+    <h2 class="scene-title scene-title--dark" data-i18n="s4-title" style="left:857px; top:123px;">私信营销</h2>
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s4-sub" style="left:0; top:213px; width:1920px;">
+      海外用户全域精准触达，助力业务拉新、召回、促活、增收
+    </p>
+
+    <!-- 左右容器：flex 水平布局，左文案+右图片垂直对齐 -->
+    <div class="s4-content" style="left:360px; top:262px; width:1200px;">
+      <!-- 左侧 4 项特性列表 -->
+      <ul class="s4-features">
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag1">定时推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd1">支持全球多时区定时推送，精准覆盖目标用户活跃时段</div>
+        </li>
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag2">定向推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd2">支持指定号码包定向推送，精细化触达目标用户群体</div>
+        </li>
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag3">条件触发推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd3">实时监测玩家游戏状态，根据行为条件自动推送匹配内容</div>
+        </li>
+        <li>
+          <div class="s4-feat-tag"><span class="s4-dot"></span><span data-i18n="s4-tag4">保密测试协议推送</span></div>
+          <div class="s4-feat-desc" data-i18n="s4-fd4">特别打通保密协议签署系统 &amp; CDK 系统，一体化管理测试资格发放</div>
+        </li>
+      </ul>
+
+      <!-- 右侧切图 -->
+      <img class="s4-right-img" src="assets/私信营销部分右侧图.png" alt="私信营销平台展示" />
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     Scene 05 · 合作游戏（浅色） Figma y=4529~5882, h=1353
+     ========================================================= -->
+<section id="scene5" class="scene scene--light" data-reveal>
+  <div class="scene-canvas" style="height:1920px;">
+
+    <h2 class="scene-title scene-title--dark" data-i18n="s5-title" style="left:857px; top:186px;">合作游戏</h2>
+    <p class="scene-subtitle scene-subtitle--dark" data-i18n="s5-sub" style="left:0; top:280px; width:1920px;">
+      深度接入游戏生态，实现平台与游戏的无缝联动，持续扩展合作版图，更多游戏陆续接入中
+    </p>
+
+    <!-- 合作游戏卡片：整张设计稿切图 -->
+    <img class="games-wall-img" src="assets/合作游戏卡片.png" alt="合作游戏" style="position:absolute; left:288px; top:360px; width:1344px; height:auto;" />
+  </div>
+</section>
+
+
+<!-- =========================================================
+     Footer · 深蓝区（Figma y=5882~7290, h=1408）
+     ========================================================= -->
+<footer class="site-footer" data-reveal>
+  <div class="footer-glow-wrap">
+    <div class="footer-glow footer-glow--1"></div>
+    <div class="footer-glow footer-glow--2"></div>
+    <div class="footer-glow footer-glow--3"></div>
+    <div class="footer-glow-cursor"></div>
+  </div>
+  <div class="scene-canvas" style="height:1000px;">
+
+    <!-- 背景大字 HIMA -->
+    <div class="footer-bigname" style="left:0; top:200px; width:1920px;">HIMA</div>
+
+    <!-- Logo 圆球徽章（渐变主色） -->
+    <div class="footer-logo" style="left:885px; top:174px; width:150px; height:150px;">
+      <div class="footer-logo-badge">
+        <img src="assets/icons/hima-logo.png" alt="HIMA" onerror="this.style.display='none'"/>
+      </div>
+    </div>
+
+    <!-- Slogan -->
+    <div class="footer-slogan" data-i18n="footer-slogan" data-i18n-html style="left:0; top:374px; width:1920px;">一站式海外游戏运营平台</div>
+
+    <!-- 底部版权信息 -->
+    <div class="footer-copy" style="left:0; top:742px; width:1920px;">
+      <div class="footer-links" data-i18n="footer-links1" data-i18n-html>
+        <a>关于腾讯</a><span class="sep">|</span>
+        <a>About Tencent</a><span class="sep">|</span>
+        <a>服务协议</a><span class="sep">|</span>
+        <a>隐私政策</a><span class="sep">|</span>
+        <a>开放平台</a><span class="sep">|</span>
+        <a>广告服务</a><span class="sep">|</span>
+        <a>腾讯招聘</a><span class="sep">|</span>
+        <a>腾讯公益</a><span class="sep">|</span>
+        <a>腾讯云</a><span class="sep">|</span>
+        <a>客服中心</a><span class="sep">|</span>
+        <a>举报中心</a><span class="sep">|</span>
+        <a>网址导航</a>
+      </div>
+      <div class="footer-links" data-i18n="footer-links2" data-i18n-html style="margin-top:4px;">
+        <a>深圳举报中心</a><span class="sep">|</span>
+        <a>深圳公安局</a><span class="sep">|</span>
+        <a>抵制违法广告承诺书</a><span class="sep">|</span>
+        <a>版权保护投诉指引</a><span class="sep">|</span>
+        <a>广东省通管局</a>
+      </div>
+      <div class="footer-company" data-i18n="footer-company" data-i18n-html>
+        粤网文[2017]6138-1456号 新出网证（粤）字010号 网络视听许可证1904073号 网络视听许可证1904073号 增值电信业务经营许可证: 粤B2-20090059 B2-20090028<br/>
+        新闻信息服务许可证 粤府新函[2001]87号 违法和不良信息举报电话：0755-83765566-9 粤公网安备44030002000001号<br/>
+        互联网药品信息服务资格证书 （粤）一非营业性一2017-0153
+      </div>
+      <div class="footer-copyright">
+        Copyright © 2026 Tencent . All Rights Reserved.
+      </div>
+    </div>
+  </div>
+</footer>
+</div><!-- /.shared-bg-wrap -->
+
+<script src="app.js?v=20260430d"></script>
+</body>
+</html>
