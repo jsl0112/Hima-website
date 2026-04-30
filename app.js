@@ -14,12 +14,74 @@ const setVW = () => {
 setVW();
 window.addEventListener('resize', setVW);
 
+// ========= 0.1 各模块垂直居中：当 section 高度 > 画布缩放视觉高度时 =========
+const centerCanvases = () => {
+  const vw = document.documentElement.clientWidth;
+  const maxW = 1920;
+  const scaleW = Math.min(vw, maxW);
+  const scale = scaleW / 1920;
+
+  // 只在宽屏（>1200px）时执行，响应式模式由 CSS 控制
+  if (vw <= 1200) return;
+
+  // 处理各 scene 模块
+  const scenes = document.querySelectorAll('.scene');
+  scenes.forEach((scene) => {
+    const canvas = scene.querySelector('.scene-canvas');
+    if (!canvas) return;
+    const canvasH = canvas.offsetHeight; // DOM 原始高度
+    const visualH = canvasH * scale;     // 缩放后视觉高度
+    const sectionH = scene.offsetHeight; // section 实际高度（可能是 100vh）
+    const diff = sectionH - visualH;
+    if (diff > 10) {
+      // 有多余空间，给画布加 margin-top 使其垂直居中
+      canvas.style.marginTop = (diff / 2) + 'px';
+    } else {
+      canvas.style.marginTop = '0px';
+    }
+  });
+
+  // 处理 hero
+  const hero = document.querySelector('.hero');
+  const heroCanvas = document.querySelector('.hero-canvas');
+  if (hero && heroCanvas) {
+    const canvasH = 1006; // hero 画布固定高度
+    const visualH = canvasH * scale;
+    const sectionH = hero.offsetHeight;
+    const diff = sectionH - visualH;
+    if (diff > 10) {
+      heroCanvas.style.marginTop = (diff / 2) + 'px';
+    } else {
+      heroCanvas.style.marginTop = '0px';
+    }
+  }
+
+  // 处理 footer
+  const footer = document.querySelector('.site-footer');
+  const footerCanvas = footer ? footer.querySelector('.scene-canvas') : null;
+  if (footer && footerCanvas) {
+    const canvasH = footerCanvas.offsetHeight;
+    const visualH = canvasH * scale;
+    const sectionH = footer.offsetHeight;
+    const diff = sectionH - visualH;
+    if (diff > 10) {
+      footerCanvas.style.marginTop = (diff / 2) + 'px';
+    } else {
+      footerCanvas.style.marginTop = '0px';
+    }
+  }
+};
+
+// 初次加载和 resize 时执行
+centerCanvases();
+
 // 响应式：debounce resize 事件确保性能
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     setVW();
+    centerCanvases();
     if (typeof initTabSwitcher === 'function') initTabSwitcher();
   }, 150);
 });
