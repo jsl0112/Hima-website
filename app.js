@@ -8,9 +8,21 @@
 const setVW = () => {
   const vw = document.documentElement.clientWidth;
   document.documentElement.style.setProperty('--vw', vw + 'px');
+  // 在响应式模式（≤1200px）下，各 scene 的固定高度由媒体查询中 height:auto 覆盖
+  // 无需额外 JS 处理
 };
 setVW();
 window.addEventListener('resize', setVW);
+
+// 响应式：debounce resize 事件确保性能
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    setVW();
+    if (typeof initTabSwitcher === 'function') initTabSwitcher();
+  }, 150);
+});
 
 // ========= 1. Stats 数字计数动画（进入视口时触发） =========
 const countNums = document.querySelectorAll('.stat-num');

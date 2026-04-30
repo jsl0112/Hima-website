@@ -1745,3 +1745,385 @@ html[lang="en"] .s3-feat-title {
 html[lang="en"] .s3-feat-desc {
   margin-bottom: 20px;
 }
+
+/* =========================================================
+   响应式适配 · 确保各模块在不同屏幕尺寸下内容比例不会太小
+   策略：
+   - ≤1440px：微调间距，保持 scale 模式
+   - ≤1200px：关键区域字体放大、间距减少
+   - ≤1024px：平板适配，部分布局切换为纵向
+   - ≤768px：移动端完全重排，放弃 scale 画布模式
+   ========================================================= */
+
+/* --- 1440px 以下：轻微调整 --- */
+@media (max-width: 1440px) {
+  :root {
+    --max-w: 100vw;
+  }
+}
+
+/* --- 1200px 以下：中等屏幕优化 --- */
+@media (max-width: 1200px) {
+  .hero {
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+  .hero-canvas {
+    position: relative;
+    width: 100%;
+    transform: none !important;
+    margin-left: 0 !important;
+    height: auto;
+    min-height: 90vh;
+    padding: 0 5%;
+  }
+  .hero-nav {
+    width: 100%;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-brand { position: relative !important; left: auto !important; top: auto !important; }
+  .nav-menu {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    gap: 24px;
+  }
+  .nav-lang { position: relative !important; left: auto !important; top: auto !important; }
+  .nav-cta { position: relative !important; left: auto !important; top: auto !important; }
+
+  .hero-title {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    font-size: 64px;
+    text-align: center;
+    width: 100%;
+    display: block;
+    margin-top: 20px;
+  }
+  .hero-title-2 { margin-top: 0; }
+  .hero-subtitle {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    text-align: center;
+    margin-top: 20px;
+    white-space: normal;
+    font-size: 15px;
+  }
+  .hero-kv {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    margin: 30px auto;
+    width: 200px;
+    height: auto;
+  }
+  .hero-icon { display: none; }
+  .hero-vortex-wrap { display: none; }
+
+  .hero-stats {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 40px;
+  }
+  .hero-stats-inner {
+    width: 100%;
+    padding: 0 20px;
+    gap: 20px;
+  }
+
+  .logo-ticker {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 30px;
+    height: 60px;
+  }
+
+  /* Scene 通用 */
+  .scene { height: auto !important; }
+  .scene-canvas {
+    width: 100% !important;
+    transform: none !important;
+    margin-left: 0 !important;
+    height: auto !important;
+    min-height: auto;
+    padding: 60px 5% 80px;
+  }
+  .site-footer { height: auto !important; }
+  .site-footer .scene-canvas {
+    padding: 80px 5% 60px;
+  }
+
+  .scene-eyebrow { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; text-align: center; margin-bottom: 8px; }
+  .scene-title { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; text-align: center; font-size: 42px; }
+  .scene-subtitle { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; text-align: center; margin-top: 16px; font-size: 16px; white-space: normal; }
+
+  .scene-tabs {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .scene-tabs-line {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 4px;
+  }
+
+  /* Scene 01 社媒管理 */
+  .s1-plat-bar {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin: 20px auto 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .s1-left {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 40px;
+    text-align: center;
+  }
+  .s1-bluet { text-align: center; }
+  .s1-bullets { align-items: center; }
+  .s1-shots {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 30px;
+  }
+  .s1-shot-main {
+    position: relative;
+    width: 100%;
+    height: auto;
+    right: auto;
+    top: auto;
+  }
+  .s1-shot-card {
+    position: relative;
+    width: 80%;
+    height: auto;
+    left: auto;
+    top: auto;
+    margin-top: 16px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .s1-shot-btnbar {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: auto;
+    max-width: 100%;
+    margin-top: 12px;
+    justify-content: center;
+  }
+  .s1-icons-row { display: none; }
+
+  /* Scene 02 社区运营 */
+  .s2-icons-row { display: none; }
+  .s2-cards {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  /* Scene 03 直播运营 */
+  .s3-icon-bar {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 16px;
+  }
+  .s3-features {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 30px;
+    text-align: center;
+  }
+  .s3-feat-desc { max-width: none; margin-left: auto; margin-right: auto; }
+  .s3-feat-list { align-items: center; }
+  .s3-showcase {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 30px;
+  }
+  .s3-main-img { height: auto; }
+  .s3-icons-row { display: none; }
+
+  /* Scene 04 私信营销 */
+  .s4-content {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 30px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .s4-features { width: 100%; }
+  .s4-right-img { width: 100%; max-width: 600px; }
+
+  /* Scene 05 合作游戏 */
+  #scene5 .scene-canvas { padding-bottom: 60px; }
+  .games-wall-img {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 30px;
+  }
+
+  /* Footer */
+  .footer-bigname {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    font-size: 120px;
+    text-align: center;
+  }
+  .footer-logo {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100px !important;
+    height: 100px !important;
+    margin: 20px auto;
+  }
+  .footer-slogan {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    font-size: 36px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .footer-copy {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin-top: 60px;
+  }
+  .footer-links { flex-wrap: wrap; gap: 8px; }
+}
+
+/* --- 768px 以下：移动端完全重排 --- */
+@media (max-width: 768px) {
+  /* 导航 */
+  .hero-nav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  .nav-menu {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .nav-menu .nav-link { font-size: 13px; }
+  .nav-cta { width: auto !important; height: 36px !important; font-size: 12px; padding: 0 12px; }
+
+  /* Hero 标题 */
+  .hero-title { font-size: 40px !important; letter-spacing: -2px; }
+  .hero-subtitle { font-size: 13px !important; }
+  .hero-kv { width: 150px; }
+
+  /* Stats */
+  .hero-stats-inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .hero-stats .stat-num { font-size: 48px; }
+  .hero-stats .stat-title { font-size: 18px; }
+  .hero-stats .stat-desc { font-size: 11px; }
+
+  /* Scene 通用 */
+  .scene-canvas { padding: 40px 16px 60px !important; }
+  .scene-title { font-size: 32px !important; }
+  .scene-subtitle { font-size: 14px !important; }
+  .scene-tabs { gap: 8px !important; }
+  .scene-tabs .tab { font-size: 13px; padding: 6px 2px 10px; }
+
+  /* Scene 01 */
+  .s1-plat-bar { gap: 16px; padding: 8px 16px; }
+  .s1-bluet { font-size: 28px; }
+  .s1-bullets li { font-size: 12px; }
+
+  /* Scene 02 */
+  .s2-cards { grid-template-columns: 1fr !important; gap: 12px; }
+
+  /* Scene 03 */
+  .s3-feat-title { font-size: 28px; }
+  .s3-feat-desc { font-size: 12px; }
+  .s3-feat-list li { font-size: 12px; }
+
+  /* Scene 04 */
+  .s4-feat-tag { font-size: 15px; }
+  .s4-feat-desc { font-size: 12px; }
+
+  /* Footer */
+  .site-footer .scene-canvas { padding: 60px 16px 40px !important; }
+  .footer-bigname { font-size: 72px !important; }
+  .footer-slogan { font-size: 26px !important; }
+  .footer-copy { font-size: 11px; }
+  .footer-links { font-size: 11px; gap: 4px; }
+  .footer-company { font-size: 10px; line-height: 1.7; }
+
+  /* 左侧导航圆点在移动端隐藏 */
+  .side-dots { display: none; }
+}
+
+/* --- 480px 以下：极小屏幕 --- */
+@media (max-width: 480px) {
+  .hero-title { font-size: 32px !important; }
+  .hero-stats-inner { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .hero-stats .stat-num { font-size: 40px; }
+  .hero-stats .stat-title { font-size: 16px; }
+  .scene-title { font-size: 26px !important; }
+  .s1-bluet { font-size: 22px; }
+  .s3-feat-title { font-size: 22px; }
+  .footer-bigname { font-size: 48px !important; }
+  .footer-slogan { font-size: 20px !important; }
+  .nav-menu .nav-link { font-size: 12px; }
+  .nav-brand-name { font-size: 18px; }
+}
