@@ -512,7 +512,7 @@ a { color: inherit; text-decoration: none; }
 #scene2 { height: calc(962px * var(--scale)); }
 #scene3 { height: calc(984px * var(--scale)); }
 #scene4 { height: calc(636px * var(--scale)); }
-#scene5 { height: calc(1500px * var(--scale)); }
+#scene5 { height: calc(1700px * var(--scale)); }
 .site-footer { height: calc(900px * var(--scale)); min-height: 500px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
@@ -1412,23 +1412,11 @@ a { color: inherit; text-decoration: none; }
   background: url('assets/scene5-bg.jpg?v=20260430') top center / 100% auto no-repeat;
   background-color: #1a1a1a;
 }
-/* 合作游戏模块：浅色底色 + 背景图覆盖（半透明叠加） */
+/* 合作游戏模块：透明底色，让 shared-bg-wrap 的背景图直接透出 */
 .scene--s5dark {
   position: relative;
-  background-color: #f0f4fc;
-  color: #11131b;
-}
-.scene--s5dark::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('assets/scene5-bg.jpg?v=20260430');
-  background-size: 100% auto;
-  background-position: top center;
-  background-repeat: no-repeat;
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 0;
+  background-color: transparent;
+  color: #ffffff;
 }
 .scene--s5dark .scene-canvas {
   position: relative;

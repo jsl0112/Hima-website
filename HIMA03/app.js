@@ -199,11 +199,9 @@ const initTabSwitcher = () => {
     const indicator = tabGroup.querySelector('.tab-indicator');
     if (!indicator || tabs.length === 0) return;
 
-    // 移动指示条到目标 tab 下方
+    // 移动指示条到目标 tab 下方（使用 offsetLeft 避免 transform scale 导致坐标偏差）
     const moveIndicator = (tab) => {
-      const groupRect = tabGroup.getBoundingClientRect();
-      const tabRect = tab.getBoundingClientRect();
-      const left = tabRect.left - groupRect.left + (tabRect.width - 32) / 2;
+      const left = tab.offsetLeft + (tab.offsetWidth - 32) / 2;
       indicator.style.left = left + 'px';
       indicator.style.width = '32px';
     };
