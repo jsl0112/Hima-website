@@ -1412,10 +1412,27 @@ a { color: inherit; text-decoration: none; }
   background: url('assets/第五屏背景.png') top center / 100% auto no-repeat;
   background-color: #1a1a1a;
 }
-/* 合作游戏模块透明，让 shared-bg-wrap 的深色背景图穿透显示 */
+/* 合作游戏模块：浅色底色 + 背景图覆盖（半透明叠加） */
 .scene--s5dark {
-  background: transparent;
-  color: rgba(255,255,255,.95);
+  position: relative;
+  background-color: #f0f4fc;
+  color: #11131b;
+}
+.scene--s5dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('assets/第五屏背景.png');
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+.scene--s5dark .scene-canvas {
+  position: relative;
+  z-index: 1;
 }
 .shared-bg-wrap .site-footer {
   background: transparent;
