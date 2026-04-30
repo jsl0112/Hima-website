@@ -36,9 +36,10 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --vw: 100vw;  /* JS 会在运行时修正为不含滚动条的真实视口宽度 */
+  --scale: 1;   /* JS 会设置为 clientWidth / 1920 */
 }
 html {
-  overflow-x: hidden;        /* 防止 100vw 包含滚动条导致水平溢出 */
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 html, body {
@@ -47,10 +48,10 @@ html, body {
   background: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;        /* 双重保险：防止水平滚动 */
-  max-width: 100%;
+  overflow-x: hidden;
+  width: 100%;
 }
-img { display: block; max-width: 100%; }
+img { display: block; max-width: none; }
 button { border: none; background: none; font-family: inherit; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
 
@@ -62,8 +63,9 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   width: 100%;
   overflow: hidden;
-  height: calc(var(--vw) * 1006 / 1920);
-  min-height: 640px;
+  /* 使用 JS 设置的高度，兜底使用 52.4vw (1006/1920*100) */
+  height: calc(1006px * var(--scale));
+  min-height: 500px;
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
 }
@@ -114,15 +116,16 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(1);    opacity: .55; }
 }
 
-/* 1920×1006 固定画布 + 等比缩放 */
+/* 1920×1006 固定画布 + 等比缩放居中 */
 .hero-canvas {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
+  margin-left: -960px;
   width: 1920px;
   height: 1006px;
-  transform-origin: top left;
-  transform: scale(calc(var(--vw) / 1920));
+  transform: scale(var(--scale));
+  transform-origin: top center;
   z-index: 2;
 }
 
@@ -484,8 +487,10 @@ a { color: inherit; text-decoration: none; }
 .scene-canvas {
   position: relative;
   width: 1920px;
-  transform-origin: top left;
-  transform: scale(calc(var(--vw) / 1920));
+  left: 50%;
+  margin-left: -960px;
+  transform: scale(var(--scale));
+  transform-origin: top center;
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -502,13 +507,13 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 动态计算 section 高度（canvas 高 × var(--vw)/1920） */
-#scene1 { height: calc(var(--vw) * 941 / 1920); }
-#scene2 { height: calc(var(--vw) * 962 / 1920); }
-#scene3 { height: calc(var(--vw) * 984 / 1920); }
-#scene4 { height: calc(var(--vw) * 636 / 1920); }
-#scene5 { height: calc(var(--vw) * 2100 / 1920); }
-.site-footer { height: calc(var(--vw) * 900 / 1920); min-height: 500px; }
+/* 动态计算 section 高度 = 设计稿高度 × 缩放比 */
+#scene1 { height: calc(941px * var(--scale)); }
+#scene2 { height: calc(962px * var(--scale)); }
+#scene3 { height: calc(984px * var(--scale)); }
+#scene4 { height: calc(636px * var(--scale)); }
+#scene5 { height: calc(2100px * var(--scale)); }
+.site-footer { height: calc(900px * var(--scale)); min-height: 500px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {

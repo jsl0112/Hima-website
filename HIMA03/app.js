@@ -2,9 +2,11 @@
    HIMA 官网交互脚本（第五版 · 加入滚动入场动画）
    ========================================================= */
 
-// ========= 0. 设置 --vw 为真实视口宽度（不含滚动条） =========
+// ========= 0. 设置 --vw 和 --scale 为真实视口宽度（不含滚动条） =========
 function setVW() {
-  document.documentElement.style.setProperty('--vw', document.documentElement.clientWidth + 'px');
+  var w = document.documentElement.clientWidth;
+  document.documentElement.style.setProperty('--vw', w + 'px');
+  document.documentElement.style.setProperty('--scale', (w / 1920).toString());
 }
 setVW();
 window.addEventListener('resize', setVW);

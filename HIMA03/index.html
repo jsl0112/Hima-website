@@ -9,7 +9,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=20260430r" />
+  <link rel="stylesheet" href="style.css?v=20260430v3" />
+  <script>
+    // 尽早设置 --scale，避免页面在 JS 加载前以 1920px 原尺寸闪烁
+    (function(){
+      var w = document.documentElement.clientWidth || window.innerWidth;
+      var s = w / 1920;
+      document.documentElement.style.setProperty('--scale', s.toString());
+      document.documentElement.style.setProperty('--vw', w + 'px');
+    })();
+  </script>
 </head>
 <body>
 
@@ -516,6 +525,6 @@
 </footer>
 </div><!-- /.shared-bg-wrap -->
 
-<script src="app.js?v=20260430v2"></script>
+<script src="app.js?v=20260430v3"></script>
 </body>
 </html>
