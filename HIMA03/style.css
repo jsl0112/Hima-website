@@ -53,15 +53,13 @@ a { color: inherit; text-decoration: none; }
 
 /* =========================================================
    Hero · 严格 Figma 1920×1006 1:1 还原
-   策略：100vh 一屏高 + 1920×1006 画布按 contain 居中缩放
-   - --fit: 由 JS 动态计算的缩放比例 (min(vw/1920, vh/designH))
-   - 画布水平 + 垂直居中，不会堆在左上角
+   策略：1920×1006 固定画布 + transform: scale(100vw/1920) 等比缩放
    ========================================================= */
 .hero {
   position: relative;
   width: 100%;
   overflow: hidden;
-  height: 100vh;
+  height: calc(100vw * 1006 / 1920);
   min-height: 640px;
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
@@ -113,14 +111,14 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(1);    opacity: .55; }
 }
 
-/* 1920×1006 固定画布 + 居中缩放（contain 策略） */
+/* 1920×1006 固定画布 + 等比缩放 */
 .hero-canvas {
   position: absolute;
-  top: 50%; left: 50%;
+  top: 0; left: 0;
   width: 1920px;
   height: 1006px;
-  transform-origin: center center;
-  transform: translate(-50%, -50%) scale(var(--fit, 1));
+  transform-origin: top left;
+  transform: scale(calc(100vw / 1920));
   z-index: 2;
 }
 
@@ -470,24 +468,20 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =========================================================
-   Scene 通用画布：每个模块独立 100vh 一屏高
-   - 每个 .scene 设置 --design-h 为 Figma 原稿高度
-   - .scene-canvas 按 min(vw/1920, vh/designH) 居中缩放（contain）
-   - 内容永远水平+垂直居中，不会堆到左上角
+   Scene 通用画布（沿用 Hero 的 1920 scale 模式）
+   每个 section 给 .scene-canvas 一个固定 height（Figma 原稿高度），
+   外层 .scene 根据 height / 1920 计算响应式高度。
    ========================================================= */
 .scene {
   position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 560px;
   overflow: hidden;
 }
 .scene-canvas {
-  position: absolute;
-  top: 50%; left: 50%;
+  position: relative;
   width: 1920px;
-  transform-origin: center center;
-  transform: translate(-50%, -50%) scale(var(--fit, 1));
+  transform-origin: top left;
+  transform: scale(calc(100vw / 1920));
 }
 /* 深色 / 浅色主题 */
 .scene--dark {
@@ -504,47 +498,13 @@ a { color: inherit; text-decoration: none; }
 /* scene 大标题配色：浅色场景应为深色，深色场景为白色 */
 .scene--light .scene-title--dark { color: rgba(0,0,0,.95); }
 .scene--dark  .scene-title--light { color: #fff; }
-/* 每个 scene 的 Figma 原稿高度（供 JS 读取） */
-#scene1 { --design-h: 941; }
-#scene2 { --design-h: 962; }
-#scene3 { --design-h: 984; }
-#scene4 {
-  --design-h: 636;
-  height: calc(100vw * 636 / 1920);
-  min-height: 400px;
-}
-#scene4 .scene-canvas {
-  position: absolute;
-  top: 0; left: 0;
-  width: 1920px;
-  transform-origin: top left;
-  transform: scale(calc(100vw / 1920));
-}
-/* scene5 合作游戏：按宽度缩放 + 垂直居中 */
-#scene5 {
-  --design-h: 1000;
-  height: calc(100vw * 1000 / 1920);
-  min-height: 520px;
-  max-height: 1000px;
-}
-#scene5 .scene-canvas {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 1920px;
-  transform-origin: center center;
-  transform: translate(-50%, -50%) scale(calc(100vw / 1920));
-}
-/* footer：增加高度让版权区不贴底 */
-.site-footer {
-  --design-h: 1000;
-}
-.site-footer .scene-canvas {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 1920px;
-  transform-origin: center center;
-  transform: translate(-50%, -50%) scale(calc(100vw / 1920));
-}
+/* 动态计算 section 高度（canvas 高 × 100vw/1920） */
+#scene1 { height: calc(100vw * 941 / 1920); }
+#scene2 { height: calc(100vw * 962 / 1920); }
+#scene3 { height: calc(100vw * 984 / 1920); }
+#scene4 { height: calc(100vw * 636 / 1920); }
+#scene5 { height: calc(100vw * 900 / 1920); }
+.site-footer { height: calc(100vw * 900 / 1920); min-height: 500px; }
 
 /* ===== Scene 通用：标签 / eyebrow / 标题 / 副标题 / Tab ===== */
 .scene-tag {
@@ -700,6 +660,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s1bg .scene-canvas {
+  position: relative;
   z-index: 2;
 }
 
@@ -932,6 +893,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s2bg .scene-canvas {
+  position: relative;
   z-index: 2;
 }
 /* 继承浅色主题文字配色 */
@@ -1037,6 +999,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .scene--s3bg .scene-canvas {
+  position: relative;
   z-index: 2;
 }
 .scene--s3bg .scene-title--light { color: rgba(255,255,255,.95); }
@@ -1437,10 +1400,7 @@ a { color: inherit; text-decoration: none; }
 /* 私信营销 + 合作游戏 + Footer 共用背景图 */
 .shared-bg-wrap {
   position: relative;
-  /* 背景图按宽度铺满 + 不变形（保持比例、顶部对齐、纵向重复兜底） */
-  background:
-    url('assets/第五屏背景.png') top center / 100% auto no-repeat,
-    linear-gradient(180deg, #eef3fc 0%, #e4ecfa 30%, #dae4f6 60%, #040b34 100%);
+  background: url('assets/第五屏背景.png') top center / 100% 100% no-repeat;
 }
 .shared-bg-wrap .scene--light {
   background: transparent;
@@ -1448,10 +1408,6 @@ a { color: inherit; text-decoration: none; }
 .site-footer {
   position: relative;
   width: 100%;
-  /* footer 高度按宽度比例 + 底部留白 */
-  height: calc(100vw * 1100 / 1920);
-  min-height: 640px;
-  max-height: 1100px;
   overflow: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 50% 30%, #2752c2 0%, #0c2274 45%, #040b34 100%);
