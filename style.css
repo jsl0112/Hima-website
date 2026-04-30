@@ -73,8 +73,8 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   width: 100%;
   overflow: hidden;
-  /* 高度由 JS 动态计算，CSS 回退为按宽度比例 */
-  height: calc(var(--scale-w) * 1006 / 1920);
+  /* 高度由 JS 动态设置（铺满视口），CSS 回退 100vh */
+  height: 100vh;
   /* 浅色渐变兜底：白 → 浅蓝 */
   background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 60%, #dce8ff 100%);
 }
