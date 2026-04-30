@@ -1409,7 +1409,7 @@ a { color: inherit; text-decoration: none; }
 /* 私信营销 + 合作游戏 + Footer 共用背景图 */
 .shared-bg-wrap {
   position: relative;
-  background: url('assets/第五屏背景.png') top center / 100% auto no-repeat;
+  background: url('assets/第五屏背景_compressed.jpg') top center / 100% auto no-repeat;
   background-color: #1a1a1a;
 }
 /* 合作游戏模块：浅色底色 + 背景图覆盖（半透明叠加） */
@@ -1422,7 +1422,7 @@ a { color: inherit; text-decoration: none; }
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('assets/第五屏背景.png');
+  background-image: url('assets/第五屏背景_compressed.jpg');
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
