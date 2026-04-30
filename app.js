@@ -14,66 +14,147 @@ const setVW = () => {
 setVW();
 window.addEventListener('resize', setVW);
 
-// ========= 0.1 各模块垂直居中：当 section 高度 > 画布缩放视觉高度时 =========
-const centerCanvases = () => {
+// ========= 0.1 各模块自适应缩放：确保内容填满视口，不显得太小 =========
+// 策略：对每个 section，取 max(scaleByWidth, scaleByHeight) 并限制 ≤ 1
+//       当 scaleByHeight > scaleByWidth 时，画布视觉宽度 > 视口宽度 —— 通过水平居中 + overflow:hidden 裁切
+const adaptCanvases = () => {
   const vw = document.documentElement.clientWidth;
+  const vh = window.innerHeight;
   const maxW = 1920;
-  const scaleW = Math.min(vw, maxW);
-  const scale = scaleW / 1920;
 
   // 只在宽屏（>1200px）时执行，响应式模式由 CSS 控制
-  if (vw <= 1200) return;
+  if (vw <= 1200) {
+    // 清除 JS 设置的样式
+    document.querySelectorAll('.scene .scene-canvas, .site-footer .scene-canvas').forEach(c => {
+      c.style.transform = '';
+      c.style.marginLeft = '';
+      c.style.marginTop = '';
+    });
+    const heroCanvas = document.querySelector('.hero-canvas');
+    if (heroCanvas) {
+      heroCanvas.style.transform = '';
+      heroCanvas.style.left = '';
+      heroCanvas.style.top = '';
+      heroCanvas.style.marginLeft = '';
+      heroCanvas.style.marginTop = '';
+    }
+    return;
+  }
+
+  const scaleByWidth = Math.min(vw, maxW) / 1920;
+
+  // 定义各 section 的画布原始高度
+  const canvasHeights = {
+    scene1: 941,
+    scene2: 962,
+    scene3: 984,
+    scene4: 636,
+    scene5: 1920,
+  };
 
   // 处理各 scene 模块
-  const scenes = document.querySelectorAll('.scene');
-  scenes.forEach((scene) => {
+  Object.entries(canvasHeights).forEach(([id, rawH]) => {
+    const scene = document.getElementById(id);
+    if (!scene) return;
     const canvas = scene.querySelector('.scene-canvas');
     if (!canvas) return;
-    const canvasH = canvas.offsetHeight; // DOM 原始高度
-    const visualH = canvasH * scale;     // 缩放后视觉高度
-    const sectionH = scene.offsetHeight; // section 实际高度（可能是 100vh）
-    const diff = sectionH - visualH;
-    if (diff > 10) {
-      // 有多余空间，给画布加 margin-top 使其垂直居中
-      canvas.style.marginTop = (diff / 2) + 'px';
-    } else {
-      canvas.style.marginTop = '0px';
+
+    // 使用视口高度的 92%（留出呼吸空间）作为目标高度
+    const targetH = vh * 0.92;
+    const scaleByHeight = targetH / rawH;
+
+    // 取较大值确保内容填满视口，但不超过 1
+    // 同时限制画布视觉宽度不超过视口宽度的 130%，避免两侧裁切过多
+    const maxScaleForWidth = (vw * 1.3) / 1920;
+    let finalScale = Math.max(scaleByWidth, scaleByHeight);
+    finalScale = Math.min(finalScale, 1, maxScaleForWidth);
+
+    // 对于特别高的画布（如 scene5: 1920px），按宽度缩放已经足够
+    // 不强制放大，避免内容被过度裁切
+    if (rawH > vh) {
+      finalScale = scaleByWidth;
     }
+
+    // 计算画布视觉尺寸
+    const visualW = 1920 * finalScale;
+    const visualH = rawH * finalScale;
+
+    // 设置 section 高度为视觉高度（至少等于视口高度的 92%）
+    scene.style.height = Math.max(visualH, targetH) + 'px';
+
+    // 水平居中偏移
+    const offsetX = (vw - visualW) / 2;
+
+    // 垂直居中偏移
+    const sectionH = scene.offsetHeight;
+    const offsetY = Math.max(0, (sectionH - visualH) / 2);
+
+    canvas.style.transform = `scale(${finalScale})`;
+    canvas.style.marginLeft = offsetX + 'px';
+    canvas.style.marginTop = offsetY + 'px';
   });
 
   // 处理 hero
   const hero = document.querySelector('.hero');
   const heroCanvas = document.querySelector('.hero-canvas');
   if (hero && heroCanvas) {
-    const canvasH = 1006; // hero 画布固定高度
-    const visualH = canvasH * scale;
+    const rawH = 1006;
+    const targetH = vh * 0.92;
+    const scaleByHeight = targetH / rawH;
+    const maxScaleForWidthHero = (vw * 1.3) / 1920;
+    let finalScale = Math.max(scaleByWidth, scaleByHeight);
+    finalScale = Math.min(finalScale, 1, maxScaleForWidthHero);
+
+    const visualW = 1920 * finalScale;
+    const visualH = rawH * finalScale;
+
+    // hero section 高度
+    hero.style.height = Math.max(visualH, targetH) + 'px';
+
+    const offsetX = (vw - visualW) / 2;
     const sectionH = hero.offsetHeight;
-    const diff = sectionH - visualH;
-    if (diff > 10) {
-      heroCanvas.style.marginTop = (diff / 2) + 'px';
-    } else {
-      heroCanvas.style.marginTop = '0px';
-    }
+    const offsetY = Math.max(0, (sectionH - visualH) / 2);
+
+    heroCanvas.style.transform = `scale(${finalScale})`;
+    heroCanvas.style.left = offsetX + 'px';
+    heroCanvas.style.top = offsetY + 'px';
+    heroCanvas.style.marginLeft = '0';
+    heroCanvas.style.marginTop = '0';
   }
 
   // 处理 footer
   const footer = document.querySelector('.site-footer');
   const footerCanvas = footer ? footer.querySelector('.scene-canvas') : null;
   if (footer && footerCanvas) {
-    const canvasH = footerCanvas.offsetHeight;
-    const visualH = canvasH * scale;
+    const rawH = 1000;
+    const targetH = vh * 0.92;
+    const scaleByHeight = targetH / rawH;
+    const maxScaleForWidthFooter = (vw * 1.3) / 1920;
+    let finalScale = Math.max(scaleByWidth, scaleByHeight);
+    finalScale = Math.min(finalScale, 1, maxScaleForWidthFooter);
+
+    const visualW = 1920 * finalScale;
+    const visualH = rawH * finalScale;
+
+    footer.style.height = Math.max(visualH, targetH) + 'px';
+
+    const offsetX = (vw - visualW) / 2;
     const sectionH = footer.offsetHeight;
-    const diff = sectionH - visualH;
-    if (diff > 10) {
-      footerCanvas.style.marginTop = (diff / 2) + 'px';
-    } else {
-      footerCanvas.style.marginTop = '0px';
-    }
+    const offsetY = Math.max(0, (sectionH - visualH) / 2);
+
+    footerCanvas.style.transform = `scale(${finalScale})`;
+    footerCanvas.style.marginLeft = offsetX + 'px';
+    footerCanvas.style.marginTop = offsetY + 'px';
   }
 };
 
 // 初次加载和 resize 时执行
-centerCanvases();
+// 使用 requestAnimationFrame 确保 DOM 布局已完成
+requestAnimationFrame(() => {
+  adaptCanvases();
+});
+// 页面完全加载后再次执行（确保图片等资源加载完毕后高度正确）
+window.addEventListener('load', adaptCanvases);
 
 // 响应式：debounce resize 事件确保性能
 let resizeTimer;
@@ -81,7 +162,7 @@ window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     setVW();
-    centerCanvases();
+    adaptCanvases();
     if (typeof initTabSwitcher === 'function') initTabSwitcher();
   }, 150);
 });
