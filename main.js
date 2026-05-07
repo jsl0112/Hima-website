@@ -1,6 +1,9 @@
 (function () {
   const DESIGN_W = 2560;
-  const DESIGN_H = 10007;
+  // 从 CSS 变量 --dh 动态读取设计稿高度，保持与 styles.css 一致
+  const DESIGN_H = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue('--dh')
+  ) || 9296;
   const viewport = document.querySelector('.viewport');
   const stage = document.getElementById('stage');
 
@@ -144,23 +147,97 @@
   activateMod1(1);
 
   /* --------------------------------------------------------
-   * 2.2) 03 模块 4-tab 切换（HTML + CSS，非切图）
-   *      胶囊按各 tab 自身 top 位置平滑滑动
+   * 2.2) 03 模块 4-tab 切换（HTML 文字 + CSS，可点击切换）
+   *      active tab 下方插入内容面板，其他 tab 顺次下移
+   *      普通 tab 间距 72px，active 占用 296px（含内容面板）
    * ------------------------------------------------------ */
   const m3Tabs = document.querySelectorAll('.mod3-tab');
   const m3Pill = document.querySelector('.mod3-pill');
-  // 每个 tab 的 top 位置（与 HTML inline style 对齐）
-  const m3TopMap = { 1: 0, 2: 72, 3: 142, 4: 438 };
+  const m3Panel = document.getElementById('mod3Panel');
+  const m3PanelTitle = m3Panel ? m3Panel.querySelector('.mod3-panel-title') : null;
+  const m3PanelDesc = m3Panel ? m3Panel.querySelector('.mod3-panel-desc') : null;
+  const m3PanelList = m3Panel ? m3Panel.querySelector('.mod3-panel-list') : null;
+
+  // 4 套内容文案（tab3 为 Figma 原文）
+  const m3Contents = {
+    1: {
+      title: '直播间掉宝互动奖励',
+      desc: '基于主流直播平台开放能力，打造观看即有奖的实时掉宝互动体系。',
+      list: [
+        '观众实时观看即可获得游戏道具',
+        '奖励可配置，精准触达目标用户',
+        '提升直播观看时长与留存'
+      ]
+    },
+    2: {
+      title: '主播专属互动挂件',
+      desc: '为主播量身打造直播间互动挂件工具，让观众通过弹幕、礼物参与游戏任务。',
+      list: [
+        '多样挂件模板快速接入',
+        '弹幕 / 礼物实时驱动游戏内事件',
+        '强化观众代入感与主播影响力'
+      ]
+    },
+    3: {
+      title: '玩家与主播互动挑战',
+      desc: '基于 Twitch Extension 等能力，开发 Streamer Challenge 等玩家与主播的互动挑战任务。',
+      list: [
+        '主播与玩家联动，提升直播互动深度',
+        'Player / Streamer Challenge 双轨并行',
+        '任务奖励机制驱动持续参与'
+      ]
+    },
+    4: {
+      title: '更多直播运营能力',
+      desc: '围绕 Twitch、YouTube、Discord 等平台持续拓展直播运营与主播互动的更多解决方案。',
+      list: [
+        '多平台一体化直播运营',
+        '数据驱动的主播/观众分层运营',
+        '持续迭代的新玩法与新能力'
+      ]
+    }
+  };
+
+  // tab 位置映射：key 为 activeIdx，value 为 4 个 tab 的 top 数组
+  // 规则：普通间距 72，active 额外占用 224（内容面板）。所以 active 后下一个 tab 比正常多 +224
+  const m3Layout = {
+    1: { tops: [0, 296, 368, 440], panelTop: 72 },
+    2: { tops: [0, 72, 368, 440], panelTop: 144 },
+    3: { tops: [0, 72, 142, 438], panelTop: 214 },
+    4: { tops: [0, 72, 142, 214], panelTop: 286 }
+  };
+
   function activateMod3(idx) {
-    m3Tabs.forEach((t) => t.classList.toggle('active', Number(t.dataset.m3) === idx));
-    if (m3Pill && m3TopMap[idx] !== undefined) {
-      m3Pill.style.top = m3TopMap[idx] + 'px';
+    const cfg = m3Layout[idx];
+    if (!cfg) return;
+
+    // 切 tab active
+    m3Tabs.forEach((t) => {
+      const i = Number(t.dataset.m3);
+      t.classList.toggle('active', i === idx);
+      if (cfg.tops[i - 1] !== undefined) {
+        t.style.top = cfg.tops[i - 1] + 'px';
+      }
+    });
+
+    // 胶囊跟着 active tab 移动
+    if (m3Pill) {
+      m3Pill.style.top = cfg.tops[idx - 1] + 'px';
+    }
+
+    // 更新内容面板位置与文案
+    if (m3Panel && m3PanelTitle && m3PanelDesc && m3PanelList) {
+      m3Panel.style.top = cfg.panelTop + 'px';
+      const c = m3Contents[idx];
+      m3PanelTitle.textContent = c.title;
+      m3PanelDesc.textContent = c.desc;
+      m3PanelList.innerHTML = c.list.map((t) => `<li>${t}</li>`).join('');
     }
   }
   m3Tabs.forEach((t) => {
     t.addEventListener('click', () => activateMod3(Number(t.dataset.m3)));
   });
-  activateMod3(3);  // 默认 tab 3 active（和底图展开区一致）
+  activateMod3(3);  // 默认 tab 3 active
 
   const mediaPanel = document.getElementById('discord-media');
   if (mediaPanel) {

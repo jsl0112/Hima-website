@@ -1,9 +1,19 @@
 /* Radikal 字体（数字组大数字使用） */
 @import url('https://fonts.cdnfonts.com/css/radikal');
 
+/* 造字工房皓影体（首屏大标题使用） */
+@font-face {
+  font-family: "ZZGFHaoYing";
+  src: url("assets/造字工房皓影体.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 :root {
   --dw: 2560;
-  --dh: 10007;
+  --dh: 9721;
   --scale: 1;
 }
 
@@ -16,7 +26,7 @@ html, body {
   padding: 0;
   background: #000;
   color: #fff;
-  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
@@ -76,20 +86,47 @@ html, body {
   animation: segFadeIn 1.6s ease-out .1s forwards;
 }
 
-/* ========== 首屏专用背景：bgg2.png 纯装饰蓝光圆环（无文字/数字/图标）==========
-   bgg2.png 尺寸: 2566×2560px（≈1x），覆盖首屏 2560×2620 区域
-   纯装饰图，不会和 HTML 前景文字/数字产生重复 */
-.hero-bg {
+
+
+
+/* ========== 首屏 hero 段：bgg2.png 作为 01 模块独立背景 ==========
+   直接替换掉 full-frame.png 在 0~2640px 的部分，避免底图里自带的
+   大标题/副标题/数字/社交条/01标题切图与 HTML 前景元素重复。
+   bgg2.png 保持原始比例，通过 clip-path 裁掉标题上方区域。 */
+.hero-seg {
   position: absolute;
   left: 0;
   top: 0;
   width: 2560px;
-  height: 2620px;
-  background: #000 url("assets/bgg2.png") center 380px / 2560px auto no-repeat;
+  height: 10007px;
+  background-image: url("assets/bgg2.png");
+  background-size: 2560px 2640px;      /* 保持原始比例，精确填充 hero 区域 */
+  background-repeat: no-repeat;
+  background-position: 0 380px;        /* 背景图从 380px 开始绘制（原330+50） */
+  clip-path: inset(var(--seg-top) 0 calc(10007px - var(--seg-bot)) 0);
   pointer-events: none;
   user-select: none;
+  image-rendering: -webkit-optimize-contrast;
   z-index: 0;
-  overflow: hidden;
+}
+
+/* hero 底部渐变过渡层：覆盖 bgg2.png 底部 400px 区域，
+   从完全透明渐变到纯黑，让背景图底部自然消融到黑色背景 */
+.hero-fade-out {
+  position: absolute;
+  left: 0;
+  top: 2445px;       /* 从 seg-bot(2845)-400=2445 开始渐变 */
+  width: 2560px;
+  height: 400px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;        /* 高于底图(z:0)，低于内容层 */
+  background: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 25%,
+    rgba(0, 0, 0, 0.65) 50%,
+    rgba(0, 0, 0, 0.88) 75%,
+    rgba(0, 0, 0, 1) 100%);
 }
 @keyframes segFadeIn {
   0%   { opacity: 0; }
@@ -117,7 +154,7 @@ html, body {
   pointer-events: none;
   user-select: none;
   object-fit: contain;
-  z-index: 3;
+  z-index: 6;
 }
 
 /* ---- 装饰遮罩：精确盖住底图中不想要的装饰残余
@@ -287,6 +324,78 @@ html, body {
   filter: drop-shadow(0 0 6px rgba(31, 84, 255, .9)) drop-shadow(0 0 14px rgba(31, 84, 255, .5));
 }
 
+/* 底部 4 个小标签（纯展示） */
+.bottom-tabs {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 56px;
+  padding: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.bt-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "ZZGFHaoYing", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+.bt-star {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(31, 84, 255, .6));
+}
+
+/* 底部大标题：左对齐变体（首屏保持居中） */
+.title-text.title-text-left {
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+/* 底部大标题放大版本 */
+.title-text.title-text-bottom {
+  font-size: 116px;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+/* 03 模块独立背景装饰（11-10440.png 同心圆弧） */
+.m3-bg-deco {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  image-rendering: -webkit-optimize-contrast;
+  /* 柔和外发光，融入黑色画布 */
+  filter: drop-shadow(0 0 40px rgba(31, 84, 255, .25));
+  /* 仅保留 03 模块可见区（遮罩覆盖 3658~5051，圆弧 top=3190~4835）：
+     顶裁 468px 对齐遮罩顶部，底部圆弧在遮罩内无需裁 */
+  -webkit-clip-path: inset(468px 0 0 0);
+          clip-path: inset(468px 0 0 0);
+}
+
+/* 底部同心圆装饰（11-10430.png）：贴近右侧，最底层，不遮挡上层内容 */
+.bottom-deco-bg {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  image-rendering: -webkit-optimize-contrast;
+  filter: drop-shadow(0 0 40px rgba(31, 84, 255, .2));
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+
 /* 合作咨询按钮：纯色蓝，hover 提亮（不再渐变） */
 /* ============================================================
    语言切换按钮（位于 cta-btn 左侧，图标 + EN 文本）
@@ -304,7 +413,7 @@ html, body {
   border: none;
   border-radius: 0;
   color: #ffffff;
-  font-family: "PingFang SC", "Noto Sans", "Microsoft YaHei", sans-serif;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 16px;
   font-weight: 400;
   letter-spacing: .5px;
@@ -465,50 +574,7 @@ html, body {
   100% { transform: translate(-3%, -4%)  scale(1);    }
 }
 
-/* 扫光改为随机流动光斑（非线性滑动），多个光斑以不同速度/方向漂浮 */
-.title-sweep {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  -webkit-mask: url("assets/title-main.png") center / 100% 100% no-repeat;
-          mask: url("assets/title-main.png") center / 100% 100% no-repeat;
-  pointer-events: none;
-}
-.title-sweep::before,
-.title-sweep::after {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  border-radius: 50%;
-  mix-blend-mode: screen;
-}
-.title-sweep::before {
-  background:
-    radial-gradient(40% 50% at 30% 50%, rgba(255,255,255,.7) 0%, transparent 70%),
-    radial-gradient(30% 40% at 75% 45%, rgba(255,255,255,.5) 0%, transparent 65%);
-  animation: sweepFloat1 7s ease-in-out infinite alternate;
-}
-.title-sweep::after {
-  background:
-    radial-gradient(35% 45% at 60% 55%, rgba(255,255,255,.6) 0%, transparent 68%),
-    radial-gradient(25% 35% at 20% 70%, rgba(255,255,255,.4) 0%, transparent 65%);
-  animation: sweepFloat2 9s ease-in-out infinite alternate;
-}
-
-/* 随机流动关键帧 —— 非线性漂浮轨迹 */
-@keyframes sweepFloat1 {
-  0%   { transform: translate(0%, 0%) scale(1); opacity: .6; }
-  25%  { transform: translate(12%, -8%) scale(1.1); opacity: .8; }
-  50%  { transform: translate(-5%, 6%) scale(.95); opacity: .5; }
-  75%  { transform: translate(8%, 4%) scale(1.05); opacity: .75; }
-  100% { transform: translate(-8%, -5%) scale(1); opacity: .65; }
-}
-@keyframes sweepFloat2 {
-  0%   { transform: translate(5%, 3%) scale(1.05); opacity: .5; }
-  30%  { transform: translate(-10%, -4%) scale(.92); opacity: .7; }
-  60%  { transform: translate(6%, 8%) scale(1.08); opacity: .55; }
-  100% { transform: translate(-6%, -6%) scale(1); opacity: .6; }
-}
+/* 扫光效果已移除，仅保留循环流动渐变色动效（titleFlow） */
 
 /* "一站式"蓝色高亮层 —— 用 clip-path 精确裁剪到对应字符区域
    标题第一行"懂您的一站式海外游戏"共 10 个字，"一站式"为第 4-6 个字
@@ -528,21 +594,106 @@ html, body {
   clip-path: inset(0% 40% 50% 30%);
   pointer-events: none;
 }
+/* 大标题辅助光晕：已移除，光效仅作用于"一站式"三字 */
 .title-glow {
-  position: absolute;
-  inset: -6% -4%;
-  background:
-    radial-gradient(35% 60% at 25% 50%, rgba(62,168,255,.35), transparent 70%),
-    radial-gradient(35% 60% at 75% 50%, rgba(120,200,255,.28), transparent 70%);
-  filter: blur(22px);
-  animation: titleGlow 6s ease-in-out infinite alternate;
-  pointer-events: none;
+  display: none;
 }
 
-@keyframes titleGlow {
-  0%   { opacity: .55; transform: translateX(-12px); }
-  100% { opacity: .9;  transform: translateX(12px); }
+/* 大标题文字（使用 造字工房皓影体），两行居中 —— 蓝色渐变流动 + 高光流光扫过
+   注：渐变与扫光都下放到 .title-line（每行独立 background-clip），
+   .title-text 仅负责布局（flex 多行 + background-clip:text 组合会导致渐变失效） */
+.title-text {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: "ZZGFHaoYing", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: normal;
+  font-size: 96px;
+  line-height: 1.1;
+  letter-spacing: -4px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
 }
+/* 每行独立承载"蓝色渐变流动"样式 */
+.title-line {
+  display: block;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #dbecff 0%,
+    #8ec5ff 18%,
+    #3ea8ff 36%,
+    #1f54ff 52%,
+    #3ea8ff 68%,
+    #8ec5ff 84%,
+    #dbecff 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  filter: drop-shadow(0 2px 18px rgba(62, 168, 255, .45));
+  animation: titleFlow 6s linear infinite;
+}
+@keyframes titleFlow {
+  0%   { background-position:   0% 50%; }
+  100% { background-position: 220% 50%; }
+}
+/* 高光闪烁已移除，仅保留循环流动渐变色动效（titleFlow） */
+/* "一站式"高亮：随机流动的蓝色模糊渐变，仅在文字内部 */
+.title-hi {
+  position: relative;
+  display: inline-block;
+  background:
+    radial-gradient(ellipse 50% 80% at var(--gx1, 20%) var(--gy1, 40%),
+      #5cb8ff 0%, transparent 70%),
+    radial-gradient(ellipse 60% 70% at var(--gx2, 70%) var(--gy2, 60%),
+      #3ea8ff 0%, transparent 65%),
+    radial-gradient(ellipse 45% 90% at var(--gx3, 50%) var(--gy3, 30%),
+      #7ecfff 0%, transparent 60%),
+    linear-gradient(90deg, #0136E6 0%, #1a5eff 50%, #0136E6 100%);
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  filter: blur(0.5px);
+  animation: hiDrift1 8s ease-in-out infinite, hiDrift2 11s ease-in-out infinite, hiDrift3 14s ease-in-out infinite;
+}
+@keyframes hiDrift1 {
+  0%   { --gx1: 15%; --gy1: 30%; }
+  25%  { --gx1: 60%; --gy1: 70%; }
+  50%  { --gx1: 85%; --gy1: 40%; }
+  75%  { --gx1: 35%; --gy1: 80%; }
+  100% { --gx1: 15%; --gy1: 30%; }
+}
+@keyframes hiDrift2 {
+  0%   { --gx2: 75%; --gy2: 60%; }
+  30%  { --gx2: 25%; --gy2: 30%; }
+  60%  { --gx2: 50%; --gy2: 80%; }
+  100% { --gx2: 75%; --gy2: 60%; }
+}
+@keyframes hiDrift3 {
+  0%   { --gx3: 50%; --gy3: 25%; }
+  35%  { --gx3: 80%; --gy3: 70%; }
+  70%  { --gx3: 20%; --gy3: 55%; }
+  100% { --gx3: 50%; --gy3: 25%; }
+}
+@property --gx1 { syntax: '<percentage>'; inherits: false; initial-value: 20%; }
+@property --gy1 { syntax: '<percentage>'; inherits: false; initial-value: 40%; }
+@property --gx2 { syntax: '<percentage>'; inherits: false; initial-value: 70%; }
+@property --gy2 { syntax: '<percentage>'; inherits: false; initial-value: 60%; }
+@property --gx3 { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+@property --gy3 { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
 
 /* 首屏副标题（Figma 14:13304）：浅蓝灰色，单行居中 */
 .hero-subtitle {
@@ -550,7 +701,7 @@ html, body {
   margin: 0;
   font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 20px;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 42px;
   letter-spacing: 1px;
   color: #C2C6D7;
@@ -748,6 +899,7 @@ html, body {
 .media-panel {
   position: absolute;
   border-radius: 18px;
+  z-index: 3;
   overflow: hidden;
   background: #06101f;
   box-shadow:
@@ -764,6 +916,9 @@ html, body {
   opacity: 0;
   transition: opacity .45s ease;
   pointer-events: none;
+}
+.media-panel video.m {
+  background: #06101f;
 }
 .media-panel .m.active {
   opacity: 1;
@@ -782,6 +937,47 @@ html, body {
   user-select: none;
   object-fit: contain;
   opacity: .9;
+}
+
+/* ---- 向外扩散波纹动画 ---- */
+.dm-ripple-wrap {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.dm-ripple-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 60%; height: 60%;
+  transform: translate(-50%, -50%) scale(1);
+  border: 1.5px solid rgba(0, 163, 255, .45);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  animation: dm-ripple-out 4s ease-out infinite;
+}
+
+/* 四圈依次错开，形成连续扩散效果 */
+.dm-ripple-1 { animation-delay: 0s;   }
+.dm-ripple-2 { animation-delay: 1s;   }
+.dm-ripple-3 { animation-delay: 2s;   }
+.dm-ripple-4 { animation-delay: 3s;   }
+
+@keyframes dm-ripple-out {
+  0% {
+    transform: translate(-50%, -50%) scale(.55);
+    opacity: .6;
+    border-width: 2px;
+  }
+  70% {
+    opacity: .2;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+    border-width: .5px;
+  }
 }
 
 /* 04 章节标题切图（11-10497.png："04 核心场景 海外用户全域..."） */
@@ -937,18 +1133,8 @@ html, body {
 }
 
 /* ============================================================
-   合作游戏卡片、CTA 按钮
+   CTA 按钮（底图中使用）
    ============================================================ */
-.game-hit {
-  border-radius: 14px;
-  background: transparent;
-  transition:
-    transform .4s cubic-bezier(.2,.7,.2,1);
-}
-.game-hit:hover {
-  transform: scale(1.08);
-}
-
 .cta-hit {
   position: absolute;
   border: 0;
@@ -965,14 +1151,14 @@ html, body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 0 0 0 rgba(0, 140, 255, .45);
-  animation: ctaPulse 2.4s ease-out infinite;
+  box-shadow: 0 0 0 0 rgba(0, 140, 255, 0);
   pointer-events: none;
 }
 .cta-hit:hover {
-  transform: translateY(-3px) scale(1.04);
-  filter: brightness(1.12);
-  box-shadow: 0 18px 50px rgba(0, 130, 255, .55);
+  transform: none;
+  filter: brightness(1.25) saturate(1.2);
+  box-shadow: none;
+  background: rgba(50, 140, 255, .15);
 }
 @keyframes ctaPulse {
   0%   { box-shadow: 0 0 0 0 rgba(0,140,255,.55); }
@@ -1004,7 +1190,7 @@ html, body {
 /* hover 行为在 in 之后不被 reveal.transform 覆盖 */
 .reveal.in.hover-float:hover { transform: translateY(-6px) scale(1.02); }
 .reveal.in.game-hit:hover    { transform: scale(1.08); }
-.reveal.in.cta-hit:hover     { transform: translateY(-3px) scale(1.04); }
+.reveal.in.cta-hit:hover     { transform: none; filter: brightness(1.25) saturate(1.2); }
 
 /* ============================================================
    01 模块 5 个 Tab：HTML 还原，可点击切换（不用切图）
@@ -1071,13 +1257,40 @@ html, body {
 }
 
 /* ============================================================
-   03 模块 4 个 Tab（HTML 还原，可点击切换，不用切图）
-   底图 y 位置：tab1=0  tab2=72  tab3=142(active) tab4=438
+   03 模块 4 个 Tab（HTML 文字还原，可点击切换，带 hover 态）
+   Figma: tab 231×51, 圆角 600px, 字体 Noto Sans Bold 20px uppercase
+   默认灰底(#272727) + 灰色文字(#e5e5e5)
+/* 03 社交平台图标行 */
+.mod3-platforms {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  pointer-events: none;
+}
+.mod3-platforms-img {
+  height: 57px;
+  width: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.platform-more {
+  font-size: 16px;
+  color: rgba(255, 255, 255, .5);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   03 直播运营 - mod3-tabs
+   hover 灰色变亮(#3a3a3a + #fff)
+   active 渐变背景 + 深色文字
    ============================================================ */
 .mod3-tabs {
   position: absolute;
-  z-index: 5;
-  pointer-events: none;  /* 子按钮自行开启 */
+  z-index: 7;
+  pointer-events: none;
+  overflow: visible;
 }
 .mod3-tab {
   position: absolute;
@@ -1086,25 +1299,33 @@ html, body {
   height: 51px;
   padding: 0;
   border: 0;
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 51px;
+  text-align: center;
   cursor: pointer;
   pointer-events: auto;
-  background: #272727;                   /* Figma 原 #272727 */
-  color: #e5e5e5;                         /* Figma r=g=b=0.899 */
-  border-radius: 26px;                   /* 椭圆形按钮 */
+  background: #272727;
+  color: #e5e5e5;
+  border-radius: 600px;
   z-index: 2;
-  transition: color .28s ease, background-color .28s ease;
+  transition: color .28s ease, background-color .28s ease, box-shadow .28s ease;
 }
 .mod3-tab:hover {
   color: #ffffff;
-  background: #2f2f3a;
+  background: #3a3a3a;
+  box-shadow: 0 0 12px rgba(255, 255, 255, .08);
 }
 .mod3-tab.active {
-  color: #00005B;                         /* Figma 原激活字色 */
-  background: transparent;                /* 胶囊在下方承担底色 */
+  color: #00005B;
+  background: transparent;
+}
+.mod3-tab.active:hover {
+  background: transparent;
+  box-shadow: none;
 }
 .mod3-tab:active { transform: scale(.97); }
 
@@ -1113,17 +1334,87 @@ html, body {
   position: absolute;
   z-index: 1;
   left: 0;
-  top: 142px;                             /* 初始对齐 tab 3 */
+  top: 142px;
   width: 231px;
   height: 51px;
-  border-radius: 26px;                    /* 椭圆形胶囊 */
-  /* Figma 原激活渐变：白→淡蓝紫 */
-  background: linear-gradient(155deg, #fafafa 0%, #798dff 100%);
+  border-radius: 600px;
+  background: linear-gradient(175deg, #fafafa 0%, #798dff 100%);
   box-shadow:
     0 6px 18px rgba(80, 110, 255, .45),
     0 0 0 1px rgba(255, 255, 255, .5) inset;
   transition: top .45s cubic-bezier(.2,.7,.2,1);
   pointer-events: none;
+}
+
+/* 03 tab 位置：默认 tab3 active 时的布局，JS 会根据 active 动态覆写 */
+.mod3-tab[data-m3="1"] { top: 0; }
+.mod3-tab[data-m3="2"] { top: 72px; }
+.mod3-tab[data-m3="3"] { top: 142px; }
+.mod3-tab[data-m3="4"] { top: 438px; }
+.mod3-tab { transition: top .45s cubic-bezier(.2,.7,.2,1), color .28s ease, background-color .28s ease, box-shadow .28s ease; }
+
+/* 03 内容面板（跟随 active tab 动态移动） */
+.mod3-panel {
+  position: absolute;
+  left: 2px;
+  top: 214px;            /* 默认：tab3 active（142 + 72） */
+  width: 416px;
+  pointer-events: auto;
+  color: #fff;
+  transition: top .45s cubic-bezier(.2,.7,.2,1);
+}
+.mod3-panel-title {
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 38px;
+  color: #ffffff;
+  letter-spacing: 0;
+}
+.mod3-panel-desc {
+  margin: 14px 0 0 0;
+  padding: 0;
+  width: 413px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  color: #D8D8D8;
+}
+.mod3-panel-list {
+  margin: 12px 0 0 0;
+  padding: 0;
+  list-style: none;
+  width: 416px;
+}
+.mod3-panel-list li {
+  position: relative;
+  padding: 0 0 0 36px;
+  min-height: 32px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  color: #BEBEBE;
+  white-space: nowrap;
+}
+.mod3-panel-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  background: url("assets/check-square.png") no-repeat center / contain;
+}
+.mod3-panel-list li::after {
+  content: none;
+}
+/* 无 SVG 时的回退：用绿色方块+对勾 */
+.mod3-panel-list li.fallback::before {
+  background: none;
 }
 
 /* ============================================================
@@ -1221,4 +1512,180 @@ html, body {
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: none;
+}
+
+/* 社媒管理下方的平台图标条 */
+.platform-bar {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* 03 直播截图 */
+.live-screenshot {
+  position: absolute;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  box-shadow: 0 20px 60px rgba(0, 30, 120, .35);
+  z-index: 7;
+}
+
+/* ============================================================
+   合作游戏卡片 + 封面图
+   ============================================================ */
+.game-hit {
+  position: absolute;
+  border-radius: 14px;
+  background: transparent;
+  overflow: hidden;
+  transition: transform .4s cubic-bezier(.2,.7,.2,1);
+  z-index: 3;
+}
+.game-hit:hover {
+  transform: scale(1.08);
+}
+.game-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* "以上为部分合作项目展示" 说明文字 */
+.games-note {
+  position: absolute;
+  margin: 0;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  pointer-events: none;
+  letter-spacing: 2px;
+  z-index: 3;
+}
+
+/* ============================================================
+   底部 CTA 按钮（合作咨询）
+   ============================================================ */
+.bottom-cta {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 339px;
+  height: 91px;
+  border-radius: 46px;
+  background: linear-gradient(135deg, #0136E6 0%, #1f6bff 100%);
+  color: #ffffff;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 12px 40px rgba(1, 54, 230, .5),
+    0 0 0 1px rgba(255, 255, 255, .1) inset;
+  transition: transform .3s cubic-bezier(.2,.7,.2,1),
+              box-shadow .3s ease, filter .3s ease;
+}
+.bottom-cta:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 50px rgba(1, 54, 230, .65),
+    0 0 0 2px rgba(255, 255, 255, .2) inset;
+  filter: brightness(1.15);
+}
+.bottom-cta:active {
+  transform: translateY(0);
+}
+.bottom-cta-icon {
+  width: 26px;
+  height: 26px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.site-footer {
+  position: absolute;
+  pointer-events: auto;
+}
+.footer-inner {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 16px 360px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(31, 84, 255, .35);
+}
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.footer-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+  user-select: none;
+  opacity: .7;
+}
+.footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.footer-contact {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .7);
+  letter-spacing: .5px;
+}
+.footer-contact strong {
+  font-weight: 700;
+  color: rgba(255, 255, 255, .9);
+}
+.footer-vector-deco {
+  display: block;
+  opacity: .7;
+}
+.footer-copyright {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .45);
+  letter-spacing: .5px;
+}
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.footer-link {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .55);
+  text-decoration: none;
+  letter-spacing: .5px;
+  transition: color .25s ease;
+}
+.footer-link:hover {
+  color: #ffffff;
 }
