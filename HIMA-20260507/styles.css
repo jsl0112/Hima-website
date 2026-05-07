@@ -1,0 +1,1691 @@
+/* Radikal 字体（数字组大数字使用） */
+@import url('https://fonts.cdnfonts.com/css/radikal');
+
+/* 造字工房皓影体（首屏大标题使用） */
+@font-face {
+  font-family: "ZZGFHaoYing";
+  src: url("assets/造字工房皓影体.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+:root {
+  --dw: 2560;
+  --dh: 9721;
+  --scale: 1;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #fff;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ---- 画布容器：居中 + 自适应缩放 ---- */
+.viewport {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  justify-content: center;
+}
+.stage {
+  position: relative;
+  width: calc(var(--dw) * 1px);
+  height: calc(var(--dh) * 1px);
+  flex: 0 0 auto;
+  transform-origin: top center;
+  transform: scale(var(--scale));
+}
+.base {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* ---- 分段底图：每段独立显示 full-frame.png 的对应 y 区间，
+        加载 / 滚动时以 opacity 从无到有渐入 ---- */
+.base-seg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2560px;
+  height: 10007px;
+  background-image: url("assets/full-frame.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  clip-path: inset(var(--seg-top) 0 calc(10007px - var(--seg-bot)) 0);
+  pointer-events: none;
+  user-select: none;
+  image-rendering: -webkit-optimize-contrast;
+  z-index: 0;
+}
+
+/* 首屏固定段：页面加载/刷新时从完全透明平滑渐入 */
+.seg-fixed {
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  animation: segFadeIn 1.6s ease-out .1s forwards;
+}
+
+
+
+
+/* ========== 首屏 hero 段：bgg2.png 作为 01 模块独立背景 ==========
+   直接替换掉 full-frame.png 在 0~2640px 的部分，避免底图里自带的
+   大标题/副标题/数字/社交条/01标题切图与 HTML 前景元素重复。
+   bgg2.png 保持原始比例，通过 clip-path 裁掉标题上方区域。 */
+.hero-seg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2560px;
+  height: 10007px;
+  background-image: url("assets/bgg2.png");
+  background-size: 2560px 2640px;      /* 保持原始比例，精确填充 hero 区域 */
+  background-repeat: no-repeat;
+  background-position: 0 380px;        /* 背景图从 380px 开始绘制（原330+50） */
+  clip-path: inset(var(--seg-top) 0 calc(10007px - var(--seg-bot)) 0);
+  pointer-events: none;
+  user-select: none;
+  image-rendering: -webkit-optimize-contrast;
+  z-index: 0;
+}
+
+/* hero 底部渐变过渡层：覆盖 bgg2.png 底部 400px 区域，
+   从完全透明渐变到纯黑，让背景图底部自然消融到黑色背景 */
+.hero-fade-out {
+  position: absolute;
+  left: 0;
+  top: 2445px;       /* 从 seg-bot(2845)-400=2445 开始渐变 */
+  width: 2560px;
+  height: 400px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;        /* 高于底图(z:0)，低于内容层 */
+  background: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 25%,
+    rgba(0, 0, 0, 0.65) 50%,
+    rgba(0, 0, 0, 0.88) 75%,
+    rgba(0, 0, 0, 1) 100%);
+}
+@keyframes segFadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* 可滚动段：滚入视口时纯 opacity 渐入，时间充裕让过渡自然不突兀 */
+.base-seg.scroll-reveal {
+  opacity: 0;
+  transition: opacity 1.4s ease-out;
+  will-change: opacity;
+}
+.base-seg.scroll-reveal.in {
+  opacity: 1;
+}
+
+/* 纯展示层（无交互） */
+.static-layer {
+  position: absolute;
+  pointer-events: none;
+}
+/* 首屏区域的模块标题切图（不再依赖 full-frame.png 底图） */
+.section-title-img {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;
+  z-index: 6;
+}
+
+/* ---- 装饰遮罩：精确盖住底图中不想要的装饰残余
+        （如 02 视频下方延伸到 03 sec-3 标题之间的 Group 2119902950 下沿） ---- */
+.deco-mask {
+  position: absolute;
+  background: #000;        /* 纯黑，和底图底色完全一致 */
+  pointer-events: none;
+  z-index: 1;              /* 高于 base-seg(0)，低于内容层 */
+}
+/* 与首屏底图同步渐入的遮罩，避免底图淡入时遮罩先显示为黑块 */
+.seg-sync-mask {
+  opacity: 0;
+  animation: segFadeIn 1.6s ease-out .1s forwards;
+}
+/* 数字区域覆盖层：盖住底图上原有的两组数字切图。
+   使用黑底 + 多层蓝色径向光渐变，和底图视觉无缝衔接，不是纯黑色底色 */
+.num-cover {
+  position: absolute;
+  pointer-events: none;
+  background-color: #000;
+  background-image:
+    radial-gradient(60% 70% at 8% 50%,  rgba(47, 108, 255, 0.55) 0%, rgba(47, 108, 255, 0) 65%),
+    radial-gradient(60% 70% at 92% 50%, rgba(47, 108, 255, 0.55) 0%, rgba(47, 108, 255, 0) 65%),
+    radial-gradient(45% 60% at 50% 50%, rgba(30, 60, 160, 0.25) 0%, rgba(30, 60, 160, 0) 70%);
+  background-repeat: no-repeat;
+}
+
+/* ---- 通用按钮/卡片热区 ---- */
+.hit {
+  position: absolute;
+  background: transparent;
+  cursor: pointer;
+  transition: transform .35s cubic-bezier(.2,.7,.2,1),
+              filter .35s ease,
+              box-shadow .35s ease;
+  will-change: transform, filter;
+}
+.hover-float:hover {
+  transform: translateY(-6px) scale(1.02);
+  filter: brightness(1.08) saturate(1.1);
+  box-shadow: 0 22px 60px rgba(0, 118, 255, .35);
+  border-radius: 12px;
+}
+
+/* ============================================================
+   顶栏（fixed 固定在浏览器视口顶部，内部按 2560 画布尺寸，
+   整体 scale 和 stage 保持一致；不跟随滚动）
+   ============================================================ */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(71px * var(--scale));   /* 视觉上占 71px * scale 的高度 */
+  z-index: 200;
+  pointer-events: none;
+  overflow: visible;
+}
+.topbar-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #111111;                 /* Figma r=g=b=0.0673 ≈ #111 */
+  pointer-events: auto;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
+}
+/* 内部按 2560 画布尺寸布局，用 scale 适配 */
+.topbar-inner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2560px;
+  height: 71px;
+  transform: translateX(-50%) scale(var(--scale));
+  transform-origin: top center;
+  pointer-events: none;                /* 子元素自行开启 */
+}
+
+/* 品牌 Logo */
+.brand {
+  position: absolute;
+  left: 360px;
+  top: 12px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  pointer-events: auto;
+  transition: filter .25s ease, transform .25s ease;
+}
+.brand-logo {
+  height: 48px;
+  width: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  image-rendering: -webkit-optimize-contrast;
+}
+.brand:hover {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 4px 10px rgba(1, 54, 230, .55));
+}
+
+/* 导航 */
+.nav {
+  position: absolute;
+  left: 984px;
+  top: 0;
+  height: 71px;
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  pointer-events: auto;
+}
+.nav-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  padding: 12px 8px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: color .28s ease, transform .28s cubic-bezier(.2,.7,.2,1),
+              background .35s ease, box-shadow .35s ease;
+}
+/* 蓝色星星图标 */
+.nav-star {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  display: block;
+  transition: filter .28s ease, transform .28s ease;
+}
+/* hover：文字白色 + 蓝色外发光（无底色） */
+.nav-tab:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  background: transparent;
+  text-shadow:
+    0 0 12px rgba(31, 84, 255, .7),
+    0 0 24px rgba(31, 84, 255, .35);
+  filter: drop-shadow(0 0 18px rgba(31, 84, 255, .45));
+}
+.nav-tab:hover .nav-star {
+  filter: drop-shadow(0 0 6px rgba(31, 84, 255, .8)) drop-shadow(0 0 12px rgba(31, 84, 255, .4));
+  transform: scale(1.15);
+}
+/* active 态 */
+.nav-tab.active {
+  color: #ffffff;
+  background: transparent;
+  text-shadow:
+    0 0 14px rgba(31, 84, 255, .8),
+    0 0 30px rgba(31, 84, 255, .4);
+  filter: drop-shadow(0 0 22px rgba(31, 84, 255, .5));
+}
+.nav-tab.active .nav-star {
+  filter: drop-shadow(0 0 6px rgba(31, 84, 255, .9)) drop-shadow(0 0 14px rgba(31, 84, 255, .5));
+}
+
+/* 底部 4 个小标签（纯展示） */
+.bottom-tabs {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 56px;
+  padding: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.bt-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "ZZGFHaoYing", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+.bt-star {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(31, 84, 255, .6));
+}
+
+/* 底部大标题：左对齐变体（首屏保持居中） */
+.title-text.title-text-left {
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+/* 底部大标题放大版本 */
+.title-text.title-text-bottom {
+  font-size: 116px;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+/* 03 模块独立背景装饰（11-10440.png 同心圆弧） */
+.m3-bg-deco {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  image-rendering: -webkit-optimize-contrast;
+  /* 柔和外发光，融入黑色画布 */
+  filter: drop-shadow(0 0 40px rgba(31, 84, 255, .25));
+  /* 仅保留 03 模块可见区（遮罩覆盖 3658~5051，圆弧 top=3190~4835）：
+     顶裁 468px 对齐遮罩顶部，底部圆弧在遮罩内无需裁 */
+  -webkit-clip-path: inset(468px 0 0 0);
+          clip-path: inset(468px 0 0 0);
+}
+
+/* 底部同心圆装饰（11-10430.png）：贴近右侧，最底层，不遮挡上层内容 */
+.bottom-deco-bg {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  image-rendering: -webkit-optimize-contrast;
+  filter: drop-shadow(0 0 40px rgba(31, 84, 255, .2));
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+
+/* 合作咨询按钮：纯色蓝，hover 提亮（不再渐变） */
+/* ============================================================
+   语言切换按钮（位于 cta-btn 左侧，图标 + EN 文本）
+   ============================================================ */
+.lang-switch {
+  position: absolute;
+  left: 1950px;        /* 紧靠右侧蓝色按钮，缩小间距 */
+  top: 13px;
+  height: 44px;
+  padding: 0 14px 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: #ffffff;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: .5px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity .25s ease,
+              transform .28s cubic-bezier(.2,.7,.2,1);
+}
+.lang-switch .lang-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: none;
+  transition: filter .25s ease;
+}
+.lang-switch .lang-text {
+  line-height: 1;
+  font-weight: 500;
+  transition: color .25s ease;
+}
+.lang-switch:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+}
+.lang-switch:hover .lang-icon {
+  filter: drop-shadow(0 0 6px rgba(31, 84, 255, .6)) brightness(1.15);
+}
+.lang-switch:hover .lang-text {
+  color: rgba(255, 255, 255, .85);
+}
+.lang-switch:active {
+  transform: translateY(0);
+  opacity: .75;
+}
+
+.cta-btn {
+  position: absolute;
+  left: 2040px;
+  top: 13px;
+  width: 161px;
+  height: 44px;
+  border-radius: 22px;
+  background: #0136E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 1px;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 6px 16px rgba(1, 54, 230, .35);
+  transition: background-color .25s ease,
+              transform .28s cubic-bezier(.2,.7,.2,1),
+              box-shadow .28s ease;
+  overflow: hidden;
+}
+.cta-btn .cta-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.cta-btn:hover {
+  background: #0136E6;     /* 保持品牌蓝不变 */
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 24px rgba(1, 54, 230, .6),
+    0 0 0 3px rgba(1, 54, 230, .25);
+}
+.cta-btn:active {
+  background: #0136E6;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   大标题：文字 PNG 作 mask —— 蓝白多层随机流动渐变
+   ============================================================ */
+.title-wrap {
+  position: absolute;
+  pointer-events: none;
+}
+.title-cover {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+/* 渐变容器：整体用 PNG 文字做 mask，底色保持明亮偏白 */
+.title-gradient {
+  position: absolute;
+  inset: 0;
+  background: #f4fbff;                /* 蓝白基色 */
+  -webkit-mask: url("assets/title-main.png") center / 100% 100% no-repeat;
+          mask: url("assets/title-main.png") center / 100% 100% no-repeat;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* 4 层蓝色光斑，以不同尺寸/速度/方向漂浮，形成"随机流动"观感 */
+.tg-layer {
+  position: absolute;
+  inset: -30%;
+  mix-blend-mode: normal;
+  filter: blur(2px);
+}
+.tg-l1 {
+  background:
+    radial-gradient(28% 40% at 20% 50%, #3ea8ff 0%, rgba(62,168,255,0) 70%),
+    radial-gradient(22% 36% at 70% 45%, #6fc6ff 0%, rgba(111,198,255,0) 70%);
+  animation: tgFloat1 9s ease-in-out infinite alternate;
+}
+.tg-l2 {
+  background:
+    radial-gradient(26% 38% at 55% 60%, #7bd0ff 0%, rgba(123,208,255,0) 72%),
+    radial-gradient(20% 32% at 90% 40%, #2f7bff 0%, rgba(47,123,255,0) 70%);
+  animation: tgFloat2 11s ease-in-out infinite alternate;
+}
+.tg-l3 {
+  background:
+    radial-gradient(22% 34% at 40% 30%, #bfe5ff 0%, rgba(191,229,255,0) 70%),
+    radial-gradient(18% 30% at 15% 75%, #4d9cff 0%, rgba(77,156,255,0) 72%);
+  animation: tgFloat3 13s ease-in-out infinite alternate;
+}
+.tg-l4 {
+  background:
+    radial-gradient(30% 48% at 80% 70%, rgba(255,255,255,.9) 0%, rgba(255,255,255,0) 70%),
+    radial-gradient(24% 40% at 30% 85%, #9fd8ff 0%, rgba(159,216,255,0) 72%);
+  animation: tgFloat4 15s ease-in-out infinite alternate;
+}
+
+/* 每层单独的伪随机轨迹 —— 关键帧位置/尺度不对齐，叠加后形成持续流动 */
+@keyframes tgFloat1 {
+  0%   { transform: translate(0%, 0%)    scale(1);    }
+  25%  { transform: translate(8%, -6%)   scale(1.08); }
+  50%  { transform: translate(-6%, 5%)   scale(.95);  }
+  75%  { transform: translate(10%, 3%)   scale(1.04); }
+  100% { transform: translate(-4%, -8%)  scale(1.02); }
+}
+@keyframes tgFloat2 {
+  0%   { transform: translate(6%, 4%)    scale(1.05); }
+  30%  { transform: translate(-8%, -5%)  scale(.96);  }
+  60%  { transform: translate(4%, 7%)    scale(1.1);  }
+  100% { transform: translate(9%, -3%)   scale(1);    }
+}
+@keyframes tgFloat3 {
+  0%   { transform: translate(-5%, 3%)   scale(.98);  }
+  40%  { transform: translate(7%, -6%)   scale(1.06); }
+  70%  { transform: translate(-8%, 6%)   scale(.94);  }
+  100% { transform: translate(3%, 8%)    scale(1.03); }
+}
+@keyframes tgFloat4 {
+  0%   { transform: translate(4%, -5%)   scale(1.02); }
+  35%  { transform: translate(-7%, 4%)   scale(.97);  }
+  65%  { transform: translate(9%, 6%)    scale(1.08); }
+  100% { transform: translate(-3%, -4%)  scale(1);    }
+}
+
+/* 扫光效果已移除，仅保留循环流动渐变色动效（titleFlow） */
+
+/* "一站式"蓝色高亮层 —— 用 clip-path 精确裁剪到对应字符区域
+   标题第一行"懂您的一站式海外游戏"共 10 个字，"一站式"为第 4-6 个字
+   水平：left = 3/10 = 30%，right = 4/10 = 40%
+   精确对齐字符边界，不留额外余量 */
+.title-blue {
+  position: absolute;
+  inset: 0;                  /* 与容器完全对齐，不外扩，避免 mask 错位 */
+  background: #045CFF;
+  -webkit-mask: url("assets/title-main.png") center / 100% 100% no-repeat;
+          mask: url("assets/title-main.png") center / 100% 100% no-repeat;
+  /* clip-path 精确裁剪"一站式"区域：
+     top:    0%   （从顶部开始）
+     right:  40%  （右侧裁掉"海外游戏"4字 = 4/10 = 40%）
+     bottom: 50%  （只保留第一行）
+     left:   30%  （左侧裁掉"懂您的"3字 = 3/10 = 30%）  */
+  clip-path: inset(0% 40% 50% 30%);
+  pointer-events: none;
+}
+/* 大标题辅助光晕：已移除，光效仅作用于"一站式"三字 */
+.title-glow {
+  display: none;
+}
+
+/* 大标题文字（使用 造字工房皓影体），两行居中 —— 蓝色渐变流动 + 高光流光扫过
+   注：渐变与扫光都下放到 .title-line（每行独立 background-clip），
+   .title-text 仅负责布局（flex 多行 + background-clip:text 组合会导致渐变失效） */
+.title-text {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: "ZZGFHaoYing", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: normal;
+  font-size: 96px;
+  line-height: 1.1;
+  letter-spacing: -4px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+}
+/* 每行独立承载"蓝色渐变流动"样式 */
+.title-line {
+  display: block;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #dbecff 0%,
+    #8ec5ff 18%,
+    #3ea8ff 36%,
+    #1f54ff 52%,
+    #3ea8ff 68%,
+    #8ec5ff 84%,
+    #dbecff 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  filter: drop-shadow(0 2px 18px rgba(62, 168, 255, .45));
+  animation: titleFlow 6s linear infinite;
+}
+@keyframes titleFlow {
+  0%   { background-position:   0% 50%; }
+  100% { background-position: 220% 50%; }
+}
+/* 高光闪烁已移除，仅保留循环流动渐变色动效（titleFlow） */
+/* "一站式"高亮：随机流动的蓝色模糊渐变，仅在文字内部 */
+.title-hi {
+  position: relative;
+  display: inline-block;
+  background:
+    radial-gradient(ellipse 50% 80% at var(--gx1, 20%) var(--gy1, 40%),
+      #5cb8ff 0%, transparent 70%),
+    radial-gradient(ellipse 60% 70% at var(--gx2, 70%) var(--gy2, 60%),
+      #3ea8ff 0%, transparent 65%),
+    radial-gradient(ellipse 45% 90% at var(--gx3, 50%) var(--gy3, 30%),
+      #7ecfff 0%, transparent 60%),
+    linear-gradient(90deg, #0136E6 0%, #1a5eff 50%, #0136E6 100%);
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  filter: blur(0.5px);
+  animation: hiDrift1 8s ease-in-out infinite, hiDrift2 11s ease-in-out infinite, hiDrift3 14s ease-in-out infinite;
+}
+@keyframes hiDrift1 {
+  0%   { --gx1: 15%; --gy1: 30%; }
+  25%  { --gx1: 60%; --gy1: 70%; }
+  50%  { --gx1: 85%; --gy1: 40%; }
+  75%  { --gx1: 35%; --gy1: 80%; }
+  100% { --gx1: 15%; --gy1: 30%; }
+}
+@keyframes hiDrift2 {
+  0%   { --gx2: 75%; --gy2: 60%; }
+  30%  { --gx2: 25%; --gy2: 30%; }
+  60%  { --gx2: 50%; --gy2: 80%; }
+  100% { --gx2: 75%; --gy2: 60%; }
+}
+@keyframes hiDrift3 {
+  0%   { --gx3: 50%; --gy3: 25%; }
+  35%  { --gx3: 80%; --gy3: 70%; }
+  70%  { --gx3: 20%; --gy3: 55%; }
+  100% { --gx3: 50%; --gy3: 25%; }
+}
+@property --gx1 { syntax: '<percentage>'; inherits: false; initial-value: 20%; }
+@property --gy1 { syntax: '<percentage>'; inherits: false; initial-value: 40%; }
+@property --gx2 { syntax: '<percentage>'; inherits: false; initial-value: 70%; }
+@property --gy2 { syntax: '<percentage>'; inherits: false; initial-value: 60%; }
+@property --gx3 { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+@property --gy3 { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
+
+/* 首屏副标题（Figma 14:13304）：浅蓝灰色，单行居中 */
+.hero-subtitle {
+  position: absolute;
+  margin: 0;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 42px;
+  letter-spacing: 1px;
+  color: #C2C6D7;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ============================================================
+   头部数字组（HTML 还原，数字滚动动画）
+   ============================================================ */
+.stats-group {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+/* 四组数字下方的社交图标横条（使用 sj.png 原切图） */
+.sj-bar {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+.stat-item {
+  position: absolute;
+  top: 0;
+  width: 200px;
+  height: 144px;
+}
+/* 大数字行 */
+.stat-number {
+  font-family: 'Radikal', 'DIN Alternate', 'Bebas Neue', 'Helvetica Neue', 'Arial Black', sans-serif;
+  font-weight: 700;
+  font-size: 96px;
+  line-height: 72px;
+  color: #1F54FF;
+  letter-spacing: -1px;
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+}
+.stat-num {
+  display: inline-block;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+.stat-plus {
+  font-size: 96px;
+  line-height: 72px;
+}
+/* 中文标签 */
+.stat-label {
+  margin-top: 14px;
+  font-family: 'Noto Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 19.2px;
+  color: #E5E5E5;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* 描述文字 */
+.stat-desc {
+  margin-top: 14px;
+  font-family: 'Noto Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 24px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   社交图标组：整组前景，滚动整组渐变
+   ============================================================ */
+.social-group {
+  position: absolute;
+  image-rendering: -webkit-optimize-contrast;
+  z-index: 3;
+}
+.social-group .sp,
+.social-hit .sp {
+  position: absolute;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: block;
+  cursor: pointer;
+  transition: transform .25s ease, filter .25s ease, box-shadow .25s ease;
+}
+.social-group .sp:hover,
+.social-hit .sp:hover {
+  transform: translateY(-4px) scale(1.12);
+  filter: drop-shadow(0 0 10px rgba(120,180,255,.7));
+  box-shadow: 0 10px 22px rgba(0, 130, 255, .45);
+}
+
+/* ============================================================
+   Discord 4 个 Tab：4 个独立卡片
+   k_normal/k_hover/k_press/k_set.png 每张都是一个完整 tab 的切图（自带圆角）
+   所有 tab 共用同一张 normal 图整体平铺，不再切片拉伸
+   ============================================================ */
+.discord-tab {
+  position: absolute;
+  width: 386px;
+  height: 176px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: left;
+  pointer-events: auto;
+  padding: 0;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  /* 整张切图铺满 tab，保持原图圆角效果 */
+  background-color: transparent;
+  background-image: url("assets/k_normal.png");
+  background-size: 100% 100%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  /* 平滑过渡（不对 background-image 做 transition 以避免闪烁） */
+  transition: transform .3s cubic-bezier(.2,.7,.2,1),
+              filter .3s ease,
+              opacity .3s ease;
+}
+
+/* hover 微上浮 */
+.discord-tab:not(.active):hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+}
+/* active 微下沉反馈 */
+.discord-tab:active {
+  transform: scale(.98);
+}
+
+/* ---------- 文字定位 ---------- */
+.dt-title {
+  display: block;
+  position: absolute;
+  left: 26px;
+  top: 30px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: color .3s ease;
+}
+.dt-desc {
+  display: block;
+  position: absolute;
+  left: 26px;
+  top: 78px;
+  right: 20px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  transition: color .3s ease;
+}
+
+/* ---- normal 态（默认）文字颜色 ---- */
+.discord-tab .dt-title {
+  color: rgba(158, 158, 158, 0.7);
+}
+.discord-tab .dt-desc {
+  color: rgba(158, 158, 158, 0.7);
+}
+
+/* ---- hover 态文字颜色 ---- */
+.discord-tab:not(.active):hover .dt-title {
+  color: rgba(255, 255, 255, 0.7);
+}
+.discord-tab:not(.active):hover .dt-desc {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---- active / selected 态文字颜色 ---- */
+.discord-tab.active .dt-title {
+  color: #2F60FF;
+}
+.discord-tab.active .dt-desc {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Discord 媒体面板 */
+.media-panel {
+  position: absolute;
+  border-radius: 18px;
+  z-index: 3;
+  overflow: hidden;
+  background: #06101f;
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.6),
+    0 0 0 1px rgba(255,255,255,.06) inset;
+}
+.media-panel .m {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  opacity: 0;
+  transition: opacity .45s ease;
+  pointer-events: none;
+}
+.media-panel video.m {
+  background: #06101f;
+}
+.media-panel .m.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================================
+   04 海外私信营销 — 严格按 Figma 设计稿还原
+   画板 2566×1588，页面 top 偏移 = 5342
+   ============================================================ */
+
+/* 04 模块背景装饰图（bg3.png 蓝色同心圆光环） */
+.dm-bg-deco {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;
+  opacity: .9;
+}
+
+/* ---- 向外扩散波纹动画 ---- */
+.dm-ripple-wrap {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.dm-ripple-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 60%; height: 60%;
+  transform: translate(-50%, -50%) scale(1);
+  border: 1.5px solid rgba(0, 163, 255, .45);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  animation: dm-ripple-out 4s ease-out infinite;
+}
+
+/* 四圈依次错开，形成连续扩散效果 */
+.dm-ripple-1 { animation-delay: 0s;   }
+.dm-ripple-2 { animation-delay: 1s;   }
+.dm-ripple-3 { animation-delay: 2s;   }
+.dm-ripple-4 { animation-delay: 3s;   }
+
+@keyframes dm-ripple-out {
+  0% {
+    transform: translate(-50%, -50%) scale(.55);
+    opacity: .6;
+    border-width: 2px;
+  }
+  70% {
+    opacity: .2;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+    border-width: .5px;
+  }
+}
+
+/* 04 章节标题切图（11-10497.png："04 核心场景 海外用户全域..."） */
+.dm-title-img {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* ------- 4 个功能卡片（垂直布局：图标+标题同一行 → 下方描述） ------- */
+.dm-feat {
+  position: absolute;
+  background: #181818;
+  border-radius: 12px;
+  padding: 38px 44px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform .35s cubic-bezier(.2,.7,.2,1),
+              box-shadow .35s ease, background .35s ease;
+}
+.dm-feat:hover {
+  transform: translateY(-4px);
+  background: #1e1e1e;
+  box-shadow: 0 14px 40px rgba(20, 51, 255, .22);
+}
+/* 标题行：图标 + 标题文字 同一行 */
+.dm-feat-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+.dm-feat-ic {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 52px;
+  pointer-events: none;
+  user-select: none;
+}
+.dm-feat-title {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  color: #ffffff;
+  white-space: nowrap;
+}
+.dm-feat-desc {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.4;
+  color: #BEBEBE;
+}
+
+/* ------- "可支持渠道（持续接入中）" 标题行 ------- */
+/* ------- "可支持渠道（持续接入中）" 标题行：合并为一行容器，baseline 对齐并水平居中 ------- */
+.dm-ch-heading {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.dm-ch-label {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+  white-space: nowrap;
+}
+.dm-ch-sub {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  color: #BEBEBE;
+  white-space: nowrap;
+}
+
+/* ------- 8 个渠道卡片 439×114 ------- */
+.dm-ch {
+  position: absolute;
+  width: 439px;
+  height: 114px;
+  background: #181818;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 130px;       /* 左侧空位放圆形图标 */
+  box-sizing: border-box;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.2,.7,.2,1),
+              background .3s ease, box-shadow .3s ease;
+}
+.dm-ch:hover {
+  transform: translateY(-3px);
+  background: #1f1f1f;
+  box-shadow: 0 12px 30px rgba(20, 51, 255, .25);
+}
+.dm-ch-ic {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 95px;
+  height: 95px;
+  border-radius: 20px;
+  display: block;
+  overflow: hidden;
+}
+.dm-ch-ic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* 图标铺满整个底色方块 */
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+.dm-ch-name {
+  position: absolute;
+  left: 130px;
+  top: 26px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1;
+  color: #ffffff;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.dm-ch-tag {
+  position: absolute;
+  left: 130px;
+  top: 66px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.3;
+  color: #BEBEBE;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ============================================================
+   CTA 按钮（底图中使用）
+   ============================================================ */
+.cta-hit {
+  position: absolute;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 46px;
+  transition: transform .3s cubic-bezier(.2,.7,.2,1),
+              filter .3s ease,
+              box-shadow .3s ease;
+}
+.cta-hit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(0, 140, 255, 0);
+  pointer-events: none;
+}
+.cta-hit:hover {
+  transform: none;
+  filter: brightness(1.25) saturate(1.2);
+  box-shadow: none;
+  background: rgba(50, 140, 255, .15);
+}
+@keyframes ctaPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(0,140,255,.55); }
+  70%  { box-shadow: 0 0 0 22px rgba(0,140,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,140,255,0); }
+}
+
+/* ============================================================
+   滚动渐变过渡（从下而上浮现 + 视差）
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    opacity .9s cubic-bezier(.2,.7,.2,1),
+    transform .9s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.fx-up       { transform: translate3d(0, 80px, 0); }
+.reveal.fx-left     { transform: translate3d(-90px, 30px, 0); }
+.reveal.fx-right    { transform: translate3d(90px, 30px, 0); }
+.reveal.fx-zoom     { transform: translate3d(0, 60px, 0) scale(.94); }
+.reveal.fx-fade     { transform: none; }    /* 纯 opacity 渐入，无位移无缩放 */
+
+.reveal.in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* hover 行为在 in 之后不被 reveal.transform 覆盖 */
+.reveal.in.hover-float:hover { transform: translateY(-6px) scale(1.02); }
+.reveal.in.game-hit:hover    { transform: scale(1.08); }
+.reveal.in.cta-hit:hover     { transform: none; filter: brightness(1.25) saturate(1.2); }
+
+/* ============================================================
+   01 模块 5 个 Tab：HTML 还原，可点击切换（不用切图）
+   ============================================================ */
+.mod1-tabs {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 34px;
+  /* Figma 原底色：深灰到深蓝紫的线性渐变 */
+  background: linear-gradient(135deg, #191924 0%, #232269 100%);
+  box-shadow:
+    0 10px 30px rgba(0, 20, 80, .45),
+    0 0 0 1px rgba(120, 140, 255, .15) inset;
+  z-index: 5;
+  overflow: hidden;
+  isolation: isolate;
+}
+.mod1-tab {
+  flex: 1 1 0;
+  position: relative;
+  z-index: 2;
+  height: 51px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #e5e5e5;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 26px;
+  transition: color .28s ease, transform .28s ease, text-shadow .28s ease;
+}
+.mod1-tab:hover {
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(160, 190, 255, .7);
+}
+.mod1-tab.active {
+  color: #00005B;          /* Figma 原激活字色 */
+  text-shadow: none;
+}
+.mod1-tab:active { transform: scale(.97); }
+
+/* 激活胶囊：用 transform 平滑滑动 */
+.mod1-pill {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  left: 10px;
+  height: 51px;
+  width: calc((100% - 20px) / 5);
+  border-radius: 26px;
+  /* Figma 原激活渐变：白→淡蓝紫 */
+  background: linear-gradient(155deg, #fafafa 0%, #798dff 100%);
+  box-shadow:
+    0 6px 18px rgba(80, 110, 255, .45),
+    0 0 0 1px rgba(255, 255, 255, .5) inset;
+  transform: translateX(0);
+  transition: transform .45s cubic-bezier(.2,.7,.2,1);
+  pointer-events: none;
+}
+
+/* ============================================================
+   03 模块 4 个 Tab（HTML 文字还原，可点击切换，带 hover 态）
+   Figma: tab 231×51, 圆角 600px, 字体 Noto Sans Bold 20px uppercase
+   默认灰底(#272727) + 灰色文字(#e5e5e5)
+/* 03 社交平台图标行 */
+.mod3-platforms {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  pointer-events: none;
+}
+.mod3-platforms-img {
+  height: 57px;
+  width: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.platform-more {
+  font-size: 16px;
+  color: rgba(255, 255, 255, .5);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   03 直播运营 - mod3-tabs
+   hover 灰色变亮(#3a3a3a + #fff)
+   active 渐变背景 + 深色文字
+   ============================================================ */
+.mod3-tabs {
+  position: absolute;
+  z-index: 7;
+  pointer-events: none;
+  overflow: visible;
+}
+.mod3-tab {
+  position: absolute;
+  left: 0;
+  width: 231px;
+  height: 51px;
+  padding: 0;
+  border: 0;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 51px;
+  text-align: center;
+  cursor: pointer;
+  pointer-events: auto;
+  background: #272727;
+  color: #e5e5e5;
+  border-radius: 600px;
+  z-index: 2;
+  transition: color .28s ease, background-color .28s ease, box-shadow .28s ease;
+}
+.mod3-tab:hover {
+  color: #ffffff;
+  background: #3a3a3a;
+  box-shadow: 0 0 12px rgba(255, 255, 255, .08);
+}
+.mod3-tab.active {
+  color: #00005B;
+  background: transparent;
+}
+.mod3-tab.active:hover {
+  background: transparent;
+  box-shadow: none;
+}
+.mod3-tab:active { transform: scale(.97); }
+
+/* 03 tab 激活胶囊：根据 active tab 的 top 值平滑滑动 */
+.mod3-pill {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 142px;
+  width: 231px;
+  height: 51px;
+  border-radius: 600px;
+  background: linear-gradient(175deg, #fafafa 0%, #798dff 100%);
+  box-shadow:
+    0 6px 18px rgba(80, 110, 255, .45),
+    0 0 0 1px rgba(255, 255, 255, .5) inset;
+  transition: top .45s cubic-bezier(.2,.7,.2,1);
+  pointer-events: none;
+}
+
+/* 03 tab 位置：默认 tab3 active 时的布局，JS 会根据 active 动态覆写 */
+.mod3-tab[data-m3="1"] { top: 0; }
+.mod3-tab[data-m3="2"] { top: 72px; }
+.mod3-tab[data-m3="3"] { top: 142px; }
+.mod3-tab[data-m3="4"] { top: 438px; }
+.mod3-tab { transition: top .45s cubic-bezier(.2,.7,.2,1), color .28s ease, background-color .28s ease, box-shadow .28s ease; }
+
+/* 03 内容面板（跟随 active tab 动态移动） */
+.mod3-panel {
+  position: absolute;
+  left: 2px;
+  top: 214px;            /* 默认：tab3 active（142 + 72） */
+  width: 416px;
+  pointer-events: auto;
+  color: #fff;
+  transition: top .45s cubic-bezier(.2,.7,.2,1);
+}
+.mod3-panel-title {
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 38px;
+  color: #ffffff;
+  letter-spacing: 0;
+}
+.mod3-panel-desc {
+  margin: 14px 0 0 0;
+  padding: 0;
+  width: 413px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  color: #D8D8D8;
+}
+.mod3-panel-list {
+  margin: 12px 0 0 0;
+  padding: 0;
+  list-style: none;
+  width: 416px;
+}
+.mod3-panel-list li {
+  position: relative;
+  padding: 0 0 0 36px;
+  min-height: 32px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 32px;
+  color: #BEBEBE;
+  white-space: nowrap;
+}
+.mod3-panel-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  background: url("assets/check-square.png") no-repeat center / contain;
+}
+.mod3-panel-list li::after {
+  content: none;
+}
+/* 无 SVG 时的回退：用绿色方块+对勾 */
+.mod3-panel-list li.fallback::before {
+  background: none;
+}
+
+/* ============================================================
+   01 模块 · 卡片区（HTML 还原 Figma 70-1130）
+   1499×528 深色卡片，左侧文字 + 右侧产品截图
+   ============================================================ */
+.mod1-card {
+  position: absolute;
+  width: 1499px;
+  height: 528px;
+  background: #141414;
+  border-radius: 20px;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+/* 左侧文字容器 */
+.mod1-card-text {
+  position: absolute;
+  left: 60px;
+  top: 140px;
+  width: 428px;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 标题 */
+.m1c-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+/* 描述 */
+.m1c-desc {
+  margin: 16px 0 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  letter-spacing: 0.5px;
+  color: #bebebe;
+}
+
+/* 勾选列表 */
+.m1c-list {
+  list-style: none;
+  margin: 28px 0 0 0;
+  padding: 0;
+}
+.m1c-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 34px;
+  color: #bebebe;
+  letter-spacing: 0.5px;
+  transition: color .25s ease, transform .25s ease;
+}
+.m1c-list li:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+/* check 图标 */
+.m1c-check {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 6px rgba(20, 51, 255, .45));
+}
+.m1c-check img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* 右侧产品截图 */
+.mod1-card-img {
+  position: absolute;
+  left: 517px;
+  top: 22px;
+  width: 959px;
+  height: 483px;
+  border-radius: 12px;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* 社媒管理下方的平台图标条 */
+.platform-bar {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* 03 直播截图 */
+.live-screenshot {
+  position: absolute;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  box-shadow: 0 20px 60px rgba(0, 30, 120, .35);
+  z-index: 7;
+}
+
+/* ============================================================
+   合作游戏卡片 + 封面图
+   ============================================================ */
+.game-hit {
+  position: absolute;
+  border-radius: 14px;
+  background: transparent;
+  overflow: hidden;
+  transition: transform .4s cubic-bezier(.2,.7,.2,1);
+  z-index: 3;
+}
+.game-hit:hover {
+  transform: scale(1.08);
+}
+.game-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* "以上为部分合作项目展示" 说明文字 */
+.games-note {
+  position: absolute;
+  margin: 0;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  pointer-events: none;
+  letter-spacing: 2px;
+  z-index: 3;
+}
+
+/* ============================================================
+   底部 CTA 按钮（合作咨询）
+   ============================================================ */
+.bottom-cta {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 339px;
+  height: 91px;
+  border-radius: 46px;
+  background: linear-gradient(135deg, #0136E6 0%, #1f6bff 100%);
+  color: #ffffff;
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 12px 40px rgba(1, 54, 230, .5),
+    0 0 0 1px rgba(255, 255, 255, .1) inset;
+  transition: transform .3s cubic-bezier(.2,.7,.2,1),
+              box-shadow .3s ease, filter .3s ease;
+}
+.bottom-cta:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 50px rgba(1, 54, 230, .65),
+    0 0 0 2px rgba(255, 255, 255, .2) inset;
+  filter: brightness(1.15);
+}
+.bottom-cta:active {
+  transform: translateY(0);
+}
+.bottom-cta-icon {
+  width: 26px;
+  height: 26px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.site-footer {
+  position: absolute;
+  pointer-events: auto;
+}
+.footer-inner {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 16px 360px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(31, 84, 255, .35);
+}
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.footer-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+  user-select: none;
+  opacity: .7;
+}
+.footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.footer-contact {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .7);
+  letter-spacing: .5px;
+}
+.footer-contact strong {
+  font-weight: 700;
+  color: rgba(255, 255, 255, .9);
+}
+.footer-vector-deco {
+  display: block;
+  opacity: .7;
+}
+.footer-copyright {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .45);
+  letter-spacing: .5px;
+}
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.footer-link {
+  font-family: "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .55);
+  text-decoration: none;
+  letter-spacing: .5px;
+  transition: color .25s ease;
+}
+.footer-link:hover {
+  color: #ffffff;
+}
