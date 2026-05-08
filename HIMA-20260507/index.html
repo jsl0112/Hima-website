@@ -75,6 +75,11 @@
         <!-- 1. 整帧设计底图（拆成若干段，每段滚动时 opacity 从无到有渐入） -->
         <!-- 段1（hero）：bgg2.png 作为 01 模块独立背景，从380px开始显示到2845px -->
         <div class="hero-seg seg-fixed" style="--seg-top:380px;--seg-bot:2845px;"></div>
+        <!-- 头部背景图叠加 1px 扩散线圈：与 bgg2.png 中心线圈对齐 -->
+        <div class="hero-ripple-wrap">
+          <div class="hero-ripple-ring"></div>
+          <div class="hero-ripple-ring hero-ripple-ring--outer"></div>
+        </div>
         <!-- hero 底部渐变过渡：从透明到黑色，让背景图底部自然消失 -->
         <div class="hero-fade-out seg-fixed"></div>
         <!-- 段3：03 直播运营 3832-5225（下移 +175px，贴近02视频底部 4007） -->
@@ -190,15 +195,11 @@
         <!-- 底层遮罩：完全覆盖底图原 04 区域（5168 ~ 5168+1588=6756），用纯黑底色 -->
         <div class="deco-mask dm-bg" style="left:0;top:5316px;width:2560px;height:1709px;z-index:1;background:#000;"></div>
 
-        <!-- 04 模块背景装饰图（bg3.png）- 右上角蓝色光环同心圆 + 向外扩散线条动画 -->
-        <div class="dm-ripple-wrap" style="left:1525px;top:5787px;width:873px;height:873px;z-index:2;">
+        <!-- 04 模块背景装饰图（bg3.png）- 右上角蓝色光环同心圆 + 居中扩散线圈动画 -->
+        <div class="dm-ripple-wrap" style="left:1520px;top:5813px;width:873px;height:873px;z-index:2;">
           <img class="dm-bg-deco reveal fx-fade" src="assets/bg3.png" alt="" draggable="false"
                style="left:0;top:0;width:873px;height:873px;z-index:2;" />
-          <!-- 扩散波纹线条 -->
-          <div class="dm-ripple-ring dm-ripple-1"></div>
-          <div class="dm-ripple-ring dm-ripple-2"></div>
-          <div class="dm-ripple-ring dm-ripple-3"></div>
-          <div class="dm-ripple-ring dm-ripple-4"></div>
+          <div class="dm-ripple-ring"></div>
         </div>
 
         <!-- 04 标题已在 sec-4 锚点处还原 -->
@@ -345,14 +346,16 @@
         </div>
 
         <!-- 6.3 社媒管理区域下方平台图标条（YouTube/TikTok/Facebook/Instagram 等） -->
-        <img class="platform-bar reveal fx-up" src="assets/11-10654.png" alt="支持平台"
-             draggable="false"
-             style="left:967px;top:2331px;width:623px;height:48px;z-index:3;" />
+        <div class="mod1-platform-row reveal fx-up" style="left:0;top:2331px;width:2560px;height:48px;z-index:3;">
+          <img class="platform-bar" src="assets/11-10654.png" alt="支持平台"
+               draggable="false" />
+          <span class="platform-more mod1-platform-more">更多平台接入中</span>
+        </div>
 
         <!-- 7. 合作游戏标题组（使用切图还原） -->
         <!-- 遮罩：盖住段5底图(6700-8500偏移-174→6526-8326)中自带的合作游戏卡片切图，避免重复 -->
         <div class="deco-mask" style="left:0;top:6967px;width:2560px;height:1500px;z-index:1;background:#000;"></div>
-        <img class="section-title-img reveal fx-up"
+        <img id="sec-5-title" class="section-title-img reveal fx-up"
              src="assets/11-10743.png" alt="合作游戏" draggable="false"
              style="left:812px;top:7020px;width:936px;height:118px;" />
 
@@ -414,42 +417,42 @@
           </div>
         </div>
 
-        <!-- 11. 合作游戏 10 张卡片 -->
+        <!-- 11. 合作游戏 10 张封面（统一尺寸、统一间距） -->
         <!-- 第 1 行（5 张） -->
-        <div class="game-hit reveal fx-up" style="left:320px;top:7303px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:320px;top:7294px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10600.png" alt="Delta Force" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:709px;top:7214px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:708.5px;top:7214px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10612.png" alt="Teamfight Tactics" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:1097px;top:7303px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:1097px;top:7294px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10602.png" alt="PUBG Mobile" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:1485px;top:7214px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:1485.5px;top:7214px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10622.png" alt="Honor of Kings" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:1874px;top:7303px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:1874px;top:7294px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10604.png" alt="PUBG Mobile" draggable="false" />
         </div>
         <!-- 第 2 行（5 张） -->
-        <div class="game-hit reveal fx-up" style="left:319px;top:7807px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:320px;top:7798px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10607.png" alt="Goddess of Victory Nikke" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:708px;top:7718px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:708.5px;top:7718px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10619.png" alt="游戏项目" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:1097px;top:7747px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:1097px;top:7798px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10614.png" alt="Age of Empires Mobile" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:1485px;top:7658px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:1485.5px;top:7718px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10609.png" alt="Fate Trigger" draggable="false" />
         </div>
-        <div class="game-hit reveal fx-up" style="left:1874px;top:7747px;width:366px;height:477px;">
+        <div class="game-hit reveal fx-up" style="left:1874px;top:7798px;width:366px;height:477px;">
           <img class="game-cover" src="assets/11-10617.png" alt="Dragonheir Silent Gods" draggable="false" />
         </div>
 
         <!-- "以上为部分合作项目展示" 说明文字 -->
-        <p class="games-note reveal fx-up" style="left:0;top:8257px;width:2560px;">— 以上为部分合作项目展示 —</p>
+        <p class="games-note reveal fx-up" style="left:0;top:8337px;width:2560px;">— 以上为部分合作项目展示 —</p>
 
         <!-- 11.5 底部同心圆装饰（11-10430.png, Figma: x=755 y=8503 1815×1815）
              贴近右侧，z-index:2 高于底图遮罩但低于内容层，不遮挡上层内容 -->

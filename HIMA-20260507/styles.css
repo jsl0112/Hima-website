@@ -1,5 +1,32 @@
-/* Radikal 字体（数字组大数字使用） */
-@import url('https://fonts.cdnfonts.com/css/radikal');
+/* Radikal 字体（英文版统一使用，字体文件存放于 assets） */
+@font-face {
+  font-family: "Radikal";
+  src: url("assets/Nootype - Radikal.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Radikal";
+  src: url("assets/Nootype - Radikal Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Radikal";
+  src: url("assets/Nootype - Radikal Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Radikal";
+  src: url("assets/Nootype - Radikal Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* 造字工房皓影体（首屏大标题使用） */
 @font-face {
@@ -108,6 +135,76 @@ html, body {
   user-select: none;
   image-rendering: -webkit-optimize-contrast;
   z-index: 0;
+}
+
+/* 头部背景图叠加 1px 扩散线圈：中心对齐 bgg2.png 的同心圆 */
+.hero-ripple-wrap {
+  position: absolute;
+  left: 0;
+  top: 380px;
+  width: 2560px;
+  height: 2465px;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+}
+.hero-ripple-ring {
+  position: absolute;
+  left: 1280px;
+  top: 1320px;
+  width: 978px;
+  height: 978px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(0, 132, 255, .78);
+  border-radius: 50%;
+  opacity: 0;
+  background: transparent;
+  box-shadow: 0 0 10px rgba(0, 132, 255, .42);
+  animation: hero-ripple-out 5.8s cubic-bezier(.18, .7, .2, 1) infinite;
+}
+@keyframes hero-ripple-out {
+  0% {
+    width: 978px;
+    height: 978px;
+    opacity: .75;
+    filter: blur(0);
+  }
+  68% {
+    opacity: .28;
+  }
+  100% {
+    width: 1720px;
+    height: 1720px;
+    opacity: 0;
+    filter: blur(1px);
+  }
+}
+.hero-ripple-ring--outer {
+  width: 2370px;
+  height: 2370px;
+  border-width: 2px;
+  border-color: rgba(0, 132, 255, .58);
+  box-shadow: 0 0 12px rgba(0, 132, 255, .32);
+  animation: hero-ripple-outer-out 8.2s cubic-bezier(.18, .7, .2, 1) infinite;
+  animation-delay: .45s;
+}
+@keyframes hero-ripple-outer-out {
+  0% {
+    width: 2370px;
+    height: 2370px;
+    opacity: .52;
+    filter: blur(0);
+  }
+  70% {
+    opacity: .2;
+  }
+  100% {
+    width: 3800px;
+    height: 3800px;
+    opacity: 0;
+    filter: blur(1px);
+  }
 }
 
 /* hero 底部渐变过渡层：覆盖 bgg2.png 底部 400px 区域，
@@ -381,6 +478,19 @@ html, body {
      顶裁 468px 对齐遮罩顶部，底部圆弧在遮罩内无需裁 */
   -webkit-clip-path: inset(468px 0 0 0);
           clip-path: inset(468px 0 0 0);
+  /* 顶部增加半透明渐入，避免圆弧背景像被硬裁切 */
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0,
+    transparent 468px,
+    rgba(0, 0, 0, .28) 540px,
+    #000 700px,
+    #000 100%);
+          mask-image: linear-gradient(to bottom,
+    transparent 0,
+    transparent 468px,
+    rgba(0, 0, 0, .28) 540px,
+    #000 700px,
+    #000 100%);
 }
 
 /* 底部同心圆装饰（11-10430.png）：贴近右侧，最底层，不遮挡上层内容 */
@@ -939,7 +1049,7 @@ html, body {
   opacity: .9;
 }
 
-/* ---- 向外扩散波纹动画 ---- */
+/* ---- 04 背景图叠加线圈：与 bg3.png 内圈居中对齐，向外扩散后渐隐 ---- */
 .dm-ripple-wrap {
   position: absolute;
   pointer-events: none;
@@ -948,35 +1058,36 @@ html, body {
 
 .dm-ripple-ring {
   position: absolute;
-  left: 50%; top: 50%;
-  width: 60%; height: 60%;
-  transform: translate(-50%, -50%) scale(1);
-  border: 1.5px solid rgba(0, 163, 255, .45);
+  left: 50%;
+  top: 50%;
+  width: 198px;
+  height: 198px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(0, 132, 255, .9);
   border-radius: 50%;
+  z-index: 3;
   opacity: 0;
   pointer-events: none;
-  animation: dm-ripple-out 4s ease-out infinite;
+  background: transparent;
+  box-shadow: 0 0 8px rgba(0, 132, 255, .45);
+  animation: dm-ripple-out 3.6s cubic-bezier(.18, .7, .2, 1) infinite;
 }
-
-/* 四圈依次错开，形成连续扩散效果 */
-.dm-ripple-1 { animation-delay: 0s;   }
-.dm-ripple-2 { animation-delay: 1s;   }
-.dm-ripple-3 { animation-delay: 2s;   }
-.dm-ripple-4 { animation-delay: 3s;   }
 
 @keyframes dm-ripple-out {
   0% {
-    transform: translate(-50%, -50%) scale(.55);
-    opacity: .6;
-    border-width: 2px;
+    width: 198px;
+    height: 198px;
+    opacity: .85;
+    filter: blur(0);
   }
-  70% {
-    opacity: .2;
+  65% {
+    opacity: .3;
   }
   100% {
-    transform: translate(-50%, -50%) scale(1.6);
+    width: 776px;
+    height: 776px;
     opacity: 0;
-    border-width: .5px;
+    filter: blur(1px);
   }
 }
 
@@ -1266,7 +1377,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 40px;
   pointer-events: none;
 }
 .mod3-platforms-img {
@@ -1515,11 +1626,32 @@ html, body {
 }
 
 /* 社媒管理下方的平台图标条 */
+.mod1-platform-row {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  pointer-events: none;
+}
 .platform-bar {
   position: absolute;
   pointer-events: none;
   user-select: none;
   object-fit: contain;
+}
+.mod1-platform-row .platform-bar {
+  position: static;
+  width: 623px;
+  height: 48px;
+  flex: 0 0 auto;
+}
+.mod1-platform-more {
+  position: static;
+  margin-left: -42px;
+  line-height: 16px;
+  letter-spacing: .5px;
+  flex: 0 0 auto;
 }
 
 /* 03 直播截图 */
@@ -1551,6 +1683,7 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
   border-radius: 14px;
   user-select: none;
@@ -1689,3 +1822,169 @@ html, body {
 .footer-link:hover {
   color: #ffffff;
 }
+
+/* ============================================================
+   英文版：统一 Radikal 字体 + 长英文文本布局适配
+   ============================================================ */
+body.lang-en,
+body.lang-en button,
+body.lang-en a,
+body.lang-en input,
+body.lang-en textarea {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+}
+body.lang-en .nav {
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 46px;
+}
+body.lang-en .nav-tab,
+body.lang-en .lang-switch,
+body.lang-en .cta-btn,
+body.lang-en .bottom-cta,
+body.lang-en .footer-contact,
+body.lang-en .footer-copyright {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+}
+body.lang-en .cta-btn {
+  width: 172px;
+  letter-spacing: .3px;
+}
+body.lang-en .title-wrap:not(.bottom-title) {
+  left: 540px !important;
+  width: 1480px !important;
+}
+body.lang-en .title-text {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-weight: 900;
+  font-size: 82px;
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+}
+body.lang-en .title-hi {
+  font-weight: 900;
+}
+body.lang-en .hero-subtitle {
+  left: 500px !important;
+  width: 1560px !important;
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: .2px;
+}
+body.lang-en .stat-label {
+  margin-top: 6px;
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 30px;
+  line-height: 32px;
+  letter-spacing: .1px;
+  text-transform: none;
+}
+body.lang-en .stat-desc {
+  margin-top: 6px;
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  letter-spacing: .05px;
+}
+body.lang-en .dt-title {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 24px;
+  letter-spacing: .2px;
+}
+body.lang-en .dt-desc {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  top: 76px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: .1px;
+}
+body.lang-en .dm-feat-title {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.12;
+  letter-spacing: .1px;
+}
+body.lang-en .dm-feat-desc {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.35;
+}
+body.lang-en .dm-ch-label,
+body.lang-en .dm-ch-sub,
+body.lang-en .dm-ch-name,
+body.lang-en .dm-ch-tag {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+}
+body.lang-en .mod1-tab {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 15px;
+  letter-spacing: .1px;
+}
+body.lang-en .mod1-card-text {
+  width: 470px;
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+}
+body.lang-en .m1c-title {
+  font-size: 30px;
+  letter-spacing: .1px;
+}
+body.lang-en .m1c-desc {
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: .1px;
+}
+body.lang-en .m1c-list li {
+  font-size: 15px;
+  letter-spacing: .05px;
+}
+body.lang-en .mod3-tab {
+  width: 320px;
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 18px;
+  letter-spacing: .1px;
+}
+body.lang-en .mod3-pill {
+  width: 320px;
+}
+body.lang-en .mod3-panel-title,
+body.lang-en .mod3-panel-desc,
+body.lang-en .mod3-panel-list li,
+body.lang-en .platform-more,
+body.lang-en .games-note {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+}
+body.lang-en .mod3-panel-title {
+  font-size: 26px;
+  line-height: 34px;
+}
+body.lang-en .mod3-panel-desc {
+  font-size: 16px;
+  line-height: 23px;
+}
+body.lang-en .mod3-panel-list li {
+  white-space: normal;
+  font-size: 14px;
+  line-height: 24px;
+  min-height: 28px;
+}
+body.lang-en .bottom-title {
+  width: 1500px !important;
+}
+body.lang-en .title-text-bottom {
+  font-size: 82px;
+  line-height: 1.12;
+}
+body.lang-en .bottom-tabs {
+  top: 8957px !important;
+  width: 1180px !important;
+  gap: 42px;
+}
+body.lang-en .bt-item {
+  font-family: "Radikal", "Segoe UI", Arial, sans-serif;
+  font-size: 23px;
+  letter-spacing: .2px;
+}
+body.lang-en .games-note {
+  letter-spacing: .8px;
+}
+
